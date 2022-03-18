@@ -40,12 +40,11 @@ Private Const MAX_COL_LEN             As Integer = 80                           
 Private Const MENU_NUM                As Integer = 30                                               '// シートをメニューに表示する際のグループ閾値
 
 
-
 '// ////////////////////////////////////////////////////////////////////////////
 '// アプリケーション定数
 
 '// バージョン
-Private Const APP_VERSION             As String = "2.0.0.32"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Private Const APP_VERSION             As String = "2.0.1.33"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -101,7 +100,7 @@ Public gADO                             As cADO         '// 接続先DB/Excelオブジ
 Public gLang                            As Long         '// 言語
 
 '// リボン関連
-Public gRibbon                          As IRibbonUI    '// リボンオブジェクト
+'Public gRibbon                          As IRibbonUI    '// リボンオブジェクト
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// プライベート変数
@@ -474,7 +473,7 @@ End Sub
 '// 説明：       引数の文字列がパーセント形式かを判定する
 '// 引数：       コピー対象文字列
 Function pfIsPercentage(bffText As String) As Boolean
-    If bffText = "" Then
+    If bffText = BLANK Then
         pfIsPercentage = False
     ElseIf Right(bffText, 1) = "%" And IsNumeric(Left(bffText, Len(bffText) - 1)) Then
         pfIsPercentage = True
@@ -1052,7 +1051,7 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   値の重複を排除して一覧
+'// メソッド：   値の重複を排除して一覧（カウント）
 '// 説明：       重複値を排除する。
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psDistinctVals()
@@ -1125,7 +1124,8 @@ Private Sub psDistinctVals()
     Selection.Font.Name = APP_FONT
     Selection.Font.Size = APP_FONT_SIZE
     
-    Call resultSheet.Cells(1, 1).Select
+    '// 罫線描画
+    Call gsPageSetup_Lines(resultSheet, 1)
     
     '// 閉じるときに保存を求めない
     ActiveWorkbook.Saved = True
@@ -1210,9 +1210,16 @@ End Sub
 '// 説明：       VLookupCopyで格納された選択領域を張り付け位置のセルに出力する
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psVLookupPaste()
+On Error GoTo ErrorHandler
     Dim searchColIdx    As Long     '// VLookup関数の「検索」にあたるセルの列
     Dim targetColIdx    As Long     '// Vlookpu関数を出力するセルの列
     Dim bffRange        As String   '// 選択範囲のアドレス文字列を保持
+    
+    '// マスタ列が選択されていない場合はエラー
+    If pVLookupMaster = BLANK Then
+        Call MsgBox(MSG_VLOOKUP_NO_MASTER, vbOKOnly, APP_TITLE)
+        Exit Sub
+    End If
     
     '// 1列のみの選択はエラー
     If Selection.Columns.Count = 1 Then
@@ -1242,6 +1249,10 @@ Private Sub psVLookupPaste()
     
     '// 後処理
     Application.CutCopyMode = False
+    Exit Sub
+    
+ErrorHandler:
+    Call gsShowErrorMsgDlg("mdlCommon.psVLookupPaste", Err)
 End Sub
 
 
@@ -1412,17 +1423,17 @@ End Sub
 '// 説明：       リボンのインスタンス化時、初期化を行う。
 '// 引数：       ribbon   リボンコントロール
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub OnLoad(ribbon As IRibbonUI)
-    Set gRibbon = ribbon
-    
-    Call psInitExTools
-End Sub
-
-
-Public Sub controls_getEnabled(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = (Workbooks.Count > 0)
-    gRibbon.InvalidateControl control.Id
-End Sub
+'Private Sub OnLoad(ribbon As IRibbonUI)
+'    Set gRibbon = ribbon
+'
+'    Call psInitExTools
+'End Sub
+'
+'
+'Public Sub controls_getEnabled(control As IRibbonControl, ByRef returnedVal)
+'    returnedVal = (Workbooks.Count > 0)
+'    gRibbon.InvalidateControl control.Id
+'End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -1496,14 +1507,11 @@ Public Sub ribbonCallback(control As IRibbonControl)
             Call psSortWorksheet("ASC")
         Case "SheetSortDesc"                '// シートの並べ替え
             Call psSortWorksheet("DESC")
+        
         '// データ /////
         Case "Select"                       '// Select文実行
             Call frmGetRecord.Show
-        '    Case "DML"                          '// DML文出力
-        '      Call frmDataExport.Show
-        '    Case "ManageXML"                    '// XML操作
-        '      Call frmXmlManage.Show
-        Case "VLookupCopy"
+        Case "VLookupCopy"                  '// VLookup
             Call psVLookupCopy
         Case "VLookupPaste"
             Call psVLookupPaste
@@ -1546,15 +1554,15 @@ Public Sub ribbonCallback(control As IRibbonControl)
             Call gsDrawLine_Header_Vert
         Case "BorderData"                   '// データ領域の罫線
             Call gsDrawLine_Data
-        '    Case "Chart"                        '// 簡易チャート
-        '      Call frmDrawChart.Show
         Case "FitObjects"                   '// オブジェクトをセルに合わせる
             Call frmOrderShape.Show
+        
         '// 検索、ファイル /////
         Case "AdvancedSearch"               '// 拡張検索
             Call frmSearch.Show
         Case "FileList"                     '// ファイル一覧
             Call frmFileList.Show
+        
         '// その他 /////
         Case "InitTool"                     '// ツール初期化
             Call psInitExTools
