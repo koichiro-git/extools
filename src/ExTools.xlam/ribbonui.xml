@@ -47,6 +47,11 @@
 		<button id="BorderColHead" label="列ヘッダの罫線" size="normal" imageMso="TableStyleColumnHeaders" onAction="ribbonCallback" />
 		<button id="BorderData" label="データ領域の罫線" size="normal" imageMso="BorderOutside" onAction="ribbonCallback" />
 		<button id="FitObjects" label="オブジェクトをセルに合わせる" size="normal" imageMso="DrawingCanvasFit" onAction="ribbonCallback" />
+		<gallery id="AdjSape" label="オブジェクトの補正" size="normal" imageMso="ShapesInsertGallery">
+			<button id="AdjShapeBlockArrow" label="ブロック矢印の先端を揃える" image="homebase16" onAction="ribbonCallback_f1" />
+			<button id="AdjShapeRoundRect" label="角丸四角形の丸みを揃える" image="roundRect16" onAction="ribbonCallback_f1" />
+			<button id="AdjShapeElbowConn" label="鍵コネクタの曲がり位置を揃える" imageMso="PivotDiagramAlignCenter" onAction="ribbonCallback_f1" />
+		</gallery>
 	</group>
 
 	<!--- **********[Data]********** -->
