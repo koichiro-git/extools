@@ -26,9 +26,9 @@ Option Explicit
 '// ////////////////////
 '// ƒAƒvƒŠ‹¤’Ê•Ï” (•Ï”‘®: APP_{string} )
 Public Const APP_TITLE                          As String = "Šg’£ƒc[ƒ‹"
-Public Const APP_SQL_FILE                       As String = "SQLƒtƒ@ƒCƒ‹ (*.sql; *.txt),*.sql;*.txt"
+'Public Const APP_SQL_FILE                       As String = "SQLƒtƒ@ƒCƒ‹ (*.sql; *.txt),*.sql;*.txt"
 Public Const APP_EXL_FILE                       As String = "ƒGƒNƒZƒ‹Œ`® ƒtƒ@ƒCƒ‹ (#),#"
-Public Const APP_XML_FILE                       As String = "XMLƒtƒ@ƒCƒ‹ (*.xml),*.xml"
+'Public Const APP_XML_FILE                       As String = "XMLƒtƒ@ƒCƒ‹ (*.xml),*.xml"
 
 
 '// ////////////////////
@@ -38,7 +38,7 @@ Public Const MENU_EXTOOL                        As String = "Šg’£(&X)"
 Public Const MENU_SHEET_GROUP                   As String = "ƒV[ƒg # ` @"
 Public Const MENU_COMP_SHEET                    As String = "ƒV[ƒg/ƒuƒbƒN”äŠr..."
 Public Const MENU_SELECT                        As String = "SQL•¶Às..."
-Public Const MENU_FILE_EXP                      As String = "DML/ƒf[ƒ^o—Í..."
+'Public Const MENU_FILE_EXP                      As String = "DML/ƒf[ƒ^o—Í..."
 Public Const MENU_SORT                          As String = "ƒV[ƒg‚Ìƒ\[ƒg"
 Public Const MENU_SORT_ASC                      As String = "¸‡ƒ\[ƒg"
 Public Const MENU_SORT_DESC                     As String = "~‡ƒ\[ƒg"
@@ -63,7 +63,7 @@ Public Const MENU_LINK_ADD                      As String = "ƒnƒCƒp[ƒŠƒ“ƒN‚Ìİ’
 Public Const MENU_LINK_REMOVE                   As String = "ƒnƒCƒp[ƒŠƒ“ƒN‚Ìíœ"
 Public Const MENU_DRAW_LINE_H_HORIZ             As String = "•\‚Ìã•”i‰¡²j"
 Public Const MENU_DRAW_LINE_H_VERT              As String = "•\‚Ì¶ic²j"
-Public Const MENU_XML                           As String = "XML‘€ì..."
+'Public Const MENU_XML                           As String = "XML‘€ì..."
 Public Const MENU_FILE                          As String = "ƒtƒ@ƒCƒ‹ˆê——o—Í..."
 Public Const MENU_GROUP                         As String = "ƒOƒ‹[ƒvˆ—"
 Public Const MENU_GROUP_SET_ROW                 As String = "ƒOƒ‹[ƒv‰»isj"
@@ -106,6 +106,8 @@ Public Const MSG_VLOOKUP_NO_MASTER              As String = "VLOOKUP‚Ìƒ}ƒXƒ^•\‚ª
 Public Const MSG_SEL_DEFAULT_COLOR              As String = "‘I‘ğ‚³‚ê‚½ƒZƒ‹‚ÍƒfƒtƒHƒ‹ƒgF‚ªw’è‚³‚ê‚Ä‚¢‚Ü‚·Bˆ—‚ğ‘±‚¯‚Ü‚·‚©H"
 Public Const MSG_SHAPE_NOT_SELECTED             As String = "ƒVƒFƒCƒv‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
 Public Const MSG_PROCESSING                     As String = "Às’†‚Å‚·..."
+Public Const MSG_SHAPE_MULTI_SELECT             As String = "2‚ÂˆÈã‚ÌƒVƒFƒCƒv‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B"
+Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "ƒo[ƒR[ƒh‚ÍExcel2016ˆÈ~‚Åg—p‰Â”\‚Å‚·B"
 
 '// ƒƒbƒZ[ƒWFfrmCompSheet
 Public Const MSG_ERROR_NEED_BOOKNAME            As String = "ƒuƒbƒN‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B"
@@ -128,7 +130,6 @@ Public Const MSG_QUERY                          As String = "–â‚¢‡‚í‚¹’†"
 Public Const MSG_EXTRACT_SHEET                  As String = "ƒV[ƒg‚Öo—Í’†"
 Public Const MSG_PAGE_SETUP                     As String = "‘®İ’è’†"
 Public Const MSG_ROWS_PROCESSED                 As String = "s‚ªˆ—‚³‚ê‚Ü‚µ‚½"
-
 
 '// ƒƒbƒZ[ƒWFfrmDataExport
 Public Const MSG_TABLE_NAME                     As String = "•\˜_—–¼Ì"
@@ -228,40 +229,40 @@ Public Const LBL_GRC_LOGIN                      As String = "ƒƒOƒCƒ“"
 Public Const LBL_GRC_FILE_OPEN                  As String = "ƒtƒ@ƒCƒ‹‚ğŠJ‚­"
 Public Const LBL_GRC_SEARCH                     As String = "Às"
 
-'// frmDataExport (EXP)
-Public Const LBL_EXP_FORM                       As String = "DML/ƒf[ƒ^o—Í"
-Public Const LBL_EXP_FILE_TYPE                  As String = "o—ÍŒ`®"
-Public Const LBL_EXP_TARGET                     As String = "o—Í‘ÎÛ"
-Public Const LBL_EXP_OPTIONS                    As String = "o—ÍƒIƒvƒVƒ‡ƒ“"
-Public Const LBL_EXP_DATE_FORMAT                As String = "“ú•t‘®"
-Public Const LBL_EXP_QUOTE                      As String = "ƒNƒH[ƒg"
-Public Const LBL_EXP_SEPARATOR                  As String = "‹æØ‚è•¶š"
-Public Const LBL_EXP_CHAR_SET                   As String = "•¶šƒR[ƒh"
-Public Const LBL_EXP_CR_CODE                    As String = "‰üsƒR[ƒh"
-Public Const LBL_EXP_QUOTE_ALL                  As String = "”’lE“ú•t‚àƒNƒH[ƒg"
-Public Const LBL_EXP_FORMAT_DML                 As String = "DML‚ğ‰üs‚Å®Œ`"
-Public Const LBL_EXP_HEADER                     As String = "ƒwƒbƒ_Eƒtƒbƒ^‚ğo—Í"
-Public Const LBL_EXP_COL_NAME                   As String = "€–Ú–¼‚ğo—Í"
-Public Const LBL_EXP_SEMICOLON                  As String = "ƒZƒ~ƒRƒƒ“‚ğo—Í‚µ‚È‚¢"
-Public Const LBL_EXP_NUM_POINT                  As String = "”’l‚Ì¬”“_‚ğo—Í‚µ‚È‚¢"
-Public Const LBL_EXP_CREATE_SHEET               As String = "ƒV[ƒgì¬"
-
-'// frmXmlManage (XML)
-Public Const LBL_XML_FORM                       As String = "XML‘€ì"
-Public Const LBL_XML_INDENT                     As String = "ƒCƒ“ƒfƒ“ƒg"
-Public Const LBL_XML_PUT_DEF                    As String = "XMLéŒ¾‚Ìo—Í"
-Public Const LBL_XML_LOAD                       As String = "“Ç"
-Public Const LBL_XML_WRITE                      As String = "o—Í"
-
-'// frmDrawChart (CHT)
-Public Const LBL_CHT_FORM                       As String = "ŠÈˆÕƒ`ƒƒ[ƒg‚Ì•`‰æ"
-Public Const LBL_CHT_MAX_VAL                    As String = "Å‘å’l"
-Public Const LBL_CHT_INTERVAL                   As String = "•â•üŠÔŠu"
-Public Const LBL_CHT_POSITION                   As String = "•`‰æˆÊ’u"
-Public Const LBL_CHT_DIRECTION                  As String = "Œü‚«"
-Public Const LBL_CHT_GRADATION                  As String = "ƒOƒ‰ƒf[ƒVƒ‡ƒ“"
-Public Const LBL_CHT_LEGEND                     As String = "–}—á‚Ì•\¦"
-Public Const LBL_CHT_LINE_FRONT                 As String = "•â•ü‚ğè‘O‚É•\¦"
+''// frmDataExport (EXP)
+'Public Const LBL_EXP_FORM                       As String = "DML/ƒf[ƒ^o—Í"
+'Public Const LBL_EXP_FILE_TYPE                  As String = "o—ÍŒ`®"
+'Public Const LBL_EXP_TARGET                     As String = "o—Í‘ÎÛ"
+'Public Const LBL_EXP_OPTIONS                    As String = "o—ÍƒIƒvƒVƒ‡ƒ“"
+'Public Const LBL_EXP_DATE_FORMAT                As String = "“ú•t‘®"
+'Public Const LBL_EXP_QUOTE                      As String = "ƒNƒH[ƒg"
+'Public Const LBL_EXP_SEPARATOR                  As String = "‹æØ‚è•¶š"
+'Public Const LBL_EXP_CHAR_SET                   As String = "•¶šƒR[ƒh"
+'Public Const LBL_EXP_CR_CODE                    As String = "‰üsƒR[ƒh"
+'Public Const LBL_EXP_QUOTE_ALL                  As String = "”’lE“ú•t‚àƒNƒH[ƒg"
+'Public Const LBL_EXP_FORMAT_DML                 As String = "DML‚ğ‰üs‚Å®Œ`"
+'Public Const LBL_EXP_HEADER                     As String = "ƒwƒbƒ_Eƒtƒbƒ^‚ğo—Í"
+'Public Const LBL_EXP_COL_NAME                   As String = "€–Ú–¼‚ğo—Í"
+'Public Const LBL_EXP_SEMICOLON                  As String = "ƒZƒ~ƒRƒƒ“‚ğo—Í‚µ‚È‚¢"
+'Public Const LBL_EXP_NUM_POINT                  As String = "”’l‚Ì¬”“_‚ğo—Í‚µ‚È‚¢"
+'Public Const LBL_EXP_CREATE_SHEET               As String = "ƒV[ƒgì¬"
+'
+''// frmXmlManage (XML)
+'Public Const LBL_XML_FORM                       As String = "XML‘€ì"
+'Public Const LBL_XML_INDENT                     As String = "ƒCƒ“ƒfƒ“ƒg"
+'Public Const LBL_XML_PUT_DEF                    As String = "XMLéŒ¾‚Ìo—Í"
+'Public Const LBL_XML_LOAD                       As String = "“Ç"
+'Public Const LBL_XML_WRITE                      As String = "o—Í"
+'
+''// frmDrawChart (CHT)
+'Public Const LBL_CHT_FORM                       As String = "ŠÈˆÕƒ`ƒƒ[ƒg‚Ì•`‰æ"
+'Public Const LBL_CHT_MAX_VAL                    As String = "Å‘å’l"
+'Public Const LBL_CHT_INTERVAL                   As String = "•â•üŠÔŠu"
+'Public Const LBL_CHT_POSITION                   As String = "•`‰æˆÊ’u"
+'Public Const LBL_CHT_DIRECTION                  As String = "Œü‚«"
+'Public Const LBL_CHT_GRADATION                  As String = "ƒOƒ‰ƒf[ƒVƒ‡ƒ“"
+'Public Const LBL_CHT_LEGEND                     As String = "–}—á‚Ì•\¦"
+'Public Const LBL_CHT_LINE_FRONT                 As String = "•â•ü‚ğè‘O‚É•\¦"
 
 '// frmOrderShape (ORD)
 Public Const LBL_ORD_FORM                       As String = "ƒVƒFƒCƒv‚Ì”z’u"
@@ -386,9 +387,9 @@ Public Const HDR_LST                            As String = "ƒpƒX;ƒtƒ@ƒCƒ‹–¼;ì
 '// ////////////////////
 '// ƒAƒvƒŠ‹¤’Ê•Ï” (•Ï”‘®: APP_{string} )
 Public Const APP_TITLE                          As String = "Excel Extentions"
-Public Const APP_SQL_FILE                       As String = "SQL file (*.sql; *.txt),*.sql;*.txt"
+'Public Const APP_SQL_FILE                       As String = "SQL file (*.sql; *.txt),*.sql;*.txt"
 Public Const APP_EXL_FILE                       As String = "Excel file (#),#"
-Public Const APP_XML_FILE                       As String = "XML file (*.xml),*.xml"
+'Public Const APP_XML_FILE                       As String = "XML file (*.xml),*.xml"
 
 
 '// ////////////////////
@@ -398,7 +399,7 @@ Public Const MENU_EXTOOL                        As String = "Extentions(&X)"
 Public Const MENU_SHEET_GROUP                   As String = "Sheet # - @"
 Public Const MENU_COMP_SHEET                    As String = "Difference Check..."
 Public Const MENU_SELECT                        As String = "Select..."
-Public Const MENU_FILE_EXP                      As String = "Data Export..."
+'Public Const MENU_FILE_EXP                      As String = "Data Export..."
 Public Const MENU_SORT                          As String = "Sheet Sort"
 Public Const MENU_SORT_ASC                      As String = "Sort Ascending"
 Public Const MENU_SORT_DESC                     As String = "Sort Descending"
@@ -423,7 +424,7 @@ Public Const MENU_LINK_ADD                      As String = "Set Hyperlinks"
 Public Const MENU_LINK_REMOVE                   As String = "Remove Hyperlinks"
 Public Const MENU_DRAW_LINE_H_HORIZ             As String = "Top of Table (Horizontal)"
 Public Const MENU_DRAW_LINE_H_VERT              As String = "Left of Table (Vertical)"
-Public Const MENU_XML                           As String = "XML..."
+'Public Const MENU_XML                           As String = "XML..."
 Public Const MENU_FILE                          As String = "File Index..."
 Public Const MENU_GROUP                         As String = "Group"
 Public Const MENU_GROUP_SET_ROW                 As String = "Grouping (Row)"
@@ -466,6 +467,8 @@ Public Const MSG_VLOOKUP_NO_MASTER              As String = "Nothing to paste.  
 Public Const MSG_SEL_DEFAULT_COLOR              As String = "Default color is set on the current cell.  Do you want to proceed?"
 Public Const MSG_SHAPE_NOT_SELECTED             As String = "Shapes not selected."
 Public Const MSG_PROCESSING                     As String = "Processing..."
+Public Const MSG_SHAPE_MULTI_SELECT             As String = "Please select 2 or more target shapes."
+Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "Barcode function is available on Excel 2016 or higher."
 
 '// ƒƒbƒZ[ƒWFfrmCompSheet
 Public Const MSG_ERROR_NEED_BOOKNAME            As String = "No book identified."
@@ -504,6 +507,10 @@ Public Const MSG_NEED_FILL_ID                   As String = "User ID required."
 Public Const MSG_NEED_FILL_PWD                  As String = "Password required."
 Public Const MSG_NEED_FILL_TNS                  As String = "Connection string required."
 Public Const MSG_NEED_EXCEL_SAVED               As String = "Current workbook is need to be saved."
+
+'// ƒƒbƒZ[ƒWFfrmSearch
+Public Const MSG_NO_CONDITION                   As String = "Please specify search condition."
+Public Const MSG_WRONG_COND                     As String = "Invalid search condition."
 
 '// ƒƒbƒZ[ƒWFfrmFileList
 Public Const MSG_MAX_DEPTH                      As String = "Max depth reached."
@@ -582,40 +589,40 @@ Public Const LBL_GRC_LOGIN                      As String = "Login"
 Public Const LBL_GRC_FILE_OPEN                  As String = "Open file"
 Public Const LBL_GRC_SEARCH                     As String = "Execute"
 
-'// frmDataExport (EXP)
-Public Const LBL_EXP_FORM                       As String = "DML / Data Export"
-Public Const LBL_EXP_FILE_TYPE                  As String = "File type"
-Public Const LBL_EXP_TARGET                     As String = "Target sheets"
-Public Const LBL_EXP_OPTIONS                    As String = "Options"
-Public Const LBL_EXP_DATE_FORMAT                As String = "Date format"
-Public Const LBL_EXP_QUOTE                      As String = "Quotes"
-Public Const LBL_EXP_SEPARATOR                  As String = "Separator"
-Public Const LBL_EXP_CHAR_SET                   As String = "Character set"
-Public Const LBL_EXP_CR_CODE                    As String = "CR code"
-Public Const LBL_EXP_QUOTE_ALL                  As String = "Quote numbers and dates"
-Public Const LBL_EXP_FORMAT_DML                 As String = "Format DML"
-Public Const LBL_EXP_HEADER                     As String = "Add header and footer"
-Public Const LBL_EXP_COL_NAME                   As String = "Column name"
-Public Const LBL_EXP_SEMICOLON                  As String = "Semicolon"
-Public Const LBL_EXP_NUM_POINT                  As String = "Omit decimal point"
-Public Const LBL_EXP_CREATE_SHEET               As String = "New sheet"
-
-'// frmXmlManage (XML)
-Public Const LBL_XML_FORM                       As String = "Manage XML File"
-Public Const LBL_XML_INDENT                     As String = "Indent"
-Public Const LBL_XML_PUT_DEF                    As String = "Put XML definition"
-Public Const LBL_XML_LOAD                       As String = "Load XML"
-Public Const LBL_XML_WRITE                      As String = "Write XML"
-
-'// frmDrawChart (CHT)
-Public Const LBL_CHT_FORM                       As String = "Draw Chart"
-Public Const LBL_CHT_MAX_VAL                    As String = "Max value"
-Public Const LBL_CHT_INTERVAL                   As String = "Support line intervals"
-Public Const LBL_CHT_POSITION                   As String = "Position"
-Public Const LBL_CHT_DIRECTION                  As String = "Direction"
-Public Const LBL_CHT_GRADATION                  As String = "Gradation"
-Public Const LBL_CHT_LEGEND                     As String = "Show Legend"
-Public Const LBL_CHT_LINE_FRONT                 As String = "Support line in front"
+''// frmDataExport (EXP)
+'Public Const LBL_EXP_FORM                       As String = "DML / Data Export"
+'Public Const LBL_EXP_FILE_TYPE                  As String = "File type"
+'Public Const LBL_EXP_TARGET                     As String = "Target sheets"
+'Public Const LBL_EXP_OPTIONS                    As String = "Options"
+'Public Const LBL_EXP_DATE_FORMAT                As String = "Date format"
+'Public Const LBL_EXP_QUOTE                      As String = "Quotes"
+'Public Const LBL_EXP_SEPARATOR                  As String = "Separator"
+'Public Const LBL_EXP_CHAR_SET                   As String = "Character set"
+'Public Const LBL_EXP_CR_CODE                    As String = "CR code"
+'Public Const LBL_EXP_QUOTE_ALL                  As String = "Quote numbers and dates"
+'Public Const LBL_EXP_FORMAT_DML                 As String = "Format DML"
+'Public Const LBL_EXP_HEADER                     As String = "Add header and footer"
+'Public Const LBL_EXP_COL_NAME                   As String = "Column name"
+'Public Const LBL_EXP_SEMICOLON                  As String = "Semicolon"
+'Public Const LBL_EXP_NUM_POINT                  As String = "Omit decimal point"
+'Public Const LBL_EXP_CREATE_SHEET               As String = "New sheet"
+'
+''// frmXmlManage (XML)
+'Public Const LBL_XML_FORM                       As String = "Manage XML File"
+'Public Const LBL_XML_INDENT                     As String = "Indent"
+'Public Const LBL_XML_PUT_DEF                    As String = "Put XML definition"
+'Public Const LBL_XML_LOAD                       As String = "Load XML"
+'Public Const LBL_XML_WRITE                      As String = "Write XML"
+'
+''// frmDrawChart (CHT)
+'Public Const LBL_CHT_FORM                       As String = "Draw Chart"
+'Public Const LBL_CHT_MAX_VAL                    As String = "Max value"
+'Public Const LBL_CHT_INTERVAL                   As String = "Support line intervals"
+'Public Const LBL_CHT_POSITION                   As String = "Position"
+'Public Const LBL_CHT_DIRECTION                  As String = "Direction"
+'Public Const LBL_CHT_GRADATION                  As String = "Gradation"
+'Public Const LBL_CHT_LEGEND                     As String = "Show Legend"
+'Public Const LBL_CHT_LINE_FRONT                 As String = "Support line in front"
 
 '// frmOrderShape (ORD)
 Public Const LBL_ORD_FORM                       As String = "Fit Shapes to Cell Border"

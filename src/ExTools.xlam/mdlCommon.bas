@@ -44,7 +44,7 @@ Private Const MENU_NUM                As Integer = 30                           
 '// アプリケーション定数
 
 '// バージョン
-Private Const APP_VERSION             As String = "2.0.1.33"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.1.0.47"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -52,6 +52,7 @@ Public Const CHR_ESC                  As Long = 27                              
 Public Const CLR_ENABLED              As Long = &H80000005                                          '// コントロール背景色 有効
 Public Const CLR_DISABLED             As Long = &H8000000F                                          '// コントロール背景色 無効
 Public Const TYPE_RANGE               As String = "Range"                                           '// selection タイプ：レンジ
+Public Const TYPE_SHAPE               As String = "Shape"                                           '// selection タイプ：シェイプ（varType）
 Public Const MENU_PREFIX              As String = "sheet"
 Public Const EXCEL_FILE_EXT           As String = "*.xls; *.xlsx"                                   '// エクセル拡張子
 
@@ -99,8 +100,6 @@ End Type
 Public gADO                             As cADO         '// 接続先DB/Excelオブジェクト
 Public gLang                            As Long         '// 言語
 
-'// リボン関連
-'Public gRibbon                          As IRibbonUI    '// リボンオブジェクト
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// プライベート変数
@@ -736,15 +735,6 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：    バージョン表示
-'// 説明：        バージョン表示
-'// ////////////////////////////////////////////////////////////////////////////
-Private Sub psShowVersionInfo()
-    Call MsgBox(APP_TITLE & Space(1) & APP_VERSION, vbOKOnly, APP_TITLE)
-End Sub
-
-
-'// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：    ページ設定(ヘッダ・フッタ)
 '// 説明：        ページ設定を行う
 '// 引数：        wksheet: ワークシート
@@ -1369,7 +1359,12 @@ Public Function gfPreCheck(Optional protectCont As Boolean = False, _
                 gfPreCheck = False
                 Exit Function
             End If
-        
+        Case TYPE_SHAPE
+            If Not VarType(ActiveWindow.Selection) = vbObject Then
+                Call MsgBox(MSG_SHAPE_NOT_SELECTED, vbOKOnly, APP_TITLE)
+                gfPreCheck = False
+                Exit Function
+            End If
         Case BLANK
             '// null
     End Select
@@ -1419,24 +1414,6 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   リボン on load
-'// 説明：       リボンのインスタンス化時、初期化を行う。
-'// 引数：       ribbon   リボンコントロール
-'// ////////////////////////////////////////////////////////////////////////////
-'Private Sub OnLoad(ribbon As IRibbonUI)
-'    Set gRibbon = ribbon
-'
-'    Call psInitExTools
-'End Sub
-'
-'
-'Public Sub controls_getEnabled(control As IRibbonControl, ByRef returnedVal)
-'    returnedVal = (Workbooks.Count > 0)
-'    gRibbon.InvalidateControl control.Id
-'End Sub
-
-
-'// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   シートメニュー get content
 '// 説明：       シートのメニュー表示を行う
 '// 引数：       control  対象となるリボン上のコントロール
@@ -1459,7 +1436,7 @@ Public Sub sheetMenu_getContent(control As IRibbonControl, ByRef content)
         If sheetObj.Type = xlWorksheet Then
             '// IDは接頭辞をつけて通番を設定:MENU_PREFIX + idx
             stMenu = stMenu & "<button id=""" & MENU_PREFIX & CStr(idx) & """ label=""" & sheetObj.Name & """ onAction=""sheetMenuOnAction"""
-            If Not sheetObj.Visible Then
+            If Not sheetObj.visible Then
                 stMenu = stMenu & " enabled=""false"""
             End If
             stMenu = stMenu & " />"
@@ -1480,7 +1457,7 @@ End Sub
 Public Sub sheetMenuOnAction(control As IRibbonControl)
 On Error GoTo ErrorHandler
     '// 押されたシートメニューのIDの接頭辞(MENU_PREFIX)を除き、通番をインデックスとして引数に渡す
-    Call ActiveWorkbook.Sheets(CInt(Mid(control.Id, Len(MENU_PREFIX) + 1))).Activate
+    Call ActiveWorkbook.Sheets(CInt(Mid(control.ID, Len(MENU_PREFIX) + 1))).Activate
     Exit Sub
 
 ErrorHandler:
@@ -1495,7 +1472,7 @@ End Sub
 '// 引数：       control 対象コントロール
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub ribbonCallback(control As IRibbonControl)
-    Select Case control.Id
+    Select Case control.ID
         '// シート /////
         Case "SheetComp"                    '// シート比較
             Call frmCompSheet.Show
@@ -1567,7 +1544,7 @@ Public Sub ribbonCallback(control As IRibbonControl)
         Case "InitTool"                     '// ツール初期化
             Call psInitExTools
         Case "Version"                      '// バージョン情報
-            Call psShowVersionInfo
+            Call frmAbout.Show
     End Select
 
 End Sub
@@ -1619,18 +1596,18 @@ On Error GoTo ErrorHandler
             End If
             
             If sheetObj.Type = xlWorksheet Then
-                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
+                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
             Else '//If (sheetObj.Type = 4) Or (sheetObj.Type = 1) Then
-                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
+                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
             End If
         Next
     Else
         '// ３０枚以下のシートはそのまま表示
         For Each sheetObj In wkBook.Sheets
             If sheetObj.Type = xlWorksheet Then
-                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
+                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
             Else '//if (sheetObj.Type = 4) Or (sheetObj.Type = 1) Then
-                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
+                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
             End If
         Next
     End If
