@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : シート操作フォーム
@@ -83,8 +85,6 @@ On Error GoTo ErrorHandler
     Dim FileName    As String
     Dim compFiles   As String   '// 複数ファイル更新時、完了したファイル名を保持
   
-    Application.ScreenUpdating = False
-  
     '// Zoom値のチェック
     If IsNull(cmbZoom.Value) Then
       If IsNumeric(cmbZoom.Text) Then
@@ -114,7 +114,8 @@ On Error GoTo ErrorHandler
             Next
     End Select
   
-  
+    Call gsSuppressAppEvents
+    
     '// 処理対象コンボの値によって{シート | ブック | ディレクトリ単位}に実行
     Select Case cmbTarget.Value
         Case 0    '// 現在のシート
@@ -156,17 +157,15 @@ On Error GoTo ErrorHandler
                 FileName = Dir
             Loop
     End Select
-  
-    Application.StatusBar = False
-    Application.ScreenUpdating = True
+    
+    Call gsResumeAppEvents
     Call MsgBox(MSG_FINISHED, vbOKOnly, APP_TITLE)
     
     Call Me.Hide
     Exit Sub
   
 ErrorHandler:
-    Application.StatusBar = False
-    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("frmSheetManage.cmdExecute_Click [" & ActiveWorkbook.FullName & "!" & ActiveSheet.Name & "]", Err)
     Call MsgBox(MSG_COMPLETED_FILES & Chr(10) & compFiles, vbOKOnly, APP_TITLE)
 End Sub
@@ -243,9 +242,11 @@ Private Sub psSetUpSheetProperty(wkSheet As Worksheet)
                 Call wkSheet.Cells.AutoFilter
             End If
         Case 2 '// 全て表示
-            Call wkSheet.ShowAllData
+            If WorksheetFunction.CountA(ActiveSheet.UsedRange) > 1 Then
+                Call wkSheet.ShowAllData
+            End If
         Case 3 '// １行目でフィルタ
-            If Not wkSheet.AutoFilterMode Then
+            If Not wkSheet.AutoFilterMode And WorksheetFunction.CountA(ActiveSheet.UsedRange) > 1 Then
                 Call wkSheet.Cells.AutoFilter
             End If
     End Select

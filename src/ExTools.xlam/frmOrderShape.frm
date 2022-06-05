@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : シェイプの整列フォーム
@@ -92,15 +94,15 @@ End Sub
 '// メソッド：   シェイプ位置・サイズ設定
 '// 説明：
 '// 引数：       targetShape: 対象シェイプオブジェクト
-'//              pixMargin: マージン
+'//              ptMargin: マージン
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub psSetShapePos(targetShape As Shape, pixMargin As Integer)
+Private Sub psSetShapePos(targetShape As Shape, ptMargin As Integer)
     Dim basePos(4) As Long
     
-    basePos(0) = targetShape.TopLeftCell.Top + pixMargin '// 上端
-    basePos(1) = targetShape.TopLeftCell.Left + pixMargin '// 左端
-    basePos(2) = targetShape.BottomRightCell.Top + targetShape.BottomRightCell.Height - pixMargin '// 下端
-    basePos(3) = targetShape.BottomRightCell.Left + targetShape.BottomRightCell.Width - pixMargin '// 右端
+    basePos(0) = targetShape.TopLeftCell.Top + ptMargin '// 上端
+    basePos(1) = targetShape.TopLeftCell.Left + ptMargin '// 左端
+    basePos(2) = targetShape.BottomRightCell.Top + targetShape.BottomRightCell.Height - ptMargin '// 下端
+    basePos(3) = targetShape.BottomRightCell.Left + targetShape.BottomRightCell.Width - ptMargin '// 右端
     
     If targetShape.Type <> msoLine Then   '// 直線シェイプ以外を対象とする
         '// 上下端設定

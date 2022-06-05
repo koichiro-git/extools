@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : 拡張検索フォーム
@@ -140,7 +142,7 @@ Private Sub cmdExecute_Click()
       Exit Sub
     End If
   
-    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
     
     '// 検索結果クリア
     pMatchCnt = 0
@@ -564,10 +566,8 @@ Private Sub psShowResult()
     
     '// 後処理
     Call wkSheet.Cells(1, 1).Select
-    ActiveWorkbook.Saved = True
-    Application.StatusBar = False
-    Application.ScreenUpdating = True
-    '// 閉じるときに保存を求めない
+    ActiveWorkbook.Saved = True    '// 閉じるときに保存を求めない
+    Call gsResumeAppEvents
 End Sub
 
 

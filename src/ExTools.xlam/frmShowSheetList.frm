@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : シート一覧出力フォーム
@@ -150,7 +152,7 @@ Private Sub psShowSheetList(wkBook As Workbook, maxRow As Integer, maxCol As Int
         Exit Sub
     End If
     
-    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
     Set statGauge = New cStatusGauge
     statGauge.MaxVal = wkBook.Sheets.Count * maxRow
   
@@ -207,10 +209,10 @@ Private Sub psShowSheetList(wkBook As Workbook, maxRow As Integer, maxCol As Int
   
     Call gsPageSetup_Lines(resultSheet, 1)
   
+    '// 後処理
     Set statGauge = Nothing
-    '// 別ブックに出力した際には、閉じるときに保存を求めない
-    ActiveWorkbook.Saved = (cmbOutput.Value = "0")
-    Application.ScreenUpdating = True
+    ActiveWorkbook.Saved = (cmbOutput.Value = "0")  '// 別ブックに出力した際には、閉じるときに保存を求めない
+    Call gsResumeAppEvents
 End Sub
 
 '// ////////////////////////////////////////////////////////////////////////////

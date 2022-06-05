@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : ファイル一覧出力フォーム
@@ -120,8 +122,8 @@ On Error GoTo ErrorHandler
     Dim sizeFormat  As String
     Dim idx         As Integer
   
-    Application.ScreenUpdating = False
-    
+    Call gsSuppressAppEvents    '// 前処理
+
     '// 設定値の記憶
     pRootDir = txtRootDir.Text                      '// ルートの設定
     pExtentions = Split(txtExtentions.Text, ";")    '// 拡張子 (trim処理要)
@@ -194,12 +196,11 @@ On Error GoTo ErrorHandler
     '// 後処理
     Call wkSheet.Cells(1, 1).Select
     ActiveWorkbook.Saved = True
-    Application.StatusBar = False
-    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
     Exit Sub
 
 ErrorHandler:
-    Application.StatusBar = False
+    Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("frmFileList.pfShowFileList", Err)
 End Sub
 

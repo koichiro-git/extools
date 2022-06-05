@@ -1,7 +1,7 @@
-<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" xmlns:nsExToolsShared="dummy">
 <ribbon startFromScratch="false">
 <tabs>
-<tab id="ExToolsTab" label="拡張" insertAfterMso="TabView" keytip="B">
+<tab idQ="nsExToolsShared:ExToolsTab" label="拡張" insertAfterMso="TabView" keytip="B">
 
 	<!--- **********[Sheet]********** -->
 	<group id="Group1" label="シート" >
@@ -70,7 +70,8 @@
 	</group>
 
 	<!--- **********[Others]********** -->
-	<group id="Group6" label="その他">
+	<group idQ="nsExToolsShared:Group6" label="その他">
+		<button idQ="nsExToolsShared:OptPackAnchor" label="OptPackAnchor" size="normal" visible="false" />
 		<button id="InitTool" label="ツールの初期化" size="normal" imageMso="AccessRefreshAllLists" onAction="ribbonCallback" />
 		<button id="Version" label="バージョン情報"  size="normal" imageMso="RefreshStatus" onAction="ribbonCallback" />
 	</group>

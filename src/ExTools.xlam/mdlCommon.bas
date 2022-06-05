@@ -44,7 +44,7 @@ Private Const MENU_NUM                As Integer = 30                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.1.0.47"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.1.1.49"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -206,7 +206,7 @@ Private Sub psSortWorksheet(sortMode As String)
         Exit Sub
     End If
     
-    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
     
     isOrderAsc = (sortMode = "ASC") '// 昇順/降順の設定
     
@@ -227,7 +227,7 @@ Private Sub psSortWorksheet(sortMode As String)
     
     '// 後処理
     Call Worksheets(1).Activate
-    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
     
     Call MsgBox(MSG_FINISHED, vbOKOnly, APP_TITLE)
 End Sub
@@ -247,9 +247,10 @@ On Error GoTo ErrorHandler
         Exit Sub
     End If
     
-    Application.ScreenUpdating = False
-    Set statGauge = New cStatusGauge
-    statGauge.MaxVal = Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues).Count
+'    Application.ScreenUpdating = False
+'    Set statGauge = New cStatusGauge
+'    statGauge.MaxVal = Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues).Count
+    Call gsSuppressAppEvents
     
     If Selection.Count > 1 Then
         For Each tCell In Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues)
@@ -261,16 +262,18 @@ On Error GoTo ErrorHandler
                 Exit For
             End If
             
-            Call statGauge.addValue(1)
+'            Call statGauge.addValue(1)
         Next
     Else
         Call psConvValue_sub(ActiveCell, funcFlag)
     End If
     
-    Set statGauge = Nothing
-    Application.ScreenUpdating = True
+'    Set statGauge = Nothing
+'    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
     Exit Sub
 ErrorHandler:
+    Call gsResumeAppEvents
     If Err.Number = 1004 Then  '// 範囲選択が正しくない場合
         Call MsgBox(MSG_INVALID_RANGE, vbOKOnly, APP_TITLE)
     Else
@@ -486,43 +489,43 @@ End Function
 '// メソッド：   選択範囲設定（色による）
 '// 説明：       アクティブセルと同じ色のセルを選択範囲に設定する
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub psSetupSelection_color(colorMode As String)
-    Dim targetCell  As Range
-    Dim rgbColor    As Long
-    Dim rslt        As Range
-    
-    '// 初期設定
-    If colorMode = "B" Then
-        rgbColor = ActiveCell.Interior.Color
-    Else
-        rgbColor = ActiveCell.Font.Color
-    End If
-    
-    '// デフォルト色の場合はキャンセルを促す
-    If (colorMode = "B" And rgbColor = 16777215) _
-      Or (colorMode = "F" And rgbColor = 0) Then
-        If MsgBox(MSG_SEL_DEFAULT_COLOR, vbOKCancel, APP_TITLE) = vbCancel Then
-            Exit Sub
-        End If
-    End If
-    
-    Application.ScreenUpdating = False
-    Set rslt = ActiveCell
-    For Each targetCell In ActiveSheet.UsedRange
-        If colorMode = "B" Then
-            If targetCell.Interior.Color = rgbColor Then  '// セル背景色の判定
-                Set rslt = Union(rslt, targetCell)
-            End If
-        Else
-            If targetCell.Font.Color = rgbColor Then      '// フォント色の判定
-                Set rslt = Union(rslt, targetCell)
-            End If
-        End If
-    Next
-    
-    Call rslt.Select
-    Application.ScreenUpdating = True
-End Sub
+'Private Sub psSetupSelection_color(colorMode As String)
+'    Dim targetCell  As Range
+'    Dim rgbColor    As Long
+'    Dim rslt        As Range
+'
+'    '// 初期設定
+'    If colorMode = "B" Then
+'        rgbColor = ActiveCell.Interior.Color
+'    Else
+'        rgbColor = ActiveCell.Font.Color
+'    End If
+'
+'    '// デフォルト色の場合はキャンセルを促す
+'    If (colorMode = "B" And rgbColor = 16777215) _
+'      Or (colorMode = "F" And rgbColor = 0) Then
+'        If MsgBox(MSG_SEL_DEFAULT_COLOR, vbOKCancel, APP_TITLE) = vbCancel Then
+'            Exit Sub
+'        End If
+'    End If
+'
+'    Application.ScreenUpdating = False
+'    Set rslt = ActiveCell
+'    For Each targetCell In ActiveSheet.UsedRange
+'        If colorMode = "B" Then
+'            If targetCell.Interior.Color = rgbColor Then  '// セル背景色の判定
+'                Set rslt = Union(rslt, targetCell)
+'            End If
+'        Else
+'            If targetCell.Font.Color = rgbColor Then      '// フォント色の判定
+'                Set rslt = Union(rslt, targetCell)
+'            End If
+'        End If
+'    Next
+'
+'    Call rslt.Select
+'    Application.ScreenUpdating = True
+'End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -544,7 +547,8 @@ Public Sub gsDrawLine_Header()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-    Application.ScreenUpdating = False
+'    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
     
     For Each childRange In Selection.Areas
         '// 罫線をクリア
@@ -602,7 +606,8 @@ Public Sub gsDrawLine_Header()
         End With
         'childRange.Interior.ColorIndex = COLOR_HEADER
     Next
-    Application.ScreenUpdating = True
+'    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
 End Sub
 
 
@@ -627,7 +632,8 @@ Public Sub gsDrawLine_Header_Vert()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-    Application.ScreenUpdating = False
+'    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
     
     For Each childRange In Selection.Areas
         '// 罫線をクリア
@@ -687,7 +693,8 @@ Public Sub gsDrawLine_Header_Vert()
     'childRange.Interior.ColorIndex = COLOR_HEADER
     Next
     
-    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
+'    Application.ScreenUpdating = True
 End Sub
 
 
@@ -703,7 +710,9 @@ Public Sub gsDrawLine_Data()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-    Application.ScreenUpdating = False
+    
+    Call gsSuppressAppEvents
+'    Application.ScreenUpdating = False
     
     '// V2.0より、文字位置は現状のままとする（Selection.VerticalAlignmentは変更しない）よう変更。
     '// 文字位置を上部に設定
@@ -730,7 +739,8 @@ Public Sub gsDrawLine_Data()
     Selection.Borders(xlDiagonalDown).LineStyle = xlNone
     Selection.Borders(xlDiagonalUp).LineStyle = xlNone
 
-    Application.ScreenUpdating = True
+'    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
 End Sub
 
 
@@ -845,7 +855,9 @@ Private Sub psSetHyperLink()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-    Application.ScreenUpdating = False
+    
+    Call gsSuppressAppEvents
+'    Application.ScreenUpdating = False
     
     For Each childRange In Selection.Areas
         tRange = gfGetTargetRange(ActiveSheet, childRange)
@@ -872,7 +884,8 @@ Private Sub psSetHyperLink()
             Exit For
         End If
     Next
-    Application.ScreenUpdating = True
+'    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
 End Sub
 
 
@@ -896,11 +909,8 @@ Private Sub psRemoveHyperLink()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-    Application.ScreenUpdating = False
     
     Call Selection.ClearHyperlinks
-  
-    Application.ScreenUpdating = True
 End Sub
 
 
@@ -943,7 +953,9 @@ Private Sub psSetGroup_Row()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-    Application.ScreenUpdating = False
+    
+'    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
     
   
     '// アウトラインの集計位置を変更
@@ -979,7 +991,8 @@ Private Sub psSetGroup_Row()
             End If
       Next
       
-      Application.ScreenUpdating = True
+      Call gsResumeAppEvents
+'      Application.ScreenUpdating = True
 End Sub
 
 
@@ -1001,7 +1014,9 @@ Private Sub psSetGroup_Col()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-    Application.ScreenUpdating = False
+    
+    Call gsSuppressAppEvents
+'    Application.ScreenUpdating = False
     
     '// アウトラインの集計位置を変更
     With ActiveSheet.Outline
@@ -1036,7 +1051,8 @@ Private Sub psSetGroup_Col()
         End If
     Next
     
-    Application.ScreenUpdating = True
+'    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
 End Sub
 
 
@@ -1067,7 +1083,8 @@ Private Sub psDistinctVals()
         Exit Sub
     End If
     
-    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
+'    Application.ScreenUpdating = False
     
     tRange = gfGetTargetRange(ActiveSheet, Selection)
     
@@ -1122,7 +1139,9 @@ Private Sub psDistinctVals()
     
     Set dict = Nothing
     
-    Application.ScreenUpdating = True
+'    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
+
 End Sub
 
 
@@ -1152,7 +1171,8 @@ Private Sub psGroupVals()
         Exit Sub
     End If
     
-    Application.ScreenUpdating = False
+    Call gsSuppressAppEvents
+'    Application.ScreenUpdating = False
     
     tRange = gfGetTargetRange(ActiveSheet, Selection)
     
@@ -1171,7 +1191,8 @@ Private Sub psGroupVals()
         Next
     Next
     
-    Application.ScreenUpdating = True
+'    Application.ScreenUpdating = True
+    Call gsResumeAppEvents
 End Sub
 
 
@@ -1436,7 +1457,7 @@ Public Sub sheetMenu_getContent(control As IRibbonControl, ByRef content)
         If sheetObj.Type = xlWorksheet Then
             '// IDは接頭辞をつけて通番を設定:MENU_PREFIX + idx
             stMenu = stMenu & "<button id=""" & MENU_PREFIX & CStr(idx) & """ label=""" & sheetObj.Name & """ onAction=""sheetMenuOnAction"""
-            If Not sheetObj.visible Then
+            If Not sheetObj.Visible Then
                 stMenu = stMenu & " enabled=""false"""
             End If
             stMenu = stMenu & " />"
@@ -1596,18 +1617,18 @@ On Error GoTo ErrorHandler
             End If
             
             If sheetObj.Type = xlWorksheet Then
-                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
+                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
             Else '//If (sheetObj.Type = 4) Or (sheetObj.Type = 1) Then
-                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
+                Call psPutMenu(barCtrl_sub.Controls, sheetObj.Name & " (&" & pfGetMenuIndex(sheetObj.Index, MENU_NUM) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
             End If
         Next
     Else
         '// ３０枚以下のシートはそのまま表示
         For Each sheetObj In wkBook.Sheets
             If sheetObj.Type = xlWorksheet Then
-                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
+                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
             Else '//if (sheetObj.Type = 4) Or (sheetObj.Type = 1) Then
-                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.visible = xlSheetVisible))
+                Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", 422, False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
             End If
         Next
     End If
@@ -1646,6 +1667,31 @@ On Error GoTo ErrorHandler
 
 ErrorHandler:
     Call MsgBox(MSG_NO_SHEET, vbOKOnly, APP_TITLE)
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   アプリケーションイベント抑制
+'// 説明：       各処理前に再描画や再計算を抑止設定する
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub gsSuppressAppEvents()
+    Application.ScreenUpdating = False                  '// 画面描画停止
+    Application.Cursor = xlWait                         '// ウエイトカーソル
+    Application.EnableEvents = False                    '// イベント抑止
+    Application.Calculation = xlCalculationManual       '// 手動計算
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   アプリケーションイベント抑制解除
+'// 説明：       各処理後に再描画や再計算を再開する。gsSuppressAppEvents の対
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub gsResumeAppEvents()
+    Application.StatusBar = False                       '// ステータスバーを消す
+    Application.Calculation = xlCalculationAutomatic    '// 自動計算
+    Application.EnableEvents = True
+    Application.Cursor = xlDefault
+    Application.ScreenUpdating = True
 End Sub
 
 

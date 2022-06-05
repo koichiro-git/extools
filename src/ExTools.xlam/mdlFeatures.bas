@@ -22,11 +22,11 @@ Option Base 0
 Public Sub ribbonCallback_f1(control As IRibbonControl)
     Select Case control.ID
         Case "AdjShapeElbowConn"                                                '// 鍵コネクタの補正
-            Call gsAdjustElbowConnector
+            Call psAdjustElbowConnector
         Case "AdjShapeRoundRect"                                                '// 四角形の角丸み補正
-            Call gsAdjustRoundRect
+            Call psAdjustRoundRect
         Case "AdjShapeBlockArrow"                                               '// ブロック矢印の傾き補正
-            Call gsAdjustBlockArrowHead
+            Call psAdjustBlockArrowHead
     End Select
 End Sub
 
@@ -35,7 +35,7 @@ End Sub
 '// メソッド：   鍵コネクタ補正
 '// 説明：       トーナメント表の鍵コネクタの補正位置を合わせる
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub gsAdjustElbowConnector()
+Private Sub psAdjustElbowConnector()
 On Error GoTo ErrorHandler
     Dim topObjName  As String   '// トーナメントの頂上オブジェクト名
     Dim target      As Double   '// 全コネクタのAdjustment(1)をこのターゲットに合わせる。「コネクタ幅×Adjust値の最小値)」頂上オブジェクトに最も近い値を採用する。
@@ -117,7 +117,7 @@ End Sub
 '// メソッド：   ブロック矢印の先端角度補正
 '// 説明：       ブロック矢印の先端角を、最も鈍角なものに合わせる
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub gsAdjustBlockArrowHead()
+Public Sub psAdjustBlockArrowHead()
     Dim target      As Double   '// 全ブロック矢印のAdjustment(1)をこのターゲットに合わせる。「短辺×Adjust値の最小値)」
     Dim bff         As Double
     Dim idx         As Integer
@@ -159,7 +159,7 @@ End Sub
 '// メソッド：   角の丸い四角形 丸み補正
 '// 説明：       角の丸い四角形の丸みを、最もR（径）の小さいものに合わせる
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub gsAdjustRoundRect()
+Public Sub psAdjustRoundRect()
     Dim target      As Double   '// 全ブロック矢印のAdjustment(1)をこのターゲットに合わせる。「短辺×Adjust値の最小値)」
     Dim bff         As Double
     Dim idx         As Integer

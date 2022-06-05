@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : SQL実行
@@ -34,6 +36,7 @@ Private pFileName           As String   '// ファイル名
 '// イベント： 検索実行ボタン クリック時
 Private Sub cmdExecute_Click()
     Call psExecSearch
+    Call Me.Hide
 End Sub
 
 
@@ -87,6 +90,8 @@ On Error GoTo ErrorHandler
     End If
   
     '// メインＳＱＬの問い合わせ
+    Call gsSuppressAppEvents
+    
     Application.StatusBar = MSG_QUERY
     Set rst = gADO.GetRecordset(txtScript.Text)
   
@@ -98,7 +103,7 @@ On Error GoTo ErrorHandler
   
     If rst.Fields.Count > 0 Then    '// SELECT文の場合
         If Not rst.EOF Then
-            Application.ScreenUpdating = False
+'            Application.ScreenUpdating = False
             
             '// ワークシートを追加。シート名はエクセルが命名
             Set wkSheet = ActiveWorkbook.Worksheets.Add(Count:=1)
@@ -138,12 +143,11 @@ On Error GoTo ErrorHandler
     End If
     
     Set rst = Nothing
-    Application.StatusBar = False
-    Application.ScreenUpdating = True
-    Call Me.Hide
+    Call gsResumeAppEvents
     Exit Sub
   
 ErrorHandler:
+    Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("frmGetRecord.psExecSearch", Err, gADO)
     Application.StatusBar = False
 End Sub
