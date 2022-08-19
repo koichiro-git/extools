@@ -1,11 +1,10 @@
-Attribute VB_Name = "mdlFeatures"
+Attribute VB_Name = "mdlAdjustShape"
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
-'// タイトル       : 共通関数
-'// モジュール     : mdlFeatures
-'// 説明           : フォームを持たない機能を記載
-'//                  ※mdlCommonの肥大化に伴うファイル分割
-'//                  ※個々のボタンから直接指定される仕組みにできる機能をこのモジュールに記載する
+'// タイトル       : オブジェクトの補正機能
+'// モジュール     : mdlAdjustShape
+'// 説明           : 鍵コネクタやブロック矢印などのオブジェクトの微調整機能
+'//                  ※旧mdlFeatures（V2.1.1まで）
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
@@ -19,7 +18,7 @@ Option Base 0
 '//              押されたコントロールのIDを基に処理を呼び出す。
 '// 引数：       control 対象コントロール
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub ribbonCallback_f1(control As IRibbonControl)
+Public Sub ribbonCallback_AdjustShape(control As IRibbonControl)
     Select Case control.ID
         Case "AdjShapeElbowConn"                                                '// 鍵コネクタの補正
             Call psAdjustElbowConnector
@@ -192,8 +191,9 @@ Public Sub psAdjustRoundRect()
             End If
         End With
     Next
-    
 End Sub
-    
 
 
+'// ////////////////////////////////////////////////////////////////////////////
+'// END
+'// ////////////////////////////////////////////////////////////////////////////

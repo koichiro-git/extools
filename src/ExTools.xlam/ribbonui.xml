@@ -4,7 +4,7 @@
 <tab idQ="nsExToolsShared:ExToolsTab" label="拡張" insertAfterMso="TabView" keytip="B">
 
 	<!--- **********[Sheet]********** -->
-	<group id="Group1" label="シート" >
+	<group idQ="nsExToolsShared:Group1" label="シート" insertBeforeQ="nsExToolsShared:Group6">
 		<dynamicMenu id="SheetMenu" label="シート　" size="large" imageMso="CodeEdit" getContent="sheetMenu_getContent" keytip="B"/>
 		<box id="Group1Box2" boxStyle="vertical">
 			<button id="SheetComp" label="シート比較" size="normal" imageMso="DataValidationCircleInvalid" onAction="ribbonCallback" />
@@ -18,59 +18,59 @@
 	</group>
 
 	<!--- **********[CellOperation]********** -->
-	<group id="Group3" label="値の操作">
+	<group idQ="nsExToolsShared:Group3" label="値の操作" insertBeforeQ="nsExToolsShared:Group6">
 		<gallery id="ConvVal" label="文字種の変換" size="normal" imageMso="FontSchemes">
-			<button id="chrUpper" label="大文字" imageMso="FontDialog" onAction="ribbonCallback" />
-			<button id="chrLower" label="小文字" onAction="ribbonCallback" />
-			<button id="chrInitCap" label="先頭大文字" imageMso="TextSmallCaps" onAction="ribbonCallback" />
-			<button id="chrZen" label="全角" imageMso="StylesStyleVisibility" onAction="ribbonCallback" />
-			<button id="chrHan" label="半角" onAction="ribbonCallback" />
+			<button id="chrUpper" label="大文字" imageMso="FontDialog" onAction="ribbonCallback_ConvVal" />
+			<button id="chrLower" label="小文字" onAction="ribbonCallback_ConvVal" />
+			<button id="chrInitCap" label="先頭大文字" imageMso="TextSmallCaps" onAction="ribbonCallback_ConvVal" />
+			<button id="chrZen" label="全角" imageMso="StylesStyleVisibility" onAction="ribbonCallback_ConvVal" />
+			<button id="chrHan" label="半角" onAction="ribbonCallback_ConvVal" />
 		</gallery>
-		<button id="TrimVal" label="トリム" size="normal" imageMso="Cut" onAction="ribbonCallback" />
-		<gallery id="Hyperlinks" label="ハイパーリンク" size="normal" imageMso="ribbonCallback">
-			<button id="AddLink" label="リンクの追加" imageMso="HyperlinkInsert" onAction="ribbonCallback" />
-			<button id="RemoveLink" label="リンクの削除" imageMso="HyperlinkRemove" onAction="ribbonCallback" />
+		<button id="TrimVal" label="トリム" size="normal" imageMso="Cut" onAction="ribbonCallback_ConvVal" />
+		<gallery id="Hyperlinks" label="ハイパーリンク" size="normal" imageMso="ribbonCallback_Hyperlink">
+			<button id="AddLink" label="リンクの追加" imageMso="HyperlinkInsert" onAction="ribbonCallback_Hyperlink" />
+			<button id="RemoveLink" label="リンクの削除" imageMso="HyperlinkRemove" onAction="ribbonCallback_Hyperlink" />
 		</gallery>
-		<button id="Copy2Clipboard" label="固定長コピー" keytip="L" size="normal" imageMso="Copy" onAction="ribbonCallback" />
-		<button id="Copy2CBMarkdown" label="Markdown表コピー" keytip="L" size="normal" imageMso="Copy" onAction="ribbonCallback" />
+		<button id="Copy2Clipboard" label="固定長コピー" keytip="L" size="normal" imageMso="Copy" onAction="ribbonCallback_Copy2CB" />
+		<button id="Copy2CBMarkdown" label="Markdown表コピー" keytip="L" size="normal" imageMso="Copy" onAction="ribbonCallback_Copy2CB" />
 		<gallery id="Grouping" label="グループ処理" size="normal" imageMso="OutlineSymbolsShowHide">
-			<button id="groupRow" label="グループ化(行)" imageMso="PivotMoveToFieldArea" onAction="ribbonCallback" />
-			<button id="groupCol" label="グループ化(列)" imageMso="PivotMoveToColumnArea" onAction="ribbonCallback" />
-			<button id="removeDup" label="重複値のカウント"  imageMso="RemoveDuplicates" onAction="ribbonCallback" />
-			<button id="listDup" label="重複値を階層表示" imageMso="MultilevelListGallery" onAction="ribbonCallback" />
+			<button id="groupRow" label="グループ化(行)" imageMso="PivotMoveToFieldArea" onAction="ribbonCallback_Group" />
+			<button id="groupCol" label="グループ化(列)" imageMso="PivotMoveToColumnArea" onAction="ribbonCallback_Group" />
+			<button id="removeDup" label="重複値のカウント"  imageMso="RemoveDuplicates" onAction="ribbonCallback_Group" />
+			<button id="listDup" label="重複値を階層表示" imageMso="MultilevelListGallery" onAction="ribbonCallback_Group" />
 		</gallery>
 	</group>
 
 	<!--- **********[Boarders/Charts]********** -->
-	<group id="Group4" label="罫線/オブジェクト">
-		<button id="BorderRowHead" label="行ヘッダの罫線" size="normal" imageMso="TableStyleRowHeaders" onAction="ribbonCallback" />
-		<button id="BorderColHead" label="列ヘッダの罫線" size="normal" imageMso="TableStyleColumnHeaders" onAction="ribbonCallback" />
-		<button id="BorderData" label="データ領域の罫線" size="normal" imageMso="BorderOutside" onAction="ribbonCallback" />
+	<group idQ="nsExToolsShared:Group4" label="罫線/オブジェクト" insertBeforeQ="nsExToolsShared:Group6">
+		<button id="BorderRowHead" label="行ヘッダの罫線" size="normal" imageMso="TableStyleRowHeaders" onAction="ribbonCallback_DrawLines" />
+		<button id="BorderColHead" label="列ヘッダの罫線" size="normal" imageMso="TableStyleColumnHeaders" onAction="ribbonCallback_DrawLines" />
+		<button id="BorderData" label="データ領域の罫線" size="normal" imageMso="BorderOutside" onAction="ribbonCallback_DrawLines" />
 		<button id="FitObjects" label="オブジェクトをセルに合わせる" size="normal" imageMso="DrawingCanvasFit" onAction="ribbonCallback" />
 		<gallery id="AdjSape" label="オブジェクトの補正" size="normal" imageMso="ShapesInsertGallery">
-			<button id="AdjShapeBlockArrow" label="ブロック矢印の先端を揃える" image="homebase16" onAction="ribbonCallback_f1" />
-			<button id="AdjShapeRoundRect" label="角丸四角形の丸みを揃える" image="roundRect16" onAction="ribbonCallback_f1" />
-			<button id="AdjShapeElbowConn" label="鍵コネクタの曲がり位置を揃える" imageMso="PivotDiagramAlignCenter" onAction="ribbonCallback_f1" />
+			<button id="AdjShapeBlockArrow" label="ブロック矢印の先端を揃える" image="homebase16" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeRoundRect" label="角丸四角形の丸みを揃える" image="roundRect16" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeElbowConn" label="鍵コネクタの曲がり位置を揃える" imageMso="PivotDiagramAlignCenter" onAction="ribbonCallback_AdjustShape" />
 		</gallery>
 	</group>
 
 	<!--- **********[Data]********** -->
-	<group id="Group2" label="データ">
+	<group idQ="nsExToolsShared:Group2" label="データ" insertBeforeQ="nsExToolsShared:Group6">
 		<button id="Select" label="SQL文実行" size="normal" imageMso="AdpVerifySqlSyntax" onAction="ribbonCallback" />
 		<gallery id="VLKUP" label="VLOOKUP" size="normal" imageMso="LookUp">
-			<button id="VLookupCopy" label="マスタ表領域を選択" imageMso="Copy" onAction="ribbonCallback" />
-			<button id="VLookupPaste" label="VLOOKUPとしてペースト" imageMso="Paste" onAction="ribbonCallback" />
+			<button id="VLookupCopy" label="マスタ表領域を選択" imageMso="Copy" onAction="ribbonCallback_Vlookup" />
+			<button id="VLookupPaste" label="VLOOKUPとしてペースト" imageMso="Paste" onAction="ribbonCallback_Vlookup" />
 		</gallery>
 	</group>
 
 	<!--- **********[Files/Search]********** -->
-	<group id="Group5" label="検索/ファイル">
+	<group idQ="nsExToolsShared:Group5" label="検索/ファイル" insertBeforeQ="nsExToolsShared:Group6">
 		<button id="AdvancedSearch" label="拡張検索" size="normal" imageMso="FindDialog" onAction="ribbonCallback" />
 		<button id="FileList" label="ファイル一覧" size="normal" imageMso="OtherActionsMenu" onAction="ribbonCallback" />
 	</group>
 
 	<!--- **********[Others]********** -->
-	<group idQ="nsExToolsShared:Group6" label="その他">
+	<group idQ="nsExToolsShared:Group6" label="その他" insertAfterQ="nsExToolsShared:Group5">
 		<button idQ="nsExToolsShared:OptPackAnchor" label="OptPackAnchor" size="normal" visible="false" />
 		<button id="InitTool" label="ツールの初期化" size="normal" imageMso="AccessRefreshAllLists" onAction="ribbonCallback" />
 		<button id="Version" label="バージョン情報"  size="normal" imageMso="RefreshStatus" onAction="ribbonCallback" />

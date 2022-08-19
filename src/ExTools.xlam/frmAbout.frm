@@ -31,7 +31,6 @@ Option Base 0
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
     lblVersion = APP_TITLE & Space(1) & APP_VERSION
-
 End Sub
 
 
@@ -55,4 +54,8 @@ Private Sub lblUserManual_Click()
     ThisWorkbook.FollowHyperlink Address:="https://koichiro-git.github.io/extools/"
 End Sub
 
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// END
+'// ////////////////////////////////////////////////////////////////////////////
 

@@ -1,0 +1,14 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" xmlns:nsExToolsShared="dummy">
+<ribbon startFromScratch="false">
+<tabs>
+<tab idQ="nsExToolsShared:ExToolsTab" label="拡張" insertAfterMso="TabView" keytip="B">
+	<group idQ="nsExToolsShared:Group6"  label="その他" insertAfterQ="nsExToolsShared:Group5">
+		<gallery id="OptPack" label="追加パック" size="normal" imageMso="AddInManager" insertBeforeQ="nsExToolsShared:OptPackAnchor">
+			<button id="FormatPhoneNumbers" label="電話番号ハイフン付与" imageMso="Call" onAction="ribbonCallback2" />
+			<button id="Translation" label="翻訳" imageMso="TranslateDocument" onAction="ribbonCallback2" />
+		</gallery>
+	</group>
+</tab>
+</tabs>
+</ribbon>
+</customUI>
