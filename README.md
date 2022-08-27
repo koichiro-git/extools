@@ -7,7 +7,7 @@
 
 ### 制作（Author）
 * 作成者：河崎耕一郎
-* E-mail：excelextentions@gmail.com
+* E-mail：koichiro.kawasaki@gmail.com
 
 ### ライセンス（License）
 ExTools is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
