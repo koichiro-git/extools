@@ -14,7 +14,7 @@ Option Base 0
 '// ////////////////////////////////////////////////////////////////////////////
 '// プライベート定数
 
-'// 市外局番リスト
+'// 市外局番リスト(元ネタ＝総務省 https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/shigai_list.html)
 Private Const AREA_CODE_LIST = _
     "011/0123/0124/0125/0126/01267/0133/0134/0135/0136/01372/01374/0137/01377/0138/01392/0139/01397/01398/0142/0143/0144/0145/01456/01457/0146/01466/0152/0153/0154/01547/015/0155/01558/0156/01564/0157/0158/01586/01587/0162/01632/01634/01635/0163/0164/01648/0165/01654/01655/01656/01658/0166/0167/0172/0173/0174/0175/0176/017/0178/0179/0182/0183/0184/0185/0186/0187/018/0191/0192/0193/0194/0195/019/0197/0198/" & _
     "022/0220/0223/0224/0225/0226/0228/0229/0233/0234/0235/023/0237/0238/0240/0241/0242/0243/0244/024/0246/0247/0248/025/0250/0254/0255/0256/0257/0258/0259/0260/0261/026/0263/0264/0265/0266/0267/0268/0269/0270/027/0274/0276/0277/0278/0279/0280/0282/0283/0284/0285/028/0287/0288/0289/0291/029/0293/0294/0295/0296/0297/0299/" & _
@@ -24,16 +24,32 @@ Private Const AREA_CODE_LIST = _
     "082/0820/0823/0824/0826/0827/0829/083/0833/0834/0835/0836/0837/0838/08387/08388/08396/0845/0846/0847/08477/0848/084/08512/08514/0852/0853/0854/0855/0856/0857/0858/0859/086/0863/0865/0866/0867/0868/0869/0875/0877/087/0879/0880/0883/0884/0885/088/0887/0889/0892/0893/0894/0895/0896/0897/0898/089/" & _
     "092/0920/093/0930/0940/0942/0943/0944/0946/0947/0948/0949/0950/0952/0954/0955/0956/0957/095/0959/096/0964/0965/0966/0967/0968/0969/0972/0973/0974/097/0977/0978/0979/098/0980/09802/0982/0983/0984/0985/0986/0987/09912/09913/099/0993/0994/0995/0996/09969/0997/"
 
+'// 携帯電話・IP Phoneなど11桁局番
 Private Const MOBILE_IP_CODE_LIST = "090/080/070/060/050"
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   リボンボタンコールバック管理
+'// 説明：       リボンからのコールバックをつかさどる
+'//              押されたコントロールのIDを基に処理を呼び出す。
+'// 引数：       control 対象コントロール
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub ribbonCallback_PhoneNum(control As IRibbonControl)
+    Select Case control.ID
+        Case "FormatPhoneNumbers"                       '// 電話番号補正
+            Call psFormatPhoneNumbers
+    End Select
+End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   電話番号ハイフン付与 主関数
 '// 説明：       選択範囲の文字列を電話番号と見なしてハイフンを付与する
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub gsFormatPhoneNumbers()
+Private Sub psFormatPhoneNumbers()
 On Error GoTo ErrorHandler
-    Dim tCell     As Range    '// 変換対象セル
+    Dim tCell       As Range    '// 変換対象セル
+    Dim bff         As String   '// 変換後文字列格納バッファ
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
@@ -44,10 +60,16 @@ On Error GoTo ErrorHandler
     
     If Selection.Count > 1 Then
         For Each tCell In Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues)
-            tCell.Value = pfApplyPhoneNumberFormat(tCell.Text)
+            bff = pfApplyPhoneNumberFormat(tCell.Text)
+            If bff <> BLANK Then    '// 変換ロジックからブランクが戻された場合は無視
+                tCell.Value = bff
+            End If
         Next
     Else
-        ActiveCell.Value = pfApplyPhoneNumberFormat(ActiveCell.Text)
+        bff = pfApplyPhoneNumberFormat(ActiveCell.Text)
+        If bff <> BLANK Then        '// 変換ロジックからブランクが戻された場合は無視
+            ActiveCell.Value = pfApplyPhoneNumberFormat(bff)
+        End If
     End If
     
     Call gsResumeAppEvents
@@ -61,7 +83,8 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   電話番号ハイフン付与
 '// 説明：       引数の文字列に市外局番に応じたハイフンを付与する
-'//              gsFormatPhoneNumbers から呼び出される実処理
+'//              該当する市外局番が無い場合、無効な文字列の場合はブランクを返す
+'//              psFormatPhoneNumbers から呼び出される実処理
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfApplyPhoneNumberFormat(originalStr As String) As String
     Dim targetVal As String
@@ -70,7 +93,9 @@ Private Function pfApplyPhoneNumberFormat(originalStr As String) As String
     
     targetVal = pfPicNumerics(originalStr)
     
-    If targetVal = BLANK Then
+    If targetVal = BLANK Then '// 空白
+        rslt = BLANK
+    ElseIf Left(targetVal, 1) <> "0" Then  '// 先頭がゼロでないばあい
         rslt = BLANK
     ElseIf InStr(1, MOBILE_IP_CODE_LIST, Left(targetVal, 3)) > 0 Then
         '// 携帯・IP Phone
@@ -83,7 +108,6 @@ Private Function pfApplyPhoneNumberFormat(originalStr As String) As String
                 Exit For
             End If
         Next
-        rslt = IIf(rslt = "", "N/A", rslt)
     End If
     
     pfApplyPhoneNumberFormat = rslt

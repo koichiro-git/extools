@@ -14,7 +14,7 @@ Option Base 0
 '// アプリケーション定数
 
 '// バージョン
-Public Const OPTION_PACK_VERSION      As String = "2"                                               '// このモジュール固有のバージョン（管理用通し番号）
+Public Const OPTION_PACK_VERSION      As String = "3"                                               '// このモジュール固有のバージョン（管理用通し番号）
 
 '// システム定数
 Public Const PROJECT_NAME             As String = "ExToolsOptionalPack"                             '// 本アドイン名称
@@ -177,10 +177,8 @@ End Sub
 '//              押されたコントロールのIDを基に処理を呼び出す。
 '// 引数：       control 対象コントロール
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub ribbonCallback2(control As IRibbonControl)
+Public Sub ribbonCallback(control As IRibbonControl)
     Select Case control.ID
-        Case "FormatPhoneNumbers"                       '// 電話番号補正
-            Call gsFormatPhoneNumbers
         Case "Translation"                              '// 翻訳
             Call frmTranslation.Show
     End Select
@@ -190,10 +188,13 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   iniファイル設定値取得
 '// 説明：       xlamファイルと同名のiniファイルから指定された値を取得する
+'//              読み込めない場合は空白を返す
+'//              多量の項目を読み込むことは想定していない（毎回ファイルオープンが走るため）
 '// 引数：       section セクション
 '//              key     識別キー
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfGetIniFileSetting(section As String, key As String) As String
+On Error GoTo ErrorHandler
     Dim sValue      As String   '// 取得バッファ
     Dim lSize       As Long     '// 取得バッファのサイズ
     Dim lRet        As Long     '// 戻り値
@@ -204,6 +205,10 @@ Public Function gfGetIniFileSetting(section As String, key As String) As String
     
     lRet = GetPrivateProfileString(section, key, BLANK, sValue, lSize, Replace(Application.VBE.VBProjects(PROJECT_NAME).Filename, ".xlam", ".ini"))
     gfGetIniFileSetting = Trim(Left(sValue, InStr(sValue, Chr(0)) - 1))
+    Exit Function
+
+ErrorHandler:
+    gfGetIniFileSetting = BLANK
 End Function
 
 

@@ -26,8 +26,8 @@ Option Base 0
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// プライベート定数
-Private Const URL_DEEPL_FREE = "https://api-free.deepl.com/v2/translate?"
-Private Const URL_DEEPL_LICENSED = "https://api.deepl.com/v2/translate?"
+Private Const URL_DEEPL_FREE = "https://api-free.deepl.com/v2/"
+Private Const URL_DEEPL_LICENSED = "https://api.deepl.com/v2/"
 
 Private Const SEPARATOR = "--" + vbLf
 Private Const TAG_LINE_FEED = "<LF/>"
@@ -37,9 +37,13 @@ Private auth_key        As String
 Private license         As String
 Private url_deepl       As String
 
+
 '// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
+On Error GoTo ErrorHandler
+    Dim captionTxt  As String
+    
     '// 設定ファイルからキーを読み込み
     auth_key = gfGetIniFileSetting("TRANSLATE", "DEEPL_AUTH_KEY")   '// 認証キー
     license = gfGetIniFileSetting("TRANSLATE", "DEEPL_LICENSE")     '// ライセンス（FREE/PRO）
@@ -52,18 +56,25 @@ Private Sub UserForm_Initialize()
     '// コンボボックス設定
     Call gsSetCombo(cmbLanguage, CMB_TRN_LANGUAGE, 0)
     Call gsSetCombo(cmbOutput, CMB_TRN_OUTPUT, 0)
-
+    
     '// キャプション設定
+        
     frmTranslation.Caption = IIf(license <> "FREE", BLANK, LBL_TRN_FORM & " " & pfGetServiceUsage)
     lblLanguage.Caption = LBL_TRN_LANG
     lblOutput.Caption = LBL_TRN_OUTPUT
+    Exit Sub
+
+ErrorHandler:
+    Call gsShowErrorMsgDlg_VBA("frmTranslate.psTranslate_DeepL", Err)
+    Call MsgBox(MSG_SERVICE_TRANS_NOT_REACHABLE, vbOKOnly, APP_TITLE)
+    Call Unload(Me)
 End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
 '// イベント： 閉じるボタン クリック時
 Private Sub cmdClose_Click()
-    Call Me.Hide
+    Call Unload(Me) '// 接続を確認するため毎回アンロード
 End Sub
 
 
@@ -87,7 +98,7 @@ Private Sub cmdExecute_Click()
     Call psTranslate_DeepL(tCells)  '// DeepL
     
     Call gsResumeAppEvents
-    Call Me.Hide
+    Call Unload(Me)
 End Sub
 
 
@@ -97,7 +108,7 @@ End Sub
 '// 引数：       tCells 対象範囲
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psTranslate_DeepL(tCells As Range)
-'On Error GoTo ErrorHandler
+On Error GoTo ErrorHandler
     Dim httpReq         As New XMLHTTP60
     Dim htmlDoc         As New HTMLDocument
     Dim reqParam        As String
@@ -114,7 +125,7 @@ Private Sub psTranslate_DeepL(tCells As Range)
                    "&text=" & sourceText & _
                    "&tag_handling=xml"
         
-        Call httpReq.Open("POST", url_deepl)
+        Call httpReq.Open("POST", url_deepl & "translate")
         Call httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
         Call httpReq.send(reqParam)
         
@@ -141,7 +152,7 @@ Private Sub psTranslate_DeepL(tCells As Range)
                 tCell.Characters(Start:=appendIdx, Length:=Len(resultText)).Font.Color = RGB(0, 0, 255)
             Case 1  '// 原文の上
                 appendIdx = Len(tCell.Text)
-                tCell.Value = resultText & vbLf & SEPARATOR & vbLf & tCell.Text
+                tCell.Value = resultText & vbLf & SEPARATOR & tCell.Text
                 tCell.Characters(Start:=1, Length:=Len(resultText)).Font.Color = RGB(0, 0, 255)
             Case 2  '// 原文を上書き
                 tCell.Value = resultText
@@ -158,7 +169,6 @@ Private Sub psTranslate_DeepL(tCells As Range)
         End Select
     Next
     
-'    httpReq.Close
     Set httpReq = Nothing
     
     Exit Sub
@@ -204,15 +214,15 @@ End Function
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   サービス使用状況取得
 '// 説明：       翻訳サービスからモニタリング状況を取得し、文字列で戻す
+'//              例外処理は呼び出しもとで実装。HTTPエラーの場合はエラーメッセージを戻す
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetServiceUsage() As String
-On Error GoTo ErrorHandler
     Dim httpReq         As New XMLHTTP60
     Dim reqParam        As String
     Dim sourceText      As String
     Dim resultText      As String
     
-    Call httpReq.Open("POST", "https://api-free.deepl.com/v2/usage?")
+    Call httpReq.Open("POST", url_deepl & "usage")
     Call httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     reqParam = "&auth_key=" & auth_key
     Call httpReq.send(reqParam)
@@ -225,15 +235,11 @@ On Error GoTo ErrorHandler
     If httpReq.Status = 200 Then
         pfGetServiceUsage = pfFormatUsage(httpReq.responseText)
     Else
-        pfGetServiceUsage = BLANK
+        pfGetServiceUsage = "Error.  HTTP Status = " & httpReq.Status
     End If
     
-'    httpReq.Close
     Set httpReq = Nothing
     Exit Function
-    
-ErrorHandler:
-    Call gsShowErrorMsgDlg_VBA("frmTranslate.pfGetServiceUsage", Err)
 End Function
 
 

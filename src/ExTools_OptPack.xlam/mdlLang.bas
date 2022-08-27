@@ -153,6 +153,8 @@ Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "バーコードはExcel20
 'Public Const MSG_EMPTY_DIR                      As String = "空ディレクトリ"
 'Public Const MSG_ZERO_BYTE                      As String = "ゼロバイト"
 
+'// メッセージ：frmTranslation
+Public Const MSG_SERVICE_TRANS_NOT_REACHABLE    As String = "翻訳サイトにアクセスできません。設定とインターネット接続を確認してください。"
 
 
 '// ////////////////////
@@ -525,6 +527,9 @@ Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "Barcode function is
 'Public Const MSG_ERR_PRIV                       As String = "Error: Please check your privileges or other settings."
 'Public Const MSG_EMPTY_DIR                      As String = "Empty"
 'Public Const MSG_ZERO_BYTE                      As String = "Zero byte file"
+
+'// メッセージ：frmTranslation
+Public Const MSG_SERVICE_TRANS_NOT_REACHABLE    As String = "翻訳サイトにアクセスできません。設定とインターネット接続を確認してください。"
 
 
 '// ////////////////////
