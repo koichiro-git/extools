@@ -31,6 +31,7 @@ Private Const URL_DEEPL_LICENSED = "https://api.deepl.com/v2/"
 
 Private Const SEPARATOR = "--" + vbLf
 Private Const TAG_LINE_FEED = "<LF/>"
+Private Const CAP_ERROR = "[!Error]"
 
 '// プライベート変数
 Private auth_key        As String
@@ -42,7 +43,7 @@ Private url_deepl       As String
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
 On Error GoTo ErrorHandler
-    Dim captionTxt  As String
+    Dim strUsage        As String
     
     '// 設定ファイルからキーを読み込み
     auth_key = gfGetIniFileSetting("TRANSLATE", "DEEPL_AUTH_KEY")   '// 認証キー
@@ -53,21 +54,26 @@ On Error GoTo ErrorHandler
         url_deepl = URL_DEEPL_FREE
     End If
     
+    '// 使用状況取得（使用文字数 / リミット）。取得できない場合は実行ボタンを無効化
+    strUsage = pfGetServiceUsage
+    If strUsage = BLANK Then
+        Call MsgBox(MSG_SERVICE_TRANS_NOT_REACHABLE, vbOKOnly, APP_TITLE)
+        cmdExecute.Enabled = False
+    End If
+    
+    '// キャプション設定
+    frmTranslation.Caption = LBL_TRN_FORM & " " & strUsage
+    lblLanguage.Caption = LBL_TRN_LANG
+    lblOutput.Caption = LBL_TRN_OUTPUT
+    
     '// コンボボックス設定
     Call gsSetCombo(cmbLanguage, CMB_TRN_LANGUAGE, 0)
     Call gsSetCombo(cmbOutput, CMB_TRN_OUTPUT, 0)
-    
-    '// キャプション設定
-        
-    frmTranslation.Caption = IIf(license <> "FREE", BLANK, LBL_TRN_FORM & " " & pfGetServiceUsage)
-    lblLanguage.Caption = LBL_TRN_LANG
-    lblOutput.Caption = LBL_TRN_OUTPUT
     Exit Sub
 
 ErrorHandler:
     Call gsShowErrorMsgDlg_VBA("frmTranslate.psTranslate_DeepL", Err)
-    Call MsgBox(MSG_SERVICE_TRANS_NOT_REACHABLE, vbOKOnly, APP_TITLE)
-    Call Unload(Me)
+    Call Unload(Me) '// 接続を確認するため毎回アンロード
 End Sub
 
 
@@ -168,11 +174,10 @@ On Error GoTo ErrorHandler
                 End If
         End Select
     Next
-    
-    Set httpReq = Nothing
-    
     Exit Sub
+
 ErrorHandler:
+    Set httpReq = Nothing
     Call gsResumeAppEvents
     Call gsShowErrorMsgDlg_VBA("frmTranslate.psTranslate_DeepL", Err)
 End Sub
@@ -214,7 +219,7 @@ End Function
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   サービス使用状況取得
 '// 説明：       翻訳サービスからモニタリング状況を取得し、文字列で戻す
-'//              例外処理は呼び出しもとで実装。HTTPエラーの場合はエラーメッセージを戻す
+'//              例外処理は呼び出しもとで実装。エラー時は空白を戻す
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetServiceUsage() As String
     Dim httpReq         As New XMLHTTP60
@@ -235,11 +240,10 @@ Private Function pfGetServiceUsage() As String
     If httpReq.Status = 200 Then
         pfGetServiceUsage = pfFormatUsage(httpReq.responseText)
     Else
-        pfGetServiceUsage = "Error.  HTTP Status = " & httpReq.Status
+        pfGetServiceUsage = BLANK
     End If
     
     Set httpReq = Nothing
-    Exit Function
 End Function
 
 
