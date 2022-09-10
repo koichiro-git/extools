@@ -13,8 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : SQL実行
@@ -97,14 +95,12 @@ On Error GoTo ErrorHandler
   
     If rst Is Nothing Then
         Call gsShowErrorMsgDlg("frmGetRecord.psExecSearch", Err, gADO)
-        Application.StatusBar = False
+        Call gsResumeAppEvents
         Exit Sub
     End If
   
     If rst.Fields.Count > 0 Then    '// SELECT文の場合
         If Not rst.EOF Then
-'            Application.ScreenUpdating = False
-            
             '// ワークシートを追加。シート名はエクセルが命名
             Set wkSheet = ActiveWorkbook.Worksheets.Add(Count:=1)
             '// 結果表示
@@ -136,7 +132,6 @@ On Error GoTo ErrorHandler
         Call MsgBox(gADO.DmlRows & MSG_ROWS_PROCESSED, vbOKOnly, APP_TITLE)
     End If
     
-  
     '// 後処理
     If rst.State = adStateOpen Then
         Call rst.Close
@@ -293,18 +288,6 @@ On Error GoTo ErrorHandler
         '// データを配列（列, 行）に格納
         For idxCol = 0 To IIf(cntCol > Columns.Count - 1, Columns.Count - 1, cntCol - 1)
             varResult(idxCol, idxRow - 1) = IIf(IsNull(rst.Fields(idxCol).Value), BLANK, rst.Fields(idxCol).Value)
-'            If (idxCol > groupIdx) Then
-'                '// 最小レベル以降の場合、値を描画
-'                varResult(idxResult, idxCol) = IIf(IsNull(rst.Fields(idxCol - 1).Value), BLANK, rst.Fields(idxCol - 1).Value)
-'            ElseIf (aryLastVal(idxCol - 1) = BLANK) Or (aryLastVal(idxCol - 1) <> rst.Fields(idxCol - 1).Value) Then
-'                '// 直前の値が異なる場合 (含 直前の値がブランクの場合)
-'                '// 配下のレベルの直前の値をクリア
-'                For aryIdx = groupIdx To idxCol Step -1
-'                    aryLastVal(aryIdx - 1) = BLANK
-'                Next
-'                varResult(idxResult, idxCol) = IIf(IsNull(rst.Fields(idxCol - 1).Value), BLANK, rst.Fields(idxCol - 1).Value)
-'                aryLastVal(idxCol - 1) = IIf(IsNull(rst.Fields(idxCol - 1).Value), BLANK, rst.Fields(idxCol - 1).Value)
-'            End If
         Next
         Call rst.MoveNext
     Loop
@@ -315,7 +298,6 @@ On Error GoTo ErrorHandler
     '// 罫線を描画
     Call wkSheet.UsedRange.Select
     Call gsDrawLine_Data
-    
     Exit Sub
 
 ErrorHandler:
