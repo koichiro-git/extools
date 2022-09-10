@@ -13,8 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : About画面フォーム
@@ -30,7 +28,7 @@ Option Base 0
 '// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
-    lblVersion = APP_TITLE & Space(1) & APP_VERSION
+    lblVersion.Caption = APP_TITLE & Space(1) & APP_VERSION
 End Sub
 
 
