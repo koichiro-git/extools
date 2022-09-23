@@ -69,14 +69,20 @@ On Error GoTo ErrorHandler
     Dim isConnected As Boolean
     
     '// 既存のコネクションを切断する
+    If Not gADO Is Nothing Then
+        Call gADO.CloseConnection
+    End If
     Set gADO = Nothing
   
     '// 入力チェック
     If (cmbMethod.Value = dct_excel) Then     '// Excelへの接続では現在のファイルチェック
         If (ActiveWorkbook.Path = BLANK) Or (Not ActiveWorkbook.Saved) Then
-            Call MsgBox(MSG_NEED_EXCEL_SAVED, vbOKOnly, APP_TITLE)
-            cmbMethod.SetFocus
-            Exit Sub
+            If MsgBox(MSG_NEED_EXCEL_SAVED, vbYesNo, APP_TITLE) = vbNo Then
+                cmbMethod.SetFocus
+                Exit Sub
+            Else
+                Call ActiveWorkbook.Save
+            End If
         End If
     ElseIf (txtUserId.Text = BLANK) Then      '// ユーザID
         Call MsgBox(MSG_NEED_FILL_ID, vbOKOnly, APP_TITLE)
