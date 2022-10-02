@@ -148,31 +148,31 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function Initialize(HostString As String, userID As String, password As String, connType As udDbConnType) As Boolean
 On Error GoTo ErrorHandler
-  Call InitError
-  Set AdoConnection = CreateObject("ADODB.Connection")
-  
-  AdoConnection.CursorLocation = adUseClient    '// DML実行時に更新行数を得るための設定
-  
-  Select Case connType
+    Call InitError
+    Set AdoConnection = CreateObject("ADODB.Connection")
+    
+    AdoConnection.CursorLocation = adUseClient    '// DML実行時に更新行数を得るための設定
+    
+    Select Case connType
 '    Case dct_oracle
 '      Call AdoConnection.Open("Provider=MSDAORA;Data Source=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
-    Case dct_odbc
-      Call AdoConnection.Open("Provider=MSDASQL;DSN=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
-      pDataSourceName = HostString
-    Case dct_excel
-      Call AdoConnection.Open("Driver={Microsoft Excel Driver (*.xls)};DBQ=" & HostString & ";Extended Properies=""Excel 12.0"";HDR=1;ReadOnly=0")
-      pDataSourceName = ActiveWorkbook.Name
-  End Select
+        Case dct_odbc
+            Call AdoConnection.Open("Provider=MSDASQL;DSN=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
+        Case dct_excel
+            Call AdoConnection.Open("Driver={Microsoft Excel Driver (*.xls)};DBQ=" & HostString & ";Extended Properies=""Excel 12.0"";HDR=1;ReadOnly=0")
+            pDataSourceName = HostString
+    End Select
   
-  pDbType = connType
-  Initialize = True
-  Exit Function
+    pDbType = connType
+    pDataSourceName = HostString
+    Initialize = True
+    Exit Function
 
 ErrorHandler:
-  Call SetError
-  Initialize = False
-  Set AdoConnection = Nothing
-  pDbType = dct_none
+    Call SetError
+    Initialize = False
+    Set AdoConnection = Nothing
+    pDbType = dct_none
 End Function
 
 
@@ -201,8 +201,8 @@ On Error GoTo ErrorHandler
 '  Set GetRecordset = rst
 Exit Function
 ErrorHandler:
-  Call SetError
-  Set GetRecordset = Nothing
+    Call SetError
+    Set GetRecordset = Nothing
 End Function
 
 
@@ -211,9 +211,9 @@ End Function
 '// 説明：       ADOセッションを閉じる
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub CloseConnection()
-  If Not AdoConnection Is Nothing Then
-    AdoConnection.Close
-  End If
+    If Not AdoConnection Is Nothing Then
+        AdoConnection.Close
+    End If
 End Sub
 
 

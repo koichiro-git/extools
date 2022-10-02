@@ -56,7 +56,7 @@ Private Sub cmdExecute_Click()
         End If
         '// ï€ë∂å„ÅAçƒê⁄ë±
         Call ActiveWorkbook.Save
-        isConnected = gADO.Initialize(ActiveWorkbook.Path & "\" & ActiveWorkbook.Name, BLANK, BLANK, dct_excel)
+        isConnected = gADO.Initialize(gADO.DataSourceName, BLANK, BLANK, dct_excel)
         If Not isConnected Then
             Call MsgBox(gADO.ErrorText, vbOKOnly, APP_TITLE)
             Exit Sub
@@ -86,7 +86,7 @@ On Error GoTo ErrorHandler
             Case dct_odbc
                 frmGetRecord.Caption = LBL_GRC_FORM & " / ODBC (" & gADO.DataSourceName & ")"
             Case dct_excel
-                frmGetRecord.Caption = LBL_GRC_FORM & " / Excel (" & gADO.DataSourceName & ")"
+                frmGetRecord.Caption = LBL_GRC_FORM & " / Excel (" & ActiveWorkbook.Name & ")"
         End Select
     End If
     Exit Sub
@@ -403,16 +403,7 @@ Private Function pfGetSampleSQL(wkSheet As Worksheet) As String
     Next
     
     rslt = "SELECT " & strSelect & vbLf & _
-           "  FROM " & "[" & wkSheet.Name & "$] a INNER JOIN [Sheet1$] b" & vbLf & _
-           "    ON a." & DBQ & wkSheet.Cells(1, 1).Text & DBQ & " = b." & DBQ & wkSheet.Cells(1, 1).Text & DBQ & vbLf & _
-           " WHERE a." & DBQ & wkSheet.Cells(1, 1).Text & DBQ & " = " & DBQ & wkSheet.Cells(2, 1).Text & DBQ & vbLf & _
-           " ORDER BY a." & DBQ & wkSheet.Cells(1, 1).Text & DBQ & vbLf & _
-           vbLf & vbLf & _
-           "/*" & vbLf & _
-           "SUM()," & vbLf & _
-           "AVG()," & vbLf & _
-           "COUNT()," & vbLf & _
-           "*/"
+           "  FROM " & "[" & wkSheet.Name & "$] a"
 
     pfGetSampleSQL = rslt
 End Function
