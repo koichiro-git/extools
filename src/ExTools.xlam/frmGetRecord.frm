@@ -28,20 +28,73 @@ Option Base 0
 '// ////////////////////////////////////////////////////////////////////////////
 '// プライベート変数
 Private pFileName           As String   '// ファイル名
+Private pAutoSave           As Boolean  '// 自動保存
 
 
 '// //////////////////////////////////////////////////////////////////
 '// イベント： 検索実行ボタン クリック時
 Private Sub cmdExecute_Click()
-    Call psExecSearch
-    Call Me.Hide
+    Dim isConnected     As Boolean
+    
+    '// 何らかの原因で（VBAが停止された場合など）ADOが空の場合は未ログインとして終了
+    If gADO Is Nothing Then
+        frmGetRecord.Caption = LBL_GRC_FORM
+        cmdExecute.Enabled = False
+        
+        Call MsgBox(MSG_NOT_LOGGEDIN, vbOKOnly, APP_TITLE)
+        Exit Sub
+    End If
+    
+    '// エクセルから検索の場合はセーブ状況を確認
+    If gADO.DbType = dct_excel Then
+        If Not ActiveWorkbook.Saved And pAutoSave = False Then
+            If MsgBox(MSG_NOT_SAVED, vbYesNo, APP_TITLE) = vbNo Then
+                Exit Sub '// 保存しない場合は終了
+            Else
+                pAutoSave = True    '// ダイアログでYesが押された場合、次回からは自動保存
+            End If
+        End If
+        '// 保存後、再接続
+        Call ActiveWorkbook.Save
+        isConnected = gADO.Initialize(gADO.DataSourceName, BLANK, BLANK, dct_excel)
+        If Not isConnected Then
+            Call MsgBox(gADO.ErrorText, vbOKOnly, APP_TITLE)
+            Exit Sub
+        End If
+    End If
+    
+    If pfExecSearch = True Then '// SQL実行が成功した場合のみ閉じる
+        Call Me.Hide
+    End If
 End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
 '// イベント： ログインボタン クリック時
 Private Sub cmdLogin_Click()
-    frmLogin.Show
+On Error GoTo ErrorHandler
+    
+    Call frmLogin.Show
+    
+    '// ログイン状態によりキャプションと実行ボタンのEnabledを設定
+    If gADO Is Nothing Then
+        frmGetRecord.Caption = LBL_GRC_FORM
+        cmdExecute.Enabled = False
+    Else
+        cmdExecute.Enabled = True
+        Select Case gADO.DbType
+            Case dct_odbc
+                frmGetRecord.Caption = LBL_GRC_FORM & " / ODBC (" & gADO.DataSourceName & ")"
+            Case dct_excel
+                frmGetRecord.Caption = LBL_GRC_FORM & " / Excel (" & ActiveWorkbook.Name & ")"
+        End Select
+    End If
+    Exit Sub
+    
+ErrorHandler:
+    frmGetRecord.Caption = LBL_GRC_FORM
+    cmdExecute.Enabled = False
+    pAutoSave = False
 End Sub
 
 
@@ -53,11 +106,28 @@ End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
+'// イベント： サンプルSQL挿入ボタン クリック時
+Private Sub cmdSample_Click()
+    '// 実行確認
+    If MsgBox(MSG_CONFIRM, vbOKCancel, APP_TITLE) = vbCancel Then
+        Exit Sub
+    End If
+    
+    txtScript.Text = pfGetSampleSQL(ActiveSheet) & vbLf & _
+                    "-- " & vbLf & _
+                    txtScript.Text
+End Sub
+
+
+'// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
     Call gsSetCombo(cmbDateFormat, "0,yyyy/mm/dd;1,yyyy/mm/dd hh:mm:ss", 0)
     Call gsSetCombo(cmdHeader, CMB_GRC_HEADER, 0)
-
+    
+    pAutoSave = False
+    cmdExecute.Enabled = False  '// 実行ボタンはデフォルトで無効
+    
     '// キャプション設定
     frmGetRecord.Caption = LBL_GRC_FORM
     fraOptions.Caption = LBL_GRC_OPTIONS
@@ -73,17 +143,20 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：    クエリー実行
 '// 説明：        引数のクエリーを実行し、シートに出力します。
+'// 戻り値：      成功すればTrue、失敗すればFalse（成功した場合は呼び出しもとでフォームを閉じる）
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub psExecSearch()
+Private Function pfExecSearch() As Boolean
 On Error GoTo ErrorHandler
     Dim wkSheet       As Worksheet
     Dim rst           As Object
     Dim headerRows    As Integer
   
+    pfExecSearch = False
+    
     If gADO Is Nothing Then
         Call frmLogin.Show
         If gADO Is Nothing Then
-            Exit Sub
+            Exit Function
         End If
     End If
   
@@ -92,11 +165,11 @@ On Error GoTo ErrorHandler
     
     Application.StatusBar = MSG_QUERY
     Set rst = gADO.GetRecordset(txtScript.Text)
-  
+    
     If rst Is Nothing Then
         Call gsShowErrorMsgDlg("frmGetRecord.psExecSearch", Err, gADO)
         Call gsResumeAppEvents
-        Exit Sub
+        Exit Function
     End If
   
     If rst.Fields.Count > 0 Then    '// SELECT文の場合
@@ -139,13 +212,15 @@ On Error GoTo ErrorHandler
     
     Set rst = Nothing
     Call gsResumeAppEvents
-    Exit Sub
+    pfExecSearch = True
+    Exit Function
   
 ErrorHandler:
     Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("frmGetRecord.psExecSearch", Err, gADO)
     Application.StatusBar = False
-End Sub
+'    pAutoSave = False
+End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -303,6 +378,36 @@ On Error GoTo ErrorHandler
 ErrorHandler:
     Call gsShowErrorMsgDlg("frmGetRecord.psDrawDataRows", Err)
 End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：    サンプルSQL生成
+'// 説明：        カレントシートの1行目を列とみなし、SELECT文を生成して戻す
+'// 引数：        wksheet: ワークシート
+'// 戻り値：      SELECT文
+'// ////////////////////////////////////////////////////////////////////////////
+Private Function pfGetSampleSQL(wkSheet As Worksheet) As String
+    Dim idxCol  As Integer
+    Dim strSelect   As String
+    Dim rslt        As String
+    
+    For idxCol = 1 To 256
+        If wkSheet.Cells(1, idxCol).Text = "" Then
+            Exit For
+        End If
+        
+        If idxCol > 1 Then
+            strSelect = strSelect & "," & vbLf & Space(7)
+        End If
+        strSelect = strSelect & "a." & DBQ & Replace(wkSheet.Cells(1, idxCol).Text, vbLf, "_") & DBQ
+    Next
+    
+    rslt = "SELECT " & strSelect & vbLf & _
+           "  FROM " & "[" & wkSheet.Name & "$] a"
+
+    pfGetSampleSQL = rslt
+End Function
+
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// END.

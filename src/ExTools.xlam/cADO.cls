@@ -10,14 +10,10 @@ Attribute VB_Exposed = False
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : エクセル拡張ツール
 '// タイトル       : DB/Excel接続クラス(ADO)
-'//
 '// モジュール     : cADO
-'// 最終修正日     : 2009/10/14 00:00:00
-'// 最終修正者     : こいちろ
-'//
 '// 説明           : ADO接続を提供
 '// ////////////////////////////////////////////////////////////////////////////
-'// Copyright (c) by Koichiro.  All Rights Reserved.
+'// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
 Option Explicit
 Option Base 0
@@ -27,7 +23,7 @@ Option Base 0
 '// 接続DB
 Public Enum udDbConnType
   dct_none = -1
-  dct_oracle = 0
+'  dct_oracle = 0
   dct_odbc = 1
 '  dct_db2 = 1
 '  dct_sqlsrv = 2
@@ -43,8 +39,8 @@ Private pNativeError                    As Long         '// プロパティ値保持：エ
 Private pErrorCode                      As Long         '// プロパティ値保持：エラーコード
 Private pErrorText                      As String       '// プロパティ値保持：エラーメッセージ
 Private pDbType                         As udDbConnType '// プロパティ値保持：データベース種類
+Private pDataSourceName                 As String       '// プロパティ値保持：データソース名
 Private pDmlRows                        As Long         '// プロパティ値保持：DML更新行数
-
 
 '///////////////////////////////////////////////////////////////////////////////
 '// コンストラクタ
@@ -91,6 +87,12 @@ End Property
 '// プロパティ: DB種類 (ReadOnly)
 Public Property Get DbType() As udDbConnType
   DbType = pDbType
+End Property
+
+'///////////////////////////////////////////////////////////////////////////////
+'// プロパティ: データソース名 (ReadOnly)
+Public Property Get DataSourceName() As String
+  DataSourceName = pDataSourceName
 End Property
 
 '///////////////////////////////////////////////////////////////////////////////
@@ -146,29 +148,31 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function Initialize(HostString As String, userID As String, password As String, connType As udDbConnType) As Boolean
 On Error GoTo ErrorHandler
-  Call InitError
-  Set AdoConnection = CreateObject("ADODB.Connection")
+    Call InitError
+    Set AdoConnection = CreateObject("ADODB.Connection")
+    
+    AdoConnection.CursorLocation = adUseClient    '// DML実行時に更新行数を得るための設定
+    
+    Select Case connType
+'    Case dct_oracle
+'      Call AdoConnection.Open("Provider=MSDAORA;Data Source=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
+        Case dct_odbc
+            Call AdoConnection.Open("Provider=MSDASQL;DSN=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
+        Case dct_excel
+            Call AdoConnection.Open("Driver={Microsoft Excel Driver (*.xls)};DBQ=" & HostString & ";Extended Properies=""Excel 12.0"";HDR=1;ReadOnly=0")
+            pDataSourceName = HostString
+    End Select
   
-  AdoConnection.CursorLocation = adUseClient    '// DML実行時に更新行数を得るための設定
-  
-  Select Case connType
-    Case dct_oracle
-      Call AdoConnection.Open("Provider=MSDAORA;Data Source=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
-    Case dct_odbc
-      Call AdoConnection.Open("Provider=MSDASQL;DSN=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
-    Case dct_excel
-      Call AdoConnection.Open("Driver={Microsoft Excel Driver (*.xls)};DBQ=" & HostString & ";Extended Properies=""Excel 8.0"";HDR=1;ReadOnly=0")
-  End Select
-  
-  pDbType = connType
-  Initialize = True
-  Exit Function
+    pDbType = connType
+    pDataSourceName = HostString
+    Initialize = True
+    Exit Function
 
 ErrorHandler:
-  Call SetError
-  Initialize = False
-  Set AdoConnection = Nothing
-  pDbType = dct_none
+    Call SetError
+    Initialize = False
+    Set AdoConnection = Nothing
+    pDbType = dct_none
 End Function
 
 
@@ -197,9 +201,20 @@ On Error GoTo ErrorHandler
 '  Set GetRecordset = rst
 Exit Function
 ErrorHandler:
-  Call SetError
-  Set GetRecordset = Nothing
+    Call SetError
+    Set GetRecordset = Nothing
 End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   接続クローズ
+'// 説明：       ADOセッションを閉じる
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub CloseConnection()
+    If Not AdoConnection Is Nothing Then
+        AdoConnection.Close
+    End If
+End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////

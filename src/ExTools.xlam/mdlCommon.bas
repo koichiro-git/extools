@@ -33,10 +33,11 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.2.1.53"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.2.2.55"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
+Public Const DBQ                      As String = """"                                              '// ダブルクォート
 Public Const CHR_ESC                  As Long = 27                                                  '// Escape キーコード
 Public Const CLR_ENABLED              As Long = &H80000005                                          '// コントロール背景色 有効
 Public Const CLR_DISABLED             As Long = &H8000000F                                          '// コントロール背景色 無効

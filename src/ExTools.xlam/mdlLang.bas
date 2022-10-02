@@ -125,7 +125,9 @@ Public Const MSG_TOO_MANY_COLS                  As String = "—ñ”‚ª§ŒÀ’l‚ğ‰z‚¦‚
 Public Const MSG_QUERY                          As String = "–â‚¢‡‚í‚¹’†"
 Public Const MSG_EXTRACT_SHEET                  As String = "ƒV[ƒg‚Öo—Í’†"
 Public Const MSG_PAGE_SETUP                     As String = "‘®İ’è’†"
-Public Const MSG_ROWS_PROCESSED                 As String = "s‚ªˆ—‚³‚ê‚Ü‚µ‚½"
+Public Const MSG_ROWS_PROCESSED                 As String = "s‚ªˆ—‚³‚ê‚Ü‚µ‚½B"
+Public Const MSG_NOT_LOGGEDIN                   As String = "ƒƒOƒCƒ“‚µ‚Ä‚¢‚Ü‚¹‚ñB"
+Public Const MSG_NOT_SAVED                      As String = "ƒuƒbƒN‚ª•Û‘¶‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB•Û‘¶‚µ‚ÄŒŸõ‚ğŒp‘±‚µ‚Ü‚·‚©H" & vbLf & "¦Ÿ‰ñ‚©‚ç‚ÍƒuƒbƒN‚ğ•Â‚¶‚é‚Ü‚Å–ˆ‰ñ©“®•Û‘¶‚³‚ê‚Ü‚·"
 
 '// ƒƒbƒZ[ƒWFfrmDataExport
 'Public Const MSG_TABLE_NAME                     As String = "•\˜_—–¼Ì"
@@ -141,7 +143,7 @@ Public Const MSG_LOG_ON_FAILED                  As String = "ƒƒOƒCƒ“‚É¸”s‚µ‚Ü‚
 Public Const MSG_NEED_FILL_ID                   As String = "ƒ†[ƒU‚h‚c‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
 Public Const MSG_NEED_FILL_PWD                  As String = "ƒpƒXƒ[ƒh‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
 Public Const MSG_NEED_FILL_TNS                  As String = "Ú‘±•¶š—ñ‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_NEED_EXCEL_SAVED               As String = "Œ»İ‚ÌƒuƒbƒN‚Í•Û‘¶‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBƒuƒbƒN‚ğ•Û‘¶‚µ‚Ä‚­‚¾‚³‚¢B"
+Public Const MSG_NEED_EXCEL_SAVED               As String = "Œ»İ‚ÌƒuƒbƒN‚Í•Û‘¶‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBƒuƒbƒN‚ğ•Û‘¶‚µ‚Ü‚·‚©H"
 
 '// ƒƒbƒZ[ƒWFfrmSearch
 Public Const MSG_NO_CONDITION                   As String = "ŒŸõğŒ‚ğw’è‚µ‚Ä‰º‚³‚¢B"
@@ -487,6 +489,8 @@ Public Const MSG_QUERY                          As String = "Query to data sourc
 Public Const MSG_EXTRACT_SHEET                  As String = "Extracting to sheet"
 Public Const MSG_PAGE_SETUP                     As String = "Page setup"
 Public Const MSG_ROWS_PROCESSED                 As String = " row(s) processed."
+Public Const MSG_NOT_LOGGEDIN                   As String = "Not logged in."
+Public Const MSG_NOT_SAVED                      As String = "Book is not saved. Do you want to save this book and continue query?" & vbLf & "(Auto save on every query)"
 
 '// ƒƒbƒZ[ƒWFfrmDataExport
 'Public Const MSG_TABLE_NAME                     As String = "Table Name"
@@ -502,7 +506,7 @@ Public Const MSG_LOG_ON_FAILED                  As String = "Login failed."
 Public Const MSG_NEED_FILL_ID                   As String = "User ID required."
 Public Const MSG_NEED_FILL_PWD                  As String = "Password required."
 Public Const MSG_NEED_FILL_TNS                  As String = "Connection string required."
-Public Const MSG_NEED_EXCEL_SAVED               As String = "Current workbook is need to be saved."
+Public Const MSG_NEED_EXCEL_SAVED               As String = "Current workbook is not saved. Do you save and continue?"
 
 '// ƒƒbƒZ[ƒWFfrmSearch
 Public Const MSG_NO_CONDITION                   As String = "Please specify search condition."
