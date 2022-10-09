@@ -14,7 +14,7 @@ Option Base 0
 '// アプリケーション定数
 
 '// バージョン
-Public Const OPTION_PACK_VERSION      As String = "3"                                               '// このモジュール固有のバージョン（管理用通し番号）
+Public Const OPTION_PACK_VERSION      As String = "4"                                               '// このモジュール固有のバージョン（管理用通し番号）
 
 '// システム定数
 Public Const PROJECT_NAME             As String = "ExToolsOptionalPack"                             '// 本アドイン名称
@@ -177,7 +177,7 @@ End Sub
 '//              押されたコントロールのIDを基に処理を呼び出す。
 '// 引数：       control 対象コントロール
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub ribbonCallback(control As IRibbonControl)
+Public Sub ribbonCallback_OptPack(control As IRibbonControl)
     Select Case control.ID
         Case "Translation"                              '// 翻訳
             Call frmTranslation.Show

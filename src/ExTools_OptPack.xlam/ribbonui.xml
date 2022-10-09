@@ -4,8 +4,8 @@
 <tab idQ="nsExToolsShared:ExToolsTab" label="拡張" insertAfterMso="TabView" keytip="B">
 	<group idQ="nsExToolsShared:Group6"  label="その他" insertAfterQ="nsExToolsShared:Group5">
 		<gallery id="OptPack" label="追加パック" size="normal" imageMso="AddInManager" insertBeforeQ="nsExToolsShared:OptPackAnchor">
-			<button id="FormatPhoneNumbers" label="電話番号ハイフン付与" imageMso="Call" onAction="ribbonCallback2" />
-			<button id="Translation" label="翻訳" imageMso="TranslateDocument" onAction="ribbonCallback2" />
+			<button id="FormatPhoneNumbers" label="電話番号ハイフン付与" imageMso="Call" onAction="ribbonCallback_PhoneNum" />
+			<button id="Translation" label="翻訳" imageMso="TranslateDocument" onAction="ribbonCallback_OptPack" />
 		</gallery>
 	</group>
 </tab>

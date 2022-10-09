@@ -184,8 +184,9 @@ On Error GoTo ErrorHandler
             Application.StatusBar = MSG_PAGE_SETUP
             Call gsPageSetup_Lines(wkSheet, headerRows)
             
-            '// コメント設定
-            Call Selection.NoteText("-- " & Format(Now, "yyyy/mm/dd hh:nn:ss") & vbCrLf & txtScript.Text)
+            '// コメント設定（新規シートのためコメント有無確認は不要）
+            Call ActiveCell.AddComment("-- " & Format(Now, "yyyy/mm/dd hh:nn:ss") & vbCrLf & txtScript.Text)
+'            Call Selection.NoteText("-- " & Format(Now, "yyyy/mm/dd hh:nn:ss") & vbCrLf & txtScript.Text)
             
             '// 警告表示
             If rst.Fields.Count > Columns.Count Then

@@ -165,7 +165,12 @@ On Error GoTo ErrorHandler
             Case 3  '// 右のセルに上書き
                 tCell.Offset(, 1).Value = resultText
             Case 4  '// コメントに設定
-                Call tCell.NoteText(resultText)
+                If TypeName(tCell.Comment) <> "Nothing" Then
+                    Call tCell.Comment.Delete
+                End If
+                    
+                Call tCell.AddComment(resultText)
+                'Call tCell.NoteText(resultText)
                 tCell.Comment.Shape.TextFrame.AutoSize = True
                 '// コメント幅調整
                 If tCell.Comment.Shape.Width > 500 Then
