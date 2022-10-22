@@ -59,7 +59,7 @@ On Error GoTo ErrorHandler
     Call gsSuppressAppEvents
     
     If Selection.Count > 1 Then
-        For Each tCell In Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues)
+        For Each tCell In Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues)  '//SELECTIONが空の場合はエラーハンドラでキャッチ
             bff = pfApplyPhoneNumberFormat(tCell.Text)
             If bff <> BLANK Then    '// 変換ロジックからブランクが戻された場合は無視
                 tCell.Value = bff
@@ -76,7 +76,11 @@ On Error GoTo ErrorHandler
     Exit Sub
 ErrorHandler:
     Call gsResumeAppEvents
-    Call gsShowErrorMsgDlg_VBA("gsFormatPhoneNumbers", Err)
+    If Err.Number = 1004 Then  '// 範囲選択が正しくない場合
+        Call MsgBox(MSG_INVALID_RANGE, vbOKOnly, APP_TITLE)
+    Else
+        Call gsShowErrorMsgDlg_VBA("mdlModPhoneNumber.psFormatPhoneNumbers", Err)
+    End If
 End Sub
 
 
