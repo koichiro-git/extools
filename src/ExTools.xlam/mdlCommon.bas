@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.2.4.57"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.3.0.58"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -97,6 +97,7 @@ End Type
 
 Public gADO                             As cADO         '// 接続先DB/Excelオブジェクト
 Public gLang                            As Long         '// 言語
+Public gDatePickerToggle                As Boolean      '// 日付ピッカー（MonthView）表示制御
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -106,6 +107,8 @@ Public gLang                            As Long         '// 言語
 Private Sub psInitExTools()
     '// 言語の設定
     gLang = Application.LanguageSettings.LanguageID(msoLanguageIDInstall)
+    '// 変数初期化
+    gDatePickerToggle = False   '// 日付ピッカーをひらいたままにする＝False
 End Sub
 
 
@@ -574,7 +577,10 @@ Public Sub ribbonCallback(control As IRibbonControl)
             Call frmGetRecord.Show
         
         '// 値の操作 /////
-        '// N/A
+        Case "DatePicker"                       '// 日付
+            Call frmDatePicker.Show
+        Case "Today", "Now"                     '// 日付 - 本日日付/現在時刻
+            Call psPutDateTime(control.ID)
             
         '// 罫線、オブジェクト /////
         Case "FitObjects"                   '// オブジェクトをセルに合わせる
@@ -593,6 +599,26 @@ Public Sub ribbonCallback(control As IRibbonControl)
             Call frmAbout.Show
     End Select
 
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   リボンボタンコールバック管理（日付ピッカー制御トグル用）
+'// 説明：       リボンからのコールバックをつかさどる
+'// 引数：       control 対象コントロール
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub ribbonCallback_DatePickerToggle(control As IRibbonControl, pressed As Boolean)
+    gDatePickerToggle = Not pressed
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   リボンボタンコールバック管理（日付ピッカー制御トグル メニュー制御用）
+'// 説明：       リボンからのコールバックをつかさどる
+'// 引数：       control 対象コントロール
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub GetDatePickerToggleState(control As IRibbonControl, ByRef returnedVal)
+    returnedVal = gDatePickerToggle
 End Sub
 
 
@@ -717,6 +743,34 @@ Public Sub gsResumeAppEvents()
     Application.EnableEvents = True
     Application.Cursor = xlDefault
     Application.ScreenUpdating = True
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   本日日付/現在時刻設定
+'// 説明：       アクティブセルに本日日付または現在時刻を設定する
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psPutDateTime(DateTimeMode As String)
+    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
+    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
+        Exit Sub
+    End If
+    
+    Call gsSuppressAppEvents
+    
+    Select Case DateTimeMode
+        Case "Today"
+            ActiveCell.Value = Date
+        Case "Now"
+            ActiveCell.Value = Now
+    End Select
+    
+    Call gsResumeAppEvents
+    Exit Sub
+    
+ErrorHandler:
+    Call gsResumeAppEvents
+    Call gsShowErrorMsgDlg("mdlCommon.psConvValue", Err)
 End Sub
 
 
