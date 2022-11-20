@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmDatePicker 
    Caption         =   "“ú•t"
-   ClientHeight    =   4020
+   ClientHeight    =   6060
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   3525
+   ClientWidth     =   13890
    OleObjectBlob   =   "frmDatePicker.frx":0000
    ShowModal       =   0   'False
 End
@@ -34,6 +34,8 @@ Private Const THUNDER_FRAME     As String = "ThunderDFrame" '// Excel VBAƒ†[ƒU
 '// https://learn.microsoft.com/ja-jp/windows-hardware/manufacture/desktop/dpi-related-apis-and-registry-settings?view=windows-11
 Private Const LOG_PIXELS        As Long = 96
 
+Private Const CALENDAR_SEP_WIDTH    As Double = 4.5
+
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// Windows API ŠÖ˜A‚ÌéŒ¾
@@ -45,10 +47,12 @@ Private Const ICC_DATE_CLASSES = &H100          '// ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹—p’è”i“ú
 '// Window Styles
 Private Const WS_VISIBLE = &H10000000
 Private Const WS_CHILD = &H40000000
+Private Const WS_BORDER = &H800000
 Private Const WS_EX_TOOLWINDOW = &H80
 
 '// Window field offsets for GetWindowLong() and GetWindowWord()
-Const GWL_EXSTYLE = (-20)
+Private Const GWL_WNDPROC = (-4)
+Private Const GWL_EXSTYLE = (-20)
 
 '// MonthView SendMessage—pƒƒbƒZ[ƒW’è‹`
 Private Const MCM_FIRST = &H1000
@@ -104,6 +108,9 @@ Private Declare PtrSafe Function DestroyWindow Lib "user32" (ByVal hwnd As LongP
 '// ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹æ“¾
 Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
 Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" (ByVal hWnd1 As LongPtr, ByVal hWnd2 As LongPtr, ByVal lpsz1 As String, ByVal lpsz2 As String) As LongPtr
+Private Declare PtrSafe Function GetActiveWindow Lib "user32" () As LongPtr
+
+
 '// ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹‰Šú‰»
 Private Declare PtrSafe Function InitCommonControlsEx Lib "ComCtl32" (LPINITCOMMONCONTROLSEX As Any) As Long
 
@@ -128,23 +135,23 @@ Private Sub UserForm_Initialize()
 End Sub
 
 
-'// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF OKƒ{ƒ^ƒ“ ƒNƒŠƒbƒN
-Private Sub cmdExecute_Click()
-    Dim st          As SYSTEMTIME
-    
-    Call SendMessage(hwndMonthView, MCM_GETCURSEL, 0, st)
-    
-    '// o—Í(‘I‘ğ”ÍˆÍ‚ªƒZƒ‹‚Ìê‡‚Ì‚İ)
-    If TypeName(Selection) = TYPE_RANGE Then
-        ActiveCell.Value = CDate(st.wYear & "/" & st.wMonth & "/" & st.wDay)
-    End If
-    
-    '// uí‚ÉŠJ‚­vƒgƒOƒ‹ƒƒjƒ…[‚ªƒNƒŠƒbƒNó‘Ô‚Å‚È‚¯‚ê‚ÎA–{‰æ–Ê‚ğ•Â‚¶‚é
-    If gDatePickerToggle Then
-        Call Unload(Me)
-    End If
-End Sub
+''// //////////////////////////////////////////////////////////////////
+''// ƒCƒxƒ“ƒgF OKƒ{ƒ^ƒ“ ƒNƒŠƒbƒN
+'Private Sub cmdExecute_Click()
+'    Dim st          As SYSTEMTIME
+'
+'    Call SendMessage(hwndMonthView, MCM_GETCURSEL, 0, st)
+'
+'    '// o—Í(‘I‘ğ”ÍˆÍ‚ªƒZƒ‹‚Ìê‡‚Ì‚İ)
+'    If TypeName(Selection) = TYPE_RANGE Then
+'        ActiveCell.Value = CDate(st.wYear & "/" & st.wMonth & "/" & st.wDay)
+'    End If
+'
+'    '// uí‚ÉŠJ‚­vƒgƒOƒ‹ƒƒjƒ…[‚ªƒNƒŠƒbƒNó‘Ô‚Å‚È‚¯‚ê‚ÎA–{‰æ–Ê‚ğ•Â‚¶‚é
+'    If gDatePickerToggle Then
+'        Call Unload(Me)
+'    End If
+'End Sub
 
 
 Private Sub psSetupDatePicker()
@@ -154,7 +161,7 @@ Private Sub psSetupDatePicker()
     Dim lnghWnd_Sub         As LongPtr
     Dim hwndForm            As LongPtr  '// UserForm‚ÌƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
     Dim lResult             As LongPtr
-    
+    Dim calendarWidth       As Long
     ' ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹‰Šú‰»
     icce.dwICC = ICC_DATE_CLASSES
     icce.dwSize = Len(icce)
@@ -162,6 +169,7 @@ Private Sub psSetupDatePicker()
     If lResult = 0 Then Call Err.Raise(Number:=513, Description:="“ú•tƒsƒbƒJ[‰æ–Ê‚ğ¶¬‚Å‚«‚Ü‚¹‚ñ")
     
     ' ƒ†[ƒU[ƒtƒH[ƒ€‚ÌHWND‚Ìæ“¾
+    'hwndForm = GetActiveWindow
     hwndForm = FindWindow(THUNDER_FRAME, Me.Caption)
     If hwndForm = 0 Then Call Err.Raise(Number:=513, Description:="“ú•tƒsƒbƒJ[‰æ–Ê‚ğ¶¬‚Å‚«‚Ü‚¹‚ñ")
 
@@ -170,21 +178,29 @@ Private Sub psSetupDatePicker()
     
     '// MonthViewƒEƒBƒ“ƒhƒE¶¬(ƒTƒCƒYƒ[ƒ‚Å¶¬@https://learn.microsoft.com/ja-jp/windows/win32/controls/mcm-getminreqrect)
     hwndMonthView = CreateWindowEx(0, MONTHCAL_CLASS, vbNullString, (WS_VISIBLE Or WS_CHILD), 0, 0, 0, 0, lnghWnd_Sub, 0, 0, vbNullString) '//lnghWnd_Sub, 0, lnghInstance, vbNullString)
+    hMonthView = hwndMonthView
     '// MonthView—pƒEƒBƒ“ƒhƒE‚ÌƒŠƒTƒCƒY
     lResult = SendMessage(hwndMonthView, MCM_GETMINREQRECT, 0, rc)
-    Call MoveWindow(hwndMonthView, 0, 0, rc.Right - rc.Left, rc.Bottom - rc.Top, 1&)
+    calendarWidth = (rc.Right - rc.Left) * 2 + CALENDAR_SEP_WIDTH + 10
+'    Call MoveWindow(hwndMonthView, 0, 0, rc.Right - rc.Left, rc.Bottom - rc.Top, 1&)
+    Call MoveWindow(hwndMonthView, 0, 0, calendarWidth, rc.Bottom - rc.Top, 1&)
+
+    defaultProcAddress = SetWindowLongPtr(lnghWnd_Sub, GWL_WNDPROC, AddressOf WindowProc)
+
 
     '// ‰æ–Ê•â³ //////////
     Call SetWindowLongPtr(hwndForm, GWL_EXSTYLE, GetWindowLongPtr(hwndForm, GWL_EXSTYLE) Or WS_EX_TOOLWINDOW)   '// UserForm‚ğToolWindowƒXƒ^ƒCƒ‹‚É•ÏX
     
-    '// ƒtƒH[ƒ€ƒTƒCƒY•â³BƒJƒŒƒ“ƒ_[•(px¨pt•ÏŠ·){ƒtƒH[ƒ€˜g•Bc‚‚ÍƒJƒŒƒ“ƒ_[‚+ƒ{ƒ^ƒ“‚+ƒXƒy[ƒT[1pt
-    Me.Width = (rc.Right - rc.Left) * 72 / LOG_PIXELS + (Me.Width - Me.InsideWidth)
-    Me.Height = rc.Bottom * 72 / LOG_PIXELS + cmdExecute.Height + 2 + (Me.Height - Me.InsideHeight)
+    '// ƒtƒH[ƒ€ƒTƒCƒY•â³BƒJƒŒƒ“ƒ_[•(px¨pt•ÏŠ·){ƒtƒH[ƒ€˜g•Bc‚‚ÍƒJƒŒƒ“ƒ_[‚{ƒtƒH[ƒ€˜g•
+    Me.Width = calendarWidth * 72 / LOG_PIXELS + (Me.Width - Me.InsideWidth)
+    Me.Height = rc.Bottom * 72 / LOG_PIXELS + (Me.Height - Me.InsideHeight)
+'    Me.Width = (rc.Right - rc.Left) * 72 / LOG_PIXELS + (Me.Width - Me.InsideWidth)
+'    Me.Height = rc.Bottom * 72 / LOG_PIXELS + cmdExecute.Height + 2 + (Me.Height - Me.InsideHeight)
     
     '// OKƒ{ƒ^ƒ“‚ÌƒTƒCƒYEˆÊ’u•â³iMonthView‚Ì‰ºBƒtƒH[ƒ€ƒTƒCƒY‚É‡‚í‚¹‚Ä‰¡•‚ğİ’èj
-    cmdExecute.Width = (Me.InsideWidth - 2)
-    cmdExecute.Left = 1
-    cmdExecute.Top = rc.Bottom * 72 / LOG_PIXELS + 1
+'    ckbAlwaysOpen = (Me.InsideWidth - 2)
+'    ckbAlwaysOpen.Left = 1
+'    ckbAlwaysOpen.Top = rc.Bottom * 72 / LOG_PIXELS + 1
     
     '// ƒtƒH[ƒ€ˆÊ’u•â³iƒ}ƒEƒXÀ•W‚Öj
     Call MoveFormToMouse
