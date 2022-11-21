@@ -1,9 +1,9 @@
 Attribute VB_Name = "mdlCommon"
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒvƒƒWƒFƒNƒg   : Šg’£ƒc[ƒ‹
-'// ƒ^ƒCƒgƒ‹       : ‹¤’ÊŠÖ”
-'// ƒ‚ƒWƒ…[ƒ‹     : mdlCommon
-'// à–¾           : ƒVƒXƒeƒ€‚Ì‹¤’ÊŠÖ”A‹N“®‚Ìİ’è‚È‚Ç‚ğŠÇ—
+'// ï¿½vï¿½ï¿½ï¿½Wï¿½Fï¿½Nï¿½g   : ï¿½gï¿½ï¿½ï¿½cï¿½[ï¿½ï¿½
+'// ï¿½^ï¿½Cï¿½gï¿½ï¿½       : ï¿½ï¿½ï¿½ÊŠÖï¿½
+'// ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½[ï¿½ï¿½     : mdlCommon
+'// ï¿½ï¿½ï¿½ï¿½           : ï¿½Vï¿½Xï¿½eï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ÊŠÖï¿½ï¿½Aï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½Ìİ’ï¿½È‚Ç‚ï¿½ï¿½Ç—ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
@@ -11,58 +11,58 @@ Option Explicit
 Option Base 0
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒJƒXƒ^ƒ}ƒCƒY‰Â”\ƒpƒ‰ƒ[ƒ^i’è”j
+'// ï¿½Jï¿½Xï¿½^ï¿½}ï¿½Cï¿½Yï¿½Â”\ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½iï¿½è”ï¿½j
 
-Public Const APP_FONT                 As String = "Meiryo UI"                                       '// #001 •\¦ƒtƒHƒ“ƒg–¼Ì
-Public Const APP_FONT_SIZE            As Integer = 9                                                '// #002 •\¦ƒtƒHƒ“ƒgƒTƒCƒY
-Public Const HED_LEFT                 As String = ""                                                '// #003 ƒwƒbƒ_•¶š—ñi¶j
-Public Const HED_CENTER               As String = ""                                                '// #004 ƒwƒbƒ_•¶š—ñi’†‰›j
-Public Const HED_RIGHT                As String = ""                                                '// #005 ƒwƒbƒ_•¶š—ñi‰Ej
-Public Const FOT_LEFT                 As String = "&""" & APP_FONT & ",•W€""&8&F / &A"             '// #006 ƒtƒbƒ^•¶š—ñi¶j
-Public Const FOT_CENTER               As String = "&""" & APP_FONT & ",•W€""&8&P / &N"             '// #007 ƒtƒbƒ^•¶š—ñi’†‰›j
-Public Const FOT_RIGHT                As String = "&""" & APP_FONT & ",•W€""&8ˆóü“ú: &D &T"     '// #008 ƒtƒbƒ^•¶š—ñi‰Ej
-Public Const MRG_LEFT                 As Double = 0.25                                              '// #009 ˆóüƒ}[ƒWƒ“i¶j
-Public Const MRG_RIGHT                As Double = 0.25                                              '// #010 ˆóüƒ}[ƒWƒ“i‰Ej
-Public Const MRG_TOP                  As Double = 0.75                                              '// #011 ˆóüƒ}[ƒWƒ“iãj
-Public Const MRG_BOTTOM               As Double = 0.75                                              '// #012 ˆóüƒ}[ƒWƒ“i‰ºj
-Public Const MRG_HEADER               As Double = 0.3                                               '// #013 ˆóüƒ}[ƒWƒ“iƒwƒbƒ_j
-Public Const MRG_FOOTER               As Double = 0.3                                               '// #014 ˆóüƒ}[ƒWƒ“iƒtƒbƒ^j
+Public Const APP_FONT                 As String = "Meiryo UI"                                       '// #001 ï¿½\ï¿½ï¿½ï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
+Public Const APP_FONT_SIZE            As Integer = 9                                                '// #002 ï¿½\ï¿½ï¿½ï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½Tï¿½Cï¿½Y
+Public Const HED_LEFT                 As String = ""                                                '// #003 ï¿½wï¿½bï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½j
+Public Const HED_CENTER               As String = ""                                                '// #004 ï¿½wï¿½bï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½j
+Public Const HED_RIGHT                As String = ""                                                '// #005 ï¿½wï¿½bï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Eï¿½j
+Public Const FOT_LEFT                 As String = "&""" & APP_FONT & ",ï¿½Wï¿½ï¿½""&8&F / &A"             '// #006 ï¿½tï¿½bï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½j
+Public Const FOT_CENTER               As String = "&""" & APP_FONT & ",ï¿½Wï¿½ï¿½""&8&P / &N"             '// #007 ï¿½tï¿½bï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½j
+Public Const FOT_RIGHT                As String = "&""" & APP_FONT & ",ï¿½Wï¿½ï¿½""&8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: &D &T"     '// #008 ï¿½tï¿½bï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Eï¿½j
+Public Const MRG_LEFT                 As Double = 0.25                                              '// #009 ï¿½ï¿½ï¿½ï¿½}ï¿½[ï¿½Wï¿½ï¿½ï¿½iï¿½ï¿½ï¿½j
+Public Const MRG_RIGHT                As Double = 0.25                                              '// #010 ï¿½ï¿½ï¿½ï¿½}ï¿½[ï¿½Wï¿½ï¿½ï¿½iï¿½Eï¿½j
+Public Const MRG_TOP                  As Double = 0.75                                              '// #011 ï¿½ï¿½ï¿½ï¿½}ï¿½[ï¿½Wï¿½ï¿½ï¿½iï¿½ï¿½j
+Public Const MRG_BOTTOM               As Double = 0.75                                              '// #012 ï¿½ï¿½ï¿½ï¿½}ï¿½[ï¿½Wï¿½ï¿½ï¿½iï¿½ï¿½ï¿½j
+Public Const MRG_HEADER               As Double = 0.3                                               '// #013 ï¿½ï¿½ï¿½ï¿½}ï¿½[ï¿½Wï¿½ï¿½ï¿½iï¿½wï¿½bï¿½_ï¿½j
+Public Const MRG_FOOTER               As Double = 0.3                                               '// #014 ï¿½ï¿½ï¿½ï¿½}ï¿½[ï¿½Wï¿½ï¿½ï¿½iï¿½tï¿½bï¿½^ï¿½j
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“’è”
+'// ï¿½Aï¿½vï¿½ï¿½ï¿½Pï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½è”
 
-'// ƒo[ƒWƒ‡ƒ“
-Public Const APP_VERSION              As String = "2.3.0.59"                                        '// {ƒƒWƒƒ[}.{‹@”\C³}.{ƒoƒOC³}.{ŠJ”­ŠÇ——p}
+'// ï¿½oï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½
+Public Const APP_VERSION              As String = "2.2.5.60"                                        '// {ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½[}.{ï¿½@ï¿½\ï¿½Cï¿½ï¿½}.{ï¿½oï¿½Oï¿½Cï¿½ï¿½}.{ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½p}
 
-'// ƒVƒXƒeƒ€’è”
-Public Const BLANK                    As String = ""                                                '// ‹ó”’•¶š—ñ
-Public Const DBQ                      As String = """"                                              '// ƒ_ƒuƒ‹ƒNƒH[ƒg
-Public Const CHR_ESC                  As Long = 27                                                  '// Escape ƒL[ƒR[ƒh
-Public Const CLR_ENABLED              As Long = &H80000005                                          '// ƒRƒ“ƒgƒ[ƒ‹”wŒiF —LŒø
-Public Const CLR_DISABLED             As Long = &H8000000F                                          '// ƒRƒ“ƒgƒ[ƒ‹”wŒiF –³Œø
-Public Const TYPE_RANGE               As String = "Range"                                           '// selection ƒ^ƒCƒvFƒŒƒ“ƒW
-Public Const TYPE_SHAPE               As String = "Shape"                                           '// selection ƒ^ƒCƒvFƒVƒFƒCƒvivarTypej
+'// ï¿½Vï¿½Xï¿½eï¿½ï¿½ï¿½è”
+Public Const BLANK                    As String = ""                                                '// ï¿½ó”’•ï¿½ï¿½ï¿½ï¿½ï¿½
+Public Const DBQ                      As String = """"                                              '// ï¿½_ï¿½uï¿½ï¿½ï¿½Nï¿½Hï¿½[ï¿½g
+Public Const CHR_ESC                  As Long = 27                                                  '// Escape ï¿½Lï¿½[ï¿½Rï¿½[ï¿½h
+Public Const CLR_ENABLED              As Long = &H80000005                                          '// ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½wï¿½iï¿½F ï¿½Lï¿½ï¿½
+Public Const CLR_DISABLED             As Long = &H8000000F                                          '// ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½wï¿½iï¿½F ï¿½ï¿½ï¿½ï¿½
+Public Const TYPE_RANGE               As String = "Range"                                           '// selection ï¿½^ï¿½Cï¿½vï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½W
+Public Const TYPE_SHAPE               As String = "Shape"                                           '// selection ï¿½^ï¿½Cï¿½vï¿½Fï¿½Vï¿½Fï¿½Cï¿½vï¿½ivarTypeï¿½j
 Public Const MENU_PREFIX              As String = "sheet"
-Public Const EXCEL_FILE_EXT           As String = "*.xls; *.xlsx"                                   '// ƒGƒNƒZƒ‹Šg’£q
-Public Const COLOR_ROW                As Integer = 35                                               '// sF•ª‚¯F
-Public Const COLOR_DIFF_CELL          As Integer = 3                                                '// FF3=Ô
+Public Const EXCEL_FILE_EXT           As String = "*.xls; *.xlsx"                                   '// ï¿½Gï¿½Nï¿½Zï¿½ï¿½ï¿½gï¿½ï¿½ï¿½q
+Public Const COLOR_ROW                As Integer = 35                                               '// ï¿½sï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½F
+Public Const COLOR_DIFF_CELL          As Integer = 3                                                '// ï¿½Fï¿½F3=ï¿½ï¿½
 Public Const COLOR_DIFF_ROW_INS       As Integer = 34                                               '// $mod
 Public Const COLOR_DIFF_ROW_DEL       As Integer = 15                                               '// $mod
-Public Const EXCEL_PASSWORD           As String = ""                                                '// #017 ƒGƒNƒZƒ‹‚ğŠJ‚­Û‚ÌƒpƒXƒ[ƒh
-Public Const STAT_INTERVAL            As Integer = 100                                              '// ƒXƒe[ƒ^ƒXƒo[XV•p“x
+Public Const EXCEL_PASSWORD           As String = ""                                                '// #017 ï¿½Gï¿½Nï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½Û‚Ìƒpï¿½Xï¿½ï¿½ï¿½[ï¿½h
+Public Const STAT_INTERVAL            As Integer = 100                                              '// ï¿½Xï¿½eï¿½[ï¿½^ï¿½Xï¿½oï¿½[ï¿½Xï¿½Vï¿½pï¿½x
 Public Const ROW_DIFF_STRIKETHROUGH   As Boolean = True                                             '// $mod
-Private Const MENU_NUM                As Integer = 30                                               '// ƒV[ƒg‚ğƒƒjƒ…[‚É•\¦‚·‚éÛ‚ÌƒOƒ‹[ƒvè‡’l
+Private Const MENU_NUM                As Integer = 30                                               '// ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½É•\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û‚ÌƒOï¿½ï¿½ï¿½[ï¿½vè‡’l
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// Windows API ŠÖ˜A‚ÌéŒ¾
+'// Windows API ï¿½Ö˜Aï¿½ÌéŒ¾
 
-'// ’è”
+'// ï¿½è”
 Private Const BIF_RETURNONLYFSDIRS = &H1
 Private Const MAX_PATH = 260
 
-'// ƒ^ƒCƒv
+'// ï¿½^ï¿½Cï¿½v
 Private Type BROWSEINFO
     hwndOwner       As Long
     pidlRoot        As Long
@@ -74,18 +74,18 @@ Private Type BROWSEINFO
     iImage          As Long
 End Type
 
-'// ƒtƒHƒ‹ƒ_‘I‘ğ
+'// ï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Iï¿½ï¿½
 Private Declare Function apiSHBrowseForFolder Lib "shell32.dll" Alias "SHBrowseForFolder" (lpBrowseInfo As BROWSEINFO) As Long
-'// ƒpƒXæ“¾
+'// ï¿½pï¿½Xï¿½æ“¾
 Private Declare Function apiSHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDList" (ByVal piDL As Long, ByVal strPath As String) As Long
-'//ƒL[Š„‚è‚İ
+'//ï¿½Lï¿½[ï¿½ï¿½ï¿½èï¿½ï¿½
 Public Declare Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒpƒuƒŠƒbƒN•Ï”
+'// ï¿½pï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½Ïï¿½
 
-'// ”ÍˆÍƒ^ƒCƒv
+'// ï¿½ÍˆÍƒ^ï¿½Cï¿½v
 Public Type udTargetRange
     minRow  As Long
     minCol  As Integer
@@ -95,33 +95,33 @@ Public Type udTargetRange
     Columns As Integer
 End Type
 
-Public gADO                             As cADO         '// Ú‘±æDB/ExcelƒIƒuƒWƒFƒNƒg
-Public gLang                            As Long         '// Œ¾Œê
-Public gDatePickerToggle                As Boolean      '// “ú•tƒsƒbƒJ[iMonthViewj•\¦§Œä
+Public gADO                             As cADO         '// ï¿½Ú‘ï¿½ï¿½ï¿½DB/Excelï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+Public gLang                            As Long         '// ï¿½ï¿½ï¿½ï¿½
+Public gDatePickerToggle                As Boolean      '// ï¿½ï¿½ï¿½tï¿½sï¿½bï¿½Jï¿½[ï¿½iMonthViewï¿½jï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒc[ƒ‹‰Šú‰»
-'// à–¾F       ƒƒjƒ…[‚Ì\¬AƒAƒvƒŠƒIƒuƒWƒFƒNƒg‚Ìİ’è‚ğs‚¤B
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½cï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Ì\ï¿½ï¿½ï¿½Aï¿½Aï¿½vï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ìİ’ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psInitExTools()
-    '// Œ¾Œê‚Ìİ’è
+    '// ï¿½ï¿½ï¿½ï¿½Ìİ’ï¿½
     gLang = Application.LanguageSettings.LanguageID(msoLanguageIDInstall)
-    '// •Ï”‰Šú‰»
-    gDatePickerToggle = False   '// “ú•tƒsƒbƒJ[‚ğ‚Ğ‚ç‚¢‚½‚Ü‚Ü‚É‚·‚éFalse
+    '// ï¿½Ïï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    gDatePickerToggle = False   '// ï¿½ï¿½ï¿½tï¿½sï¿½bï¿½Jï¿½[ï¿½ï¿½ï¿½Ğ‚ç‚¢ï¿½ï¿½ï¿½Ü‚Ü‚É‚ï¿½ï¿½éFalse
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒƒjƒ…[’Ç‰ÁŠÖ”
-'// à–¾F       ƒƒjƒ…[‚Ì’Ç‰Á‚ğs‚¤BeŠÖ”iƒƒjƒ…[\¬ŠÖ”j‚©‚çŒÄ‚Ño‚³‚ê‚éB
-'// ˆø”F       barCtrls:      eƒo[ƒRƒ“ƒgƒ[ƒ‹
-'//              menuCaption:   ƒLƒƒƒvƒVƒ‡ƒ“
-'//              actionCommand: ƒNƒŠƒbƒN‚ÌƒCƒxƒ“ƒgƒvƒƒV[ƒWƒƒ
-'//              iconNum:       ƒAƒCƒRƒ“”Ô†
-'//              groupFlag:     ƒOƒ‹[ƒvü—v”Û
-'//              functionID:    ƒpƒ‰ƒ[ƒ^
-'//              menuEnabled:   ƒƒjƒ…[‚Ì—LŒø/–³Œø
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Ç‰ï¿½ï¿½Öï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Ì’Ç‰ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Bï¿½eï¿½Öï¿½ï¿½iï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½\ï¿½ï¿½ï¿½Öï¿½ï¿½jï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½B
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       barCtrls:      ï¿½eï¿½oï¿½[ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½
+'//              menuCaption:   ï¿½Lï¿½ï¿½ï¿½vï¿½Vï¿½ï¿½ï¿½ï¿½
+'//              actionCommand: ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ÌƒCï¿½xï¿½ï¿½ï¿½gï¿½vï¿½ï¿½ï¿½Vï¿½[ï¿½Wï¿½ï¿½
+'//              iconNum:       ï¿½Aï¿½Cï¿½Rï¿½ï¿½ï¿½Ôï¿½
+'//              groupFlag:     ï¿½Oï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½vï¿½ï¿½
+'//              functionID:    ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^
+'//              menuEnabled:   ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Ì—Lï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psPutMenu(barCtrls As CommandBarControls, menuCaption As String, actionCommand As String, iconNum As Integer, groupFlag As Boolean, functionID As String, menuEnabled As Boolean)
     With barCtrls.Add
@@ -136,15 +136,15 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒGƒ‰[ƒƒbƒZ[ƒW•\¦
-'// à–¾F       —áŠOˆ—•”‚Åˆ—‚Å‚«‚È‚¢—áŠO‚ÌƒGƒ‰[‚Ì“à—e‚ğAƒ_ƒCƒAƒƒO•\¦‚·‚éB
-'// ˆø”F       errSource: ƒGƒ‰[‚Ì”­¶Œ³‚ÌƒIƒuƒWƒFƒNƒg‚Ü‚½‚ÍƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì–¼‘O‚ğ¦‚·•¶š—ñ®
-'//              e: ‚u‚aƒGƒ‰[ƒIƒuƒWƒFƒNƒg
-'//              objAdoF ADOƒIƒuƒWƒFƒNƒgiÈ—ª‰Âj
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½\ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½Oï¿½ÌƒGï¿½ï¿½ï¿½[ï¿½Ì“ï¿½ï¿½eï¿½ï¿½ï¿½Aï¿½_ï¿½Cï¿½Aï¿½ï¿½ï¿½Oï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       errSource: ï¿½Gï¿½ï¿½ï¿½[ï¿½Ì”ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ü‚ï¿½ï¿½ÍƒAï¿½vï¿½ï¿½ï¿½Pï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ì–ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+'//              e: ï¿½uï¿½aï¿½Gï¿½ï¿½ï¿½[ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+'//              objAdoï¿½F ADOï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½iï¿½È—ï¿½ï¿½Âj
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, Optional ado As cADO = Nothing)
     If ado Is Nothing Then
-        '// ADOƒIƒuƒWƒFƒNƒg‚ª‚©‚ç‚Ìê‡‚ÍVBƒGƒ‰[‚Æ‚µ‚Äˆµ‚¤
+        '// ADOï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìê‡ï¿½ï¿½VBï¿½Gï¿½ï¿½ï¿½[ï¿½Æ‚ï¿½ï¿½Äˆï¿½ï¿½ï¿½
         Call MsgBox(MSG_ERR & vbLf & vbLf _
                    & "Error Number: " & e.Number & vbLf _
                    & "Error Source: " & errSource & vbLf _
@@ -152,7 +152,7 @@ Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, Optional
                    , , APP_TITLE)
         Call e.Clear
     ElseIf ado.NativeError <> 0 Then
-        '// DB‚Å‚ÌƒGƒ‰[‚Ìê‡
+        '// DBï¿½Å‚ÌƒGï¿½ï¿½ï¿½[ï¿½Ìê‡
         Call MsgBox(MSG_ERR & vbLf & vbLf _
                    & "Error Number: " & ado.NativeError & vbLf _
                    & "Error Source: Database" & vbLf _
@@ -160,15 +160,15 @@ Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, Optional
                    , , APP_TITLE)
         ado.InitError
     ElseIf ado.ErrorCode <> 0 Then
-        '// ADO‚Å‚ÌƒGƒ‰[‚Ìê‡
+        '// ADOï¿½Å‚ÌƒGï¿½ï¿½ï¿½[ï¿½Ìê‡
         Call MsgBox(MSG_ERR & vbLf & vbLf _
                    & "Error Number: " & ado.ErrorCode & vbLf _
                    & "Error Source: ADO" & vbLf _
-                   & "Error DescriptionF " & ado.ErrorText _
+                   & "Error Descriptionï¿½F " & ado.ErrorText _
                    , , APP_TITLE)
         ado.InitError
     Else
-        '// ã‹L‚Åæ‚è“¦‚µ‚½ê‡‚ÍVBƒGƒ‰[‚Æ‚µ‚Äˆµ‚¤
+        '// ï¿½ï¿½Lï¿½Åï¿½è“¦ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½ï¿½VBï¿½Gï¿½ï¿½ï¿½[ï¿½Æ‚ï¿½ï¿½Äˆï¿½ï¿½ï¿½
         Call MsgBox(MSG_ERR & vbLf & vbLf _
                    & "Error Number: " & e.Number & vbLf _
                    & "Error Source: " & errSource & vbLf _
@@ -180,9 +180,9 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒV[ƒg•À‚Ñ‘Ö‚¦
-'// à–¾F       ƒV[ƒg–¼‚Å•À‚Ñ‘Ö‚¦‚é
-'// ˆø”F       sortMode: ¸‡‚Ü‚½‚Í~‡‚ğ•\‚·•¶š—ñiASC/DESCj
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½Ñ‘Ö‚ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½Å•ï¿½ï¿½Ñ‘Ö‚ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       sortMode: ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½Í~ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iASC/DESCï¿½j
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psSortWorksheet(sortMode As String)
     Dim i           As Integer
@@ -190,22 +190,22 @@ Private Sub psSortWorksheet(sortMode As String)
     Dim wkSheet     As Worksheet
     Dim isOrderAsc  As Boolean
   
-    '// ƒuƒbƒN‚ª•ÛŒì‚³‚ê‚Ä‚¢‚éê‡‚É‚ÍƒGƒ‰[‚Æ‚·‚é
+    '// ï¿½uï¿½bï¿½Nï¿½ï¿½ï¿½ÛŒì‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½É‚ÍƒGï¿½ï¿½ï¿½[ï¿½Æ‚ï¿½ï¿½ï¿½
     If ActiveWorkbook.ProtectStructure Then
         Call MsgBox(MSG_BOOK_PROTECTED, vbOKOnly, APP_TITLE)
         Exit Sub
     End If
     
-    '// ÀsŠm”F
+    '// ï¿½ï¿½ï¿½sï¿½mï¿½F
     If MsgBox(MSG_CONFIRM, vbOKCancel, APP_TITLE) = vbCancel Then
         Exit Sub
     End If
     
     Call gsSuppressAppEvents
     
-    isOrderAsc = (sortMode = "ASC") '// ¸‡/~‡‚Ìİ’è
+    isOrderAsc = (sortMode = "ASC") '// ï¿½ï¿½ï¿½ï¿½/ï¿½~ï¿½ï¿½ï¿½Ìİ’ï¿½
     
-    '// ƒ\[ƒg
+    '// ï¿½\ï¿½[ï¿½g
     For i = 1 To Worksheets.Count - 1
         Set wkSheet = Worksheets(i)
         
@@ -220,7 +220,7 @@ Private Sub psSortWorksheet(sortMode As String)
         End If
     Next
     
-    '// Œãˆ—
+    '// ï¿½ãˆï¿½ï¿½
     Call Worksheets(1).Activate
     Call gsResumeAppEvents
     
@@ -229,21 +229,21 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF    ƒy[ƒWİ’è(ƒwƒbƒ_Eƒtƒbƒ^)
-'// à–¾F        ƒy[ƒWİ’è‚ğs‚¤
-'// ˆø”F        wksheet: ƒ[ƒNƒV[ƒg
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F    ï¿½yï¿½[ï¿½Wï¿½İ’ï¿½(ï¿½wï¿½bï¿½_ï¿½Eï¿½tï¿½bï¿½^)
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F        ï¿½yï¿½[ï¿½Wï¿½İ’ï¿½ï¿½ï¿½sï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F        wksheet: ï¿½ï¿½ï¿½[ï¿½Nï¿½Vï¿½[ï¿½g
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsPageSetup_Header(wkSheet As Worksheet)
-'// $mod ƒvƒŠƒ“ƒ^‚ª‚È‚¢ê‡‚Ì–¾¦“I‚ÈƒGƒ‰[‚ÍH
+'// $mod ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Ì–ï¿½ï¿½ï¿½ï¿½Iï¿½ÈƒGï¿½ï¿½ï¿½[ï¿½ÍH
 On Error Resume Next
-    '// ƒvƒŠƒ“ƒ^‚Ìİ’è
+    '// ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Ìİ’ï¿½
     With wkSheet.PageSetup
-        '// ƒwƒbƒ_  ¦ì¬Ò‚ğ•\¦‚·‚éê‡‚Í‰Eƒwƒbƒ_‚ÌƒRƒƒ“ƒgƒAƒEƒg•”‚ğg—pB
+        '// ï¿½wï¿½bï¿½_  ï¿½ï¿½ï¿½ì¬ï¿½Ò‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Í‰Eï¿½wï¿½bï¿½_ï¿½ÌƒRï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½ï¿½ï¿½gï¿½pï¿½B
         .LeftHeader = HED_LEFT
         .CenterHeader = HED_CENTER
         .RightHeader = HED_RIGHT
-        '// .RightHeader = "&""" & APP_FONT & ",•W€""&8ì¬Ò:" & Application.UserName & IIf(Application.OrganizationName = BLANK, BLANK, "@" & Application.OrganizationName)
-        '// ƒtƒbƒ^
+        '// .RightHeader = "&""" & APP_FONT & ",ï¿½Wï¿½ï¿½""&8ï¿½ì¬ï¿½ï¿½:" & Application.UserName & IIf(Application.OrganizationName = BLANK, BLANK, "@" & Application.OrganizationName)
+        '// ï¿½tï¿½bï¿½^
         .LeftFooter = FOT_LEFT
         .CenterFooter = FOT_CENTER
         .RightFooter = FOT_RIGHT
@@ -252,15 +252,15 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF    ƒy[ƒWİ’è(ƒ}[ƒWƒ“)
-'// à–¾F        ƒ}[ƒWƒ“‚Ìİ’è‚ğs‚¤
-'// ˆø”F        wksheet: ƒ[ƒNƒV[ƒg
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F    ï¿½yï¿½[ï¿½Wï¿½İ’ï¿½(ï¿½}ï¿½[ï¿½Wï¿½ï¿½)
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F        ï¿½}ï¿½[ï¿½Wï¿½ï¿½ï¿½Ìİ’ï¿½ï¿½ï¿½sï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F        wksheet: ï¿½ï¿½ï¿½[ï¿½Nï¿½Vï¿½[ï¿½g
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsPageSetup_Margin(wkSheet As Worksheet)
 On Error Resume Next
-    '// ƒvƒŠƒ“ƒ^‚Ìİ’è
+    '// ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Ìİ’ï¿½
     With wkSheet.PageSetup
-        '// ƒ}[ƒWƒ“
+        '// ï¿½}ï¿½[ï¿½Wï¿½ï¿½
         .LeftMargin = Application.InchesToPoints(MRG_LEFT)
         .RightMargin = Application.InchesToPoints(MRG_RIGHT)
         .TopMargin = Application.InchesToPoints(MRG_TOP)
@@ -272,22 +272,22 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF    ƒy[ƒWİ’è(Œrü)
-'// à–¾F        Œrü‚ğ•`‰æ‚·‚é
-'// ˆø”F        wksheet: ƒ[ƒNƒV[ƒg
-'//               headerLines: ƒwƒbƒ_s”
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F    ï¿½yï¿½[ï¿½Wï¿½İ’ï¿½(ï¿½rï¿½ï¿½)
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F        ï¿½rï¿½ï¿½ï¿½ï¿½`ï¿½æ‚·ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F        wksheet: ï¿½ï¿½ï¿½[ï¿½Nï¿½Vï¿½[ï¿½g
+'//               headerLines: ï¿½wï¿½bï¿½_ï¿½sï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsPageSetup_Lines(wkSheet As Worksheet, headerLines As Integer)
-    '// Œrü‚ğ•`‰æ
+    '// ï¿½rï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½
     Call wkSheet.UsedRange.Select
     Call gsDrawLine_Data
   
-    '// ƒwƒbƒ_‚ÌCü
+    '// ï¿½wï¿½bï¿½_ï¿½ÌCï¿½ï¿½
     If headerLines > 0 Then
         Call wkSheet.Range(wkSheet.Cells(1, 1), wkSheet.Cells(headerLines, wkSheet.UsedRange.Columns.Count)).Select
         Call gsDrawLine_Header
     
-        '// ƒwƒbƒ_‰º•”‚ÅƒEƒBƒ“ƒhƒE˜g‚ğŒÅ’è
+        '// ï¿½wï¿½bï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ÅƒEï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½gï¿½ï¿½ï¿½Å’ï¿½
         Call wkSheet.Cells(headerLines + 1, 1).Select
         ActiveWindow.FreezePanes = True
     End If
@@ -297,11 +297,11 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   —LŒø”ÍˆÍİ’è
-'// à–¾F       ‘I‘ğ”ÍˆÍ‚Æ’l‚Ìİ’è‚³‚ê‚Ä‚¢‚é”ÍˆÍ‚ğ”äŠr‚µA—LŒø”ÍˆÍ‚ğæ“¾‚·‚é
-'// ˆø”F       wksheet: ƒ[ƒNƒV[ƒg
-'//              selRange: ‘I‘ğ”ÍˆÍ
-'// –ß‚è’lF     •â³Œã‚Ì‘I‘ğ”ÍˆÍ
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Lï¿½ï¿½ï¿½ÍˆÍİ’ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½Iï¿½ï¿½ÍˆÍ‚Æ’lï¿½Ìİ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÍˆÍ‚ï¿½ï¿½rï¿½ï¿½ï¿½Aï¿½Lï¿½ï¿½ï¿½ÍˆÍ‚ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       wksheet: ï¿½ï¿½ï¿½[ï¿½Nï¿½Vï¿½[ï¿½g
+'//              selRange: ï¿½Iï¿½ï¿½Íˆï¿½
+'// ï¿½ß‚ï¿½lï¿½F     ï¿½â³ï¿½ï¿½Ì‘Iï¿½ï¿½Íˆï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfGetTargetRange(wkSheet As Worksheet, selRange As Range) As udTargetRange
     Dim rslt  As udTargetRange
@@ -318,10 +318,10 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   —ñ•¶š—ñæ“¾
-'// à–¾F       —ñ‚Ì”Ô†‚ğ•¶š•\‹L‚É•ÏŠ·‚·‚é
-'// ˆø”F       targetVal: —ñ”Ô†
-'// –ß‚è’lF     —ñ‚Ì•¶š—ñ•\‹L
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ñ•¶ï¿½ï¿½ï¿½æ“¾
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½Ì”Ôï¿½ï¿½ğ•¶ï¿½ï¿½\ï¿½Lï¿½É•ÏŠï¿½ï¿½ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       targetVal: ï¿½ï¿½Ôï¿½
+'// ï¿½ß‚ï¿½lï¿½F     ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½L
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfGetColIndexString(ByVal targetVal As Integer) As String
     Const ALPHABETS   As Integer = 26
@@ -339,11 +339,11 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒZƒ‹•¶š—ñæ“¾
-'// à–¾F       text ‚Ü‚½‚Í value ƒvƒƒpƒeƒB‚Ì’l‚ğ•Ô‚·
-'//              •¶š—ñ(@)‚Ìê‡‚É‚Í .Text ‚ğ–ß‚µA‚»‚êˆÈŠO‚Ìê‡‚Í $todo
-'// ˆø”F       targetCell: ‘ÎÛƒZƒ‹
-'// –ß‚è’lF     ˆø”‚ÌƒZƒ‹‚Ì’litext/valueƒvƒƒpƒeƒBj
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       text ï¿½Ü‚ï¿½ï¿½ï¿½ value ï¿½vï¿½ï¿½ï¿½pï¿½eï¿½Bï¿½Ì’lï¿½ï¿½Ô‚ï¿½
+'//              ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(@)ï¿½Ìê‡ï¿½É‚ï¿½ .Text ï¿½ï¿½ß‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ÈŠOï¿½Ìê‡ï¿½ï¿½ $todo
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       targetCell: ï¿½ÎÛƒZï¿½ï¿½
+'// ï¿½ß‚ï¿½lï¿½F     ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒZï¿½ï¿½ï¿½Ì’lï¿½itext/valueï¿½vï¿½ï¿½ï¿½pï¿½eï¿½Bï¿½j
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfGetTextVal(targetCell As Range) As String
     gfGetTextVal = IIf(targetCell.NumberFormat = "@", targetCell.Value, targetCell.Text)
@@ -351,36 +351,36 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒRƒ“ƒ{ƒ{ƒbƒNƒXİ’è
-'// à–¾F       ˆø”‚ÌCSV•¶š—ñ‚ğŠî‚ÉAƒRƒ“ƒ{ƒ{ƒbƒNƒX‚Ì’l‚ğİ’è‚·‚éB
-'// ˆø”F       targetCombo: ‘ÎÛƒRƒ“ƒ{ƒ{ƒbƒNƒX
-'//              propertyStr: İ’è’li{ƒL[},{•\¦•¶š—ñ};{ƒL[},{•\¦•¶š—ñ}...j
-'//              defaultIdx: ‰Šú’l
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Rï¿½ï¿½ï¿½{ï¿½{ï¿½bï¿½Nï¿½Xï¿½İ’ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½CSVï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉAï¿½Rï¿½ï¿½ï¿½{ï¿½{ï¿½bï¿½Nï¿½Xï¿½Ì’lï¿½ï¿½İ’è‚·ï¿½ï¿½B
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       targetCombo: ï¿½ÎÛƒRï¿½ï¿½ï¿½{ï¿½{ï¿½bï¿½Nï¿½X
+'//              propertyStr: ï¿½İ’ï¿½lï¿½i{ï¿½Lï¿½[},{ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½};{ï¿½Lï¿½[},{ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½}...ï¿½j
+'//              defaultIdx: ï¿½ï¿½ï¿½ï¿½ï¿½l
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsSetCombo(targetCombo As ComboBox, propertyStr As String, defaultIdx As Integer)
-    Dim lineStr()     As String   '// İ’è’l‚Ì•¶š—ñ‚©‚çAŠes‚ğŠi”[i;‹æØ‚èj
-    Dim colStr()      As String   '// Šes‚Ì•¶š—ñ‚©‚çA—ñ‚²‚Æ‚Ì’l‚ğŠi”[i,‹æØ‚èj
+    Dim lineStr()     As String   '// ï¿½İ’ï¿½lï¿½Ì•ï¿½ï¿½ï¿½ï¿½ñ‚©‚ï¿½Aï¿½eï¿½sï¿½ï¿½ï¿½iï¿½[ï¿½i;ï¿½ï¿½Ø‚ï¿½j
+    Dim colStr()      As String   '// ï¿½eï¿½sï¿½Ì•ï¿½ï¿½ï¿½ï¿½ñ‚©‚ï¿½Aï¿½ñ‚²‚Æ‚Ì’lï¿½ï¿½ï¿½iï¿½[ï¿½i,ï¿½ï¿½Ø‚ï¿½j
     Dim idxCnt        As Integer
     
-    lineStr = Split(propertyStr, ";")     '//İ’è’l‚Ì•¶š—ñ‚ğAs–ˆ‚É•ª‰ğ
+    lineStr = Split(propertyStr, ";")     '//ï¿½İ’ï¿½lï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½sï¿½ï¿½ï¿½É•ï¿½ï¿½ï¿½
     
     Call targetCombo.Clear
     For idxCnt = 0 To UBound(lineStr)
-        colStr = Split(lineStr(idxCnt), ",")   '//s‚Ì•¶š—ñ‚ğAƒJƒ‰ƒ€–ˆ‚Ì•¶š—ñ‚É•ª‰ğ
+        colStr = Split(lineStr(idxCnt), ",")   '//ï¿½sï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½É•ï¿½ï¿½ï¿½
         Call targetCombo.AddItem(Trim(colStr(0)))
         targetCombo.List(idxCnt, 1) = Trim(colStr(1))
     Next
     
-    targetCombo.ListIndex = defaultIdx    '// ‰Šú’l‚ğİ’è
+    targetCombo.ListIndex = defaultIdx    '// ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½İ’ï¿½
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒtƒHƒ‹ƒ_‘I‘ğƒ_ƒCƒAƒƒO•\¦
-'// à–¾F       ƒtƒHƒ‹ƒ_‘I‘ğƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚éB
-'// ˆø”F       lngHwnd ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-'//              strReturnPath w’è‚³‚ê‚½ƒtƒHƒ‹ƒ_‚ÌƒpƒX•¶š—ñ
-'// –ß‚è’lF     True:¬Œ÷  False:¸”s(ƒLƒƒƒ“ƒZƒ‹‚ğ‘I‘ğ‚µ‚½ê‡ŠÜ‚Ş)
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Iï¿½ï¿½ï¿½_ï¿½Cï¿½Aï¿½ï¿½ï¿½Oï¿½\ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Iï¿½ï¿½ï¿½_ï¿½Cï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       lngHwnd ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
+'//              strReturnPath ï¿½wï¿½è‚³ï¿½ê‚½ï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Ìƒpï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+'// ï¿½ß‚ï¿½lï¿½F     True:ï¿½ï¿½ï¿½ï¿½  False:ï¿½ï¿½ï¿½s(ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ü‚ï¿½)
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfShowSelectFolder(ByVal lngHwnd As Long, ByRef strReturnPath) As Boolean
     Dim lngRet        As Long
@@ -390,15 +390,15 @@ Public Function gfShowSelectFolder(ByVal lngHwnd As Long, ByRef strReturnPath) A
     
     lngRet = False
     
-    '//•¶š—ñ—Ìˆæ‚ÌŠm•Û
+    '//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìˆï¿½ÌŠmï¿½ï¿½
     strPath = String(MAX_PATH + 1, Chr(0))
     
-    ' \‘¢‘Ì‚Ì‰Šú‰»
+    ' ï¿½\ï¿½ï¿½ï¿½Ì‚Ìï¿½ï¿½ï¿½ï¿½ï¿½
     biInfo.hwndOwner = lngHwnd
     biInfo.lpszTitle = APP_TITLE
     biInfo.ulFlags = BIF_RETURNONLYFSDIRS
     
-    '// ƒtƒHƒ‹ƒ_‘I‘ğƒ_ƒCƒAƒƒO‚Ì•\¦
+    '// ï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Iï¿½ï¿½ï¿½_ï¿½Cï¿½Aï¿½ï¿½ï¿½Oï¿½Ì•\ï¿½ï¿½
     lngReturnCode = apiSHBrowseForFolder(biInfo)
     
     If lngReturnCode <> 0 Then
@@ -412,10 +412,10 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ˆ—Às‘Oƒ`ƒFƒbƒNi”Ä—pj
-'// à–¾F       Šeˆ—‚ÌÀs‘Oƒ`ƒFƒbƒN‚ğs‚¤
-'// ˆø”F
-'// –ß‚è’lF     True:¬Œ÷  False:¸”s
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½Oï¿½`ï¿½Fï¿½bï¿½Nï¿½iï¿½Ä—pï¿½j
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½sï¿½Oï¿½`ï¿½Fï¿½bï¿½Nï¿½ï¿½ï¿½sï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F
+'// ï¿½ß‚ï¿½lï¿½F     True:ï¿½ï¿½ï¿½ï¿½  False:ï¿½ï¿½ï¿½s
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfPreCheck(Optional protectCont As Boolean = False, _
                             Optional protectBook As Boolean = False, _
@@ -425,25 +425,25 @@ Public Function gfPreCheck(Optional protectCont As Boolean = False, _
   
     gfPreCheck = True
     
-    If ActiveSheet Is Nothing Then                              '// ƒV[ƒgiƒuƒbƒNj‚ªŠJ‚©‚ê‚Ä‚¢‚é‚©
+    If ActiveSheet Is Nothing Then                              '// ï¿½Vï¿½[ï¿½gï¿½iï¿½uï¿½bï¿½Nï¿½jï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©
         Call MsgBox(MSG_NO_BOOK, vbOKOnly, APP_TITLE)
         gfPreCheck = False
         Exit Function
     End If
     
-    If protectCont And ActiveSheet.ProtectContents Then         '// ƒAƒNƒeƒBƒuƒV[ƒg‚ª•ÛŒì‚³‚ê‚Ä‚¢‚é‚©
+    If protectCont And ActiveSheet.ProtectContents Then         '// ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½ÛŒì‚³ï¿½ï¿½Ä‚ï¿½ï¿½é‚©
         Call MsgBox(MSG_SHEET_PROTECTED, vbOKOnly, APP_TITLE)
         gfPreCheck = False
         Exit Function
     End If
     
-    If protectBook And ActiveWorkbook.ProtectStructure Then     '// ƒuƒbƒN‚ª•ÛŒì‚³‚ê‚Ä‚¢‚é‚©
+    If protectBook And ActiveWorkbook.ProtectStructure Then     '// ï¿½uï¿½bï¿½Nï¿½ï¿½ï¿½ÛŒì‚³ï¿½ï¿½Ä‚ï¿½ï¿½é‚©
         Call MsgBox(MSG_BOOK_PROTECTED, vbOKOnly, APP_TITLE)
         gfPreCheck = False
         Exit Function
     End If
     
-    '// ‘I‘ğ”ÍˆÍ‚Ìƒ^ƒCƒv‚ğƒ`ƒFƒbƒN
+    '// ï¿½Iï¿½ï¿½ÍˆÍ‚Ìƒ^ï¿½Cï¿½vï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
     Select Case selType
         Case TYPE_RANGE
             If TypeName(Selection) <> TYPE_RANGE Then
@@ -461,7 +461,7 @@ Public Function gfPreCheck(Optional protectCont As Boolean = False, _
             '// null
     End Select
     
-    '// ‘I‘ğ”ÍˆÍƒJƒEƒ“ƒg
+    '// ï¿½Iï¿½ï¿½ÍˆÍƒJï¿½Eï¿½ï¿½ï¿½g
     If selAreas > 1 Then
         If Selection.Areas.Count > selAreas Then
             Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)
@@ -470,7 +470,7 @@ Public Function gfPreCheck(Optional protectCont As Boolean = False, _
         End If
     End If
     
-    '// ‘I‘ğ”ÍˆÍƒZƒ‹ƒJƒEƒ“ƒg
+    '// ï¿½Iï¿½ï¿½ÍˆÍƒZï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½g
     If selCols > 1 Then
         If Selection.Columns.Count > selCols Then
             Call MsgBox(MSG_TOO_MANY_COLS_8, vbOKOnly, APP_TITLE)
@@ -482,11 +482,11 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   Œ‹‰ÊƒV[ƒg ƒwƒbƒ_•`‰æ
-'// à–¾F       ˆø”‚Ìƒwƒbƒ_•¶š—ñ‚ğƒV[ƒg‚Éo—Í‚·‚é
-'// ˆø”F       wkSheet ‘ÎÛƒV[ƒg
-'//              headerStr  o—Í‚·‚é•¶š—ñ
-'//              idxRow  o—Í‚·‚és
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ï¿½ï¿½ÊƒVï¿½[ï¿½g ï¿½wï¿½bï¿½_ï¿½`ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒwï¿½bï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½[ï¿½gï¿½Éoï¿½Í‚ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       wkSheet ï¿½ÎÛƒVï¿½[ï¿½g
+'//              headerStr  ï¿½oï¿½Í‚ï¿½ï¿½é•¶ï¿½ï¿½ï¿½ï¿½
+'//              idxRow  ï¿½oï¿½Í‚ï¿½ï¿½ï¿½s
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsDrawResultHeader(wkSheet As Worksheet, headerStr As String, idxRow As Integer)
     Dim idxCol      As Integer
@@ -501,10 +501,10 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒV[ƒgƒƒjƒ…[ get content
-'// à–¾F       ƒV[ƒg‚Ìƒƒjƒ…[•\¦‚ğs‚¤
-'// ˆø”F       control  ‘ÎÛ‚Æ‚È‚éƒŠƒ{ƒ“ã‚ÌƒRƒ“ƒgƒ[ƒ‹
-'//              content  –ß‚è’l‚Æ‚µ‚Ä•Ô‚·Aƒƒjƒ…[‚ğ•\‚·XML
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ get content
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½Vï¿½[ï¿½gï¿½Ìƒï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       control  ï¿½ÎÛ‚Æ‚È‚éƒŠï¿½{ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½
+'//              content  ï¿½ß‚ï¿½lï¿½Æ‚ï¿½ï¿½Ä•Ô‚ï¿½ï¿½Aï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ï¿½\ï¿½ï¿½XML
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub sheetMenu_getContent(control As IRibbonControl, ByRef content)
     Dim sheetObj      As Object
@@ -513,7 +513,7 @@ Public Sub sheetMenu_getContent(control As IRibbonControl, ByRef content)
     Dim wkBook        As Workbook
     Dim stMenu        As String
     
-    '// $todo:ƒV[ƒg‚ª‘½”‚ ‚éê‡‚Ìˆ—’Ç‰Á
+    '// $todo:ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ìï¿½ï¿½ï¿½ï¿½Ç‰ï¿½
     
     Set wkBook = ActiveWorkbook
     idx = 1
@@ -521,7 +521,7 @@ Public Sub sheetMenu_getContent(control As IRibbonControl, ByRef content)
     
     For Each sheetObj In wkBook.Sheets
         If sheetObj.Type = xlWorksheet Then
-            '// ID‚ÍÚ“ª«‚ğ‚Â‚¯‚Ä’Ê”Ô‚ğİ’è:MENU_PREFIX + idx
+            '// IDï¿½ÍÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½Ä’Ê”Ô‚ï¿½İ’ï¿½:MENU_PREFIX + idx
             stMenu = stMenu & "<button id=""" & MENU_PREFIX & CStr(idx) & """ label=""" & sheetObj.Name & """ onAction=""sheetMenuOnAction"""
             If Not sheetObj.Visible Then
                 stMenu = stMenu & " enabled=""false"""
@@ -537,13 +537,13 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒV[ƒg‚ğƒAƒNƒeƒBƒu‚É‚·‚é
-'// à–¾F       ƒƒjƒ…[‚Å‘I‘ğ‚³‚ê‚½ƒƒjƒ…[ƒLƒƒƒvƒVƒ‡ƒ“‚ğAƒAƒNƒeƒBƒu‰»‚Ì‘ÎÛ‚É‚·‚é
-'// ˆø”F       control  ‰Ÿ‚³‚ê‚½ƒV[ƒgƒƒjƒ…[B
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½É‚ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Å‘Iï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Lï¿½ï¿½ï¿½vï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½Ì‘ÎÛ‚É‚ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       control  ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½B
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub sheetMenuOnAction(control As IRibbonControl)
 On Error GoTo ErrorHandler
-    '// ‰Ÿ‚³‚ê‚½ƒV[ƒgƒƒjƒ…[‚ÌID‚ÌÚ“ª«(MENU_PREFIX)‚ğœ‚«A’Ê”Ô‚ğƒCƒ“ƒfƒbƒNƒX‚Æ‚µ‚Äˆø”‚É“n‚·
+    '// ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ï¿½IDï¿½ÌÚ“ï¿½ï¿½ï¿½(MENU_PREFIX)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ê”Ô‚ï¿½ï¿½Cï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½Æ‚ï¿½ï¿½Äˆï¿½ï¿½ï¿½ï¿½É“nï¿½ï¿½
     Call ActiveWorkbook.Sheets(CInt(Mid(control.ID, Len(MENU_PREFIX) + 1))).Activate
     Exit Sub
 
@@ -553,49 +553,49 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒŠƒ{ƒ“ƒ{ƒ^ƒ“ƒR[ƒ‹ƒoƒbƒNŠÇ—
-'// à–¾F       ƒŠƒ{ƒ“‚©‚ç‚ÌƒR[ƒ‹ƒoƒbƒN‚ğ‚Â‚©‚³‚Ç‚é
-'//              ‰Ÿ‚³‚ê‚½ƒRƒ“ƒgƒ[ƒ‹‚ÌID‚ğŠî‚Éˆ—‚ğŒÄ‚Ño‚·B
-'// ˆø”F       control ‘ÎÛƒRƒ“ƒgƒ[ƒ‹
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½Rï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½Ç—ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½
+'//              ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½B
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       control ï¿½ÎÛƒRï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub ribbonCallback(control As IRibbonControl)
     Select Case control.ID
-        '// ƒV[ƒg /////
-        Case "SheetComp"                    '// ƒV[ƒg”äŠr
+        '// ï¿½Vï¿½[ï¿½g /////
+        Case "SheetComp"                    '// ï¿½Vï¿½[ï¿½gï¿½ï¿½r
             Call frmCompSheet.Show
-        Case "SheetList"                    '// ƒV[ƒgˆê——
+        Case "SheetList"                    '// ï¿½Vï¿½[ï¿½gï¿½ê——
             Call frmShowSheetList.Show
-        Case "SheetSetting"                 '// ƒV[ƒg‚Ìİ’è
+        Case "SheetSetting"                 '// ï¿½Vï¿½[ï¿½gï¿½Ìİ’ï¿½
             Call frmSheetManage.Show
-        Case "SheetSortAsc"                 '// ƒV[ƒg‚Ì•À‚×‘Ö‚¦
+        Case "SheetSortAsc"                 '// ï¿½Vï¿½[ï¿½gï¿½Ì•ï¿½ï¿½×‘Ö‚ï¿½
             Call psSortWorksheet("ASC")
-        Case "SheetSortDesc"                '// ƒV[ƒg‚Ì•À‚×‘Ö‚¦
+        Case "SheetSortDesc"                '// ï¿½Vï¿½[ï¿½gï¿½Ì•ï¿½ï¿½×‘Ö‚ï¿½
             Call psSortWorksheet("DESC")
         
-        '// ƒf[ƒ^ /////
-        Case "Select"                       '// Select•¶Às
+        '// ï¿½fï¿½[ï¿½^ /////
+        Case "Select"                       '// Selectï¿½ï¿½ï¿½ï¿½ï¿½s
             Call frmGetRecord.Show
         
-        '// ’l‚Ì‘€ì /////
-        Case "DatePicker"                       '// “ú•t
+        '// ï¿½lï¿½Ì‘ï¿½ï¿½ï¿½ /////
+        Case "DatePicker"                       '// ï¿½ï¿½ï¿½t
             Call frmDatePicker.Show
-        Case "Today", "Now"                     '// “ú•t - –{“ú“ú•t/Œ»İ
+        Case "Today", "Now"                     '// ï¿½ï¿½ï¿½t - ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½t/ï¿½ï¿½ï¿½İï¿½ï¿½ï¿½
             Call psPutDateTime(control.ID)
             
-        '// ŒrüAƒIƒuƒWƒFƒNƒg /////
-        Case "FitObjects"                   '// ƒIƒuƒWƒFƒNƒg‚ğƒZƒ‹‚É‡‚í‚¹‚é
+        '// ï¿½rï¿½ï¿½ï¿½Aï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g /////
+        Case "FitObjects"                   '// ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Éï¿½ï¿½í‚¹ï¿½ï¿½
             Call frmOrderShape.Show
         
-        '// ŒŸõAƒtƒ@ƒCƒ‹ /////
-        Case "AdvancedSearch"               '// Šg’£ŒŸõ
+        '// ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½tï¿½@ï¿½Cï¿½ï¿½ /////
+        Case "AdvancedSearch"               '// ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             Call frmSearch.Show
-        Case "FileList"                     '// ƒtƒ@ƒCƒ‹ˆê——
+        Case "FileList"                     '// ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ê——
             Call frmFileList.Show
         
-        '// ‚»‚Ì‘¼ /////
-        Case "InitTool"                     '// ƒc[ƒ‹‰Šú‰»
+        '// ï¿½ï¿½ï¿½Ì‘ï¿½ /////
+        Case "InitTool"                     '// ï¿½cï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             Call psInitExTools
-        Case "Version"                      '// ƒo[ƒWƒ‡ƒ“î•ñ
+        Case "Version"                      '// ï¿½oï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             Call frmAbout.Show
     End Select
 
@@ -603,9 +603,9 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒŠƒ{ƒ“ƒ{ƒ^ƒ“ƒR[ƒ‹ƒoƒbƒNŠÇ—i“ú•tƒsƒbƒJ[§ŒäƒgƒOƒ‹—pj
-'// à–¾F       ƒŠƒ{ƒ“‚©‚ç‚ÌƒR[ƒ‹ƒoƒbƒN‚ğ‚Â‚©‚³‚Ç‚é
-'// ˆø”F       control ‘ÎÛƒRƒ“ƒgƒ[ƒ‹
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½Rï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½Ç—ï¿½ï¿½iï¿½ï¿½ï¿½tï¿½sï¿½bï¿½Jï¿½[ï¿½ï¿½ï¿½ï¿½gï¿½Oï¿½ï¿½ï¿½pï¿½j
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       control ï¿½ÎÛƒRï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub ribbonCallback_DatePickerToggle(control As IRibbonControl, pressed As Boolean)
     gDatePickerToggle = Not pressed
@@ -613,9 +613,9 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒŠƒ{ƒ“ƒ{ƒ^ƒ“ƒR[ƒ‹ƒoƒbƒNŠÇ—i“ú•tƒsƒbƒJ[§ŒäƒgƒOƒ‹ ƒƒjƒ…[§Œä—pj
-'// à–¾F       ƒŠƒ{ƒ“‚©‚ç‚ÌƒR[ƒ‹ƒoƒbƒN‚ğ‚Â‚©‚³‚Ç‚é
-'// ˆø”F       control ‘ÎÛƒRƒ“ƒgƒ[ƒ‹
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½Rï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½Ç—ï¿½ï¿½iï¿½ï¿½ï¿½tï¿½sï¿½bï¿½Jï¿½[ï¿½ï¿½ï¿½ï¿½gï¿½Oï¿½ï¿½ ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½pï¿½j
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒRï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       control ï¿½ÎÛƒRï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub GetDatePickerToggleState(control As IRibbonControl, ByRef returnedVal)
     returnedVal = gDatePickerToggle
@@ -623,13 +623,13 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒV[ƒg‚ğƒNƒCƒbƒNƒAƒNƒZƒX‚É•\¦(Excel2007ˆÈ~)
-'// à–¾F       ƒV[ƒgˆê——‚ğƒƒjƒ…[‚É•\¦‚·‚éB
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½Nï¿½Cï¿½bï¿½Nï¿½Aï¿½Nï¿½Zï¿½Xï¿½É•\ï¿½ï¿½(Excel2007ï¿½È~)
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½Vï¿½[ï¿½gï¿½ê——ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½É•\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsShowSheetOnMenu_2007()
     Dim barCtrl       As CommandBar
     
-    '// ƒƒjƒ…[‚Ì‰Šú‰»
+    '// ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
     For Each barCtrl In CommandBars
         If barCtrl.Name = "ExSheetMenu" Then
             Call barCtrl.Delete
@@ -645,9 +645,9 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒV[ƒg‚ğƒƒjƒ…[‚É•\¦
-'// à–¾F       ƒV[ƒgˆê——‚ğƒƒjƒ…[‚É•\¦‚·‚éB
-'// ˆø”F       wkBook: ‘ÎÛƒuƒbƒN
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½É•\ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½Vï¿½[ï¿½gï¿½ê——ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½É•\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       wkBook: ï¿½ÎÛƒuï¿½bï¿½N
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub gsShowSheetOnMenu_sub(barCtrl As Object)
 On Error GoTo ErrorHandler
@@ -660,11 +660,11 @@ On Error GoTo ErrorHandler
     
     Set wkBook = ActiveWorkbook
     If wkBook.Sheets.Count > MENU_NUM Then
-        '// ‚R‚O–‡ˆÈã‚ÌƒV[ƒg‚ÍƒOƒ‹[ƒv‰»‚·‚é
+        '// ï¿½Rï¿½Oï¿½ï¿½ï¿½Èï¿½ÌƒVï¿½[ï¿½gï¿½ÍƒOï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         For Each sheetObj In wkBook.Sheets
             If (sheetObj.Index - 1) Mod MENU_NUM = 0 Then
                 Set barCtrl_sub = barCtrl.Controls.Add(Type:=msoControlPopup)
-                barCtrl_sub.Caption = "ƒV[ƒg " & CStr(sheetObj.Index) & " ` " & CStr(sheetObj.Index + MENU_NUM - 1) & " (&" & IIf(Int(sheetObj.Index / MENU_NUM) < 10, CStr(Int(sheetObj.Index / MENU_NUM)), Chr(55 + Int(sheetObj.Index / MENU_NUM))) & ")"
+                barCtrl_sub.Caption = "ï¿½Vï¿½[ï¿½g " & CStr(sheetObj.Index) & " ï¿½` " & CStr(sheetObj.Index + MENU_NUM - 1) & " (&" & IIf(Int(sheetObj.Index / MENU_NUM) < 10, CStr(Int(sheetObj.Index / MENU_NUM)), Chr(55 + Int(sheetObj.Index / MENU_NUM))) & ")"
             End If
             
             If sheetObj.Type = xlWorksheet Then
@@ -674,7 +674,7 @@ On Error GoTo ErrorHandler
             End If
         Next
     Else
-        '// ‚R‚O–‡ˆÈ‰º‚ÌƒV[ƒg‚Í‚»‚Ì‚Ü‚Ü•\¦
+        '// ï¿½Rï¿½Oï¿½ï¿½ï¿½È‰ï¿½ï¿½ÌƒVï¿½[ï¿½gï¿½Í‚ï¿½ï¿½Ì‚Ü‚Ü•\ï¿½ï¿½
         For Each sheetObj In wkBook.Sheets
             If sheetObj.Type = xlWorksheet Then
                 Call psPutMenu(barCtrl.Controls, sheetObj.Name & " (&" & IIf(sheetObj.Index < 10, CStr(sheetObj.Index), Chr(55 + sheetObj.Index)) & ")", "psActivateSheet", IIf(sheetObj.ProtectContents, 505, 0), False, sheetObj.Name, (sheetObj.Visible = xlSheetVisible))
@@ -691,9 +691,9 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒƒjƒ…[ƒVƒ‡[ƒgƒJƒbƒg•¶š—ñæ“¾
-'// à–¾F       ƒV[ƒg‚Ìƒƒjƒ…[•\¦‚É‚ÄAƒVƒ‡[ƒgƒJƒbƒg—p•¶š—ñ‚ğæ“¾‚·‚é
-'// –ß‚è’lF     1`9‚Ü‚½‚ÍA`T‚Ì•¶š—ñ
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½Vï¿½[ï¿½gï¿½Ìƒï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½\ï¿½ï¿½ï¿½É‚ÄAï¿½Vï¿½ï¿½ï¿½[ï¿½gï¿½Jï¿½bï¿½gï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
+'// ï¿½ß‚ï¿½lï¿½F     1ï¿½`9ï¿½Ü‚ï¿½ï¿½ï¿½Aï¿½`Tï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetMenuIndex(sheetIdx As Integer, menuCnt As Integer) As String
     Select Case sheetIdx Mod menuCnt
@@ -708,8 +708,8 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒV[ƒg‚ğƒAƒNƒeƒBƒu‚É‚·‚é
-'// à–¾F       ƒƒjƒ…[‚Å‘I‘ğ‚³‚ê‚½ƒƒjƒ…[ƒLƒƒƒvƒVƒ‡ƒ“‚ğAƒAƒNƒeƒBƒu‰»‚Ì‘ÎÛ‚É‚·‚é
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Vï¿½[ï¿½gï¿½ï¿½ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½É‚ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Å‘Iï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Lï¿½ï¿½ï¿½vï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½Ì‘ÎÛ‚É‚ï¿½ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub psActivateSheet()
 On Error GoTo ErrorHandler
@@ -722,24 +722,24 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg—}§
-'// à–¾F       Šeˆ—‘O‚ÉÄ•`‰æ‚âÄŒvZ‚ğ—}~İ’è‚·‚é
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Aï¿½vï¿½ï¿½ï¿½Pï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½}ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ÉÄ•`ï¿½ï¿½ï¿½ÄŒvï¿½Zï¿½ï¿½}ï¿½~ï¿½İ’è‚·ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsSuppressAppEvents()
-    Application.ScreenUpdating = False                  '// ‰æ–Ê•`‰æ’â~
-    Application.Cursor = xlWait                         '// ƒEƒGƒCƒgƒJ[ƒ\ƒ‹
-    Application.EnableEvents = False                    '// ƒCƒxƒ“ƒg—}~
-    Application.Calculation = xlCalculationManual       '// è“®ŒvZ
+    Application.ScreenUpdating = False                  '// ï¿½ï¿½Ê•`ï¿½ï¿½ï¿½~
+    Application.Cursor = xlWait                         '// ï¿½Eï¿½Gï¿½Cï¿½gï¿½Jï¿½[ï¿½\ï¿½ï¿½
+    Application.EnableEvents = False                    '// ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½}ï¿½~
+    Application.Calculation = xlCalculationManual       '// ï¿½è“®ï¿½vï¿½Z
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg—}§‰ğœ
-'// à–¾F       Šeˆ—Œã‚ÉÄ•`‰æ‚âÄŒvZ‚ğÄŠJ‚·‚éBgsSuppressAppEvents ‚Ì‘Î
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½Aï¿½vï¿½ï¿½ï¿½Pï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉÄ•`ï¿½ï¿½ï¿½ÄŒvï¿½Zï¿½ï¿½ï¿½ÄŠJï¿½ï¿½ï¿½ï¿½BgsSuppressAppEvents ï¿½Ì‘ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsResumeAppEvents()
-    Application.StatusBar = False                       '// ƒXƒe[ƒ^ƒXƒo[‚ğÁ‚·
-    Application.Calculation = xlCalculationAutomatic    '// ©“®ŒvZ
+    Application.StatusBar = False                       '// ï¿½Xï¿½eï¿½[ï¿½^ï¿½Xï¿½oï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    Application.Calculation = xlCalculationAutomatic    '// ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Z
     Application.EnableEvents = True
     Application.Cursor = xlDefault
     Application.ScreenUpdating = True
@@ -747,11 +747,11 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   –{“ú“ú•t/Œ»İİ’è
-'// à–¾F       ƒAƒNƒeƒBƒuƒZƒ‹‚É–{“ú“ú•t‚Ü‚½‚ÍŒ»İ‚ğİ’è‚·‚é
+'// ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½F   ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½t/ï¿½ï¿½ï¿½İï¿½ï¿½ï¿½ï¿½İ’ï¿½
+'// ï¿½ï¿½ï¿½ï¿½ï¿½F       ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½Zï¿½ï¿½ï¿½É–{ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½Ü‚ï¿½ï¿½ÍŒï¿½ï¿½İï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚·ï¿½ï¿½
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psPutDateTime(DateTimeMode As String)
-    '// –‘Oƒ`ƒFƒbƒNiƒAƒNƒeƒBƒuƒV[ƒg•ÛŒìA‘I‘ğƒ^ƒCƒvƒZƒ‹j
+    '// ï¿½ï¿½ï¿½Oï¿½`ï¿½Fï¿½bï¿½Nï¿½iï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½Vï¿½[ï¿½gï¿½ÛŒï¿½Aï¿½Iï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½j
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
