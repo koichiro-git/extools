@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.2.5.60"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.3.0.61"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -75,11 +75,11 @@ Private Type BROWSEINFO
 End Type
 
 '// フォルダ選択
-Private Declare Function apiSHBrowseForFolder Lib "shell32.dll" Alias "SHBrowseForFolder" (lpBrowseInfo As BROWSEINFO) As Long
+Private Declare PtrSafe Function apiSHBrowseForFolder Lib "shell32.dll" Alias "SHBrowseForFolder" (lpBrowseInfo As BROWSEINFO) As Long
 '// パス取得
-Private Declare Function apiSHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDList" (ByVal piDL As Long, ByVal strPath As String) As Long
+Private Declare PtrSafe Function apiSHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDList" (ByVal piDL As Long, ByVal strPath As String) As Long
 '//キー割り込み
-Public Declare Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long
+Public Declare PtrSafe Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,6 @@ End Type
 
 Public gADO                             As cADO         '// 接続先DB/Excelオブジェクト
 Public gLang                            As Long         '// 言語
-Public gDatePickerToggle                As Boolean      '// 日付ピッカー（MonthView）表示制御
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -107,8 +106,6 @@ Public gDatePickerToggle                As Boolean      '// 日付ピッカー（MonthV
 Private Sub psInitExTools()
     '// 言語の設定
     gLang = Application.LanguageSettings.LanguageID(msoLanguageIDInstall)
-    '// 変数初期化
-    gDatePickerToggle = False   '// 日付ピッカーをひらいたままにする＝False
 End Sub
 
 
@@ -603,26 +600,6 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   リボンボタンコールバック管理（日付ピッカー制御トグル用）
-'// 説明：       リボンからのコールバックをつかさどる
-'// 引数：       control 対象コントロール
-'// ////////////////////////////////////////////////////////////////////////////
-Public Sub ribbonCallback_DatePickerToggle(control As IRibbonControl, pressed As Boolean)
-    gDatePickerToggle = Not pressed
-End Sub
-
-
-'// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   リボンボタンコールバック管理（日付ピッカー制御トグル メニュー制御用）
-'// 説明：       リボンからのコールバックをつかさどる
-'// 引数：       control 対象コントロール
-'// ////////////////////////////////////////////////////////////////////////////
-Public Sub GetDatePickerToggleState(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = gDatePickerToggle
-End Sub
-
-
-'// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   シートをクイックアクセスに表示(Excel2007以降)
 '// 説明：       シート一覧をメニューに表示する。
 '// ////////////////////////////////////////////////////////////////////////////
@@ -770,7 +747,7 @@ Private Sub psPutDateTime(DateTimeMode As String)
     
 ErrorHandler:
     Call gsResumeAppEvents
-    Call gsShowErrorMsgDlg("mdlCommon.psConvValue", Err)
+    Call gsShowErrorMsgDlg("mdlCommon.psPutDateTime", Err)
 End Sub
 
 

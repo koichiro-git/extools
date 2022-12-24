@@ -39,14 +39,16 @@
 			<button id="removeDup" label="重複値のカウント"  imageMso="RemoveDuplicates" onAction="ribbonCallback_Group" />
 			<button id="listDup" label="重複値を階層表示" imageMso="MultilevelListGallery" onAction="ribbonCallback_Group" />
 		</gallery>
-		<box id="Group3Box1" boxStyle="vertical">
+	</group>
+
+	<!--- **********[Tool Window]********** -->
+	<group idQ="nsExToolsShared:Group7" label="ツールウィンドウ" insertBeforeQ="nsExToolsShared:Group6">
+		<box id="Group7Box1" boxStyle="vertical">
 			<splitButton id="Calendar" size="large" >
 				<button id="DatePicker" label="日付　" imageMso="DataTypeLongDate" onAction="ribbonCallback" />
-				<menu id="Group3Menu1">
+				<menu id="Group7Menu1">
 					<button id="Today" label="本日日付(Today)" imageMso="DataTypeLongDate" onAction="ribbonCallback" />
 					<button id="Now" label="現在時刻(Now)" imageMso="DataTypeDateTime" onAction="ribbonCallback" />
-					<menuSeparator id="Group3Menu1Sep1" />
-					<toggleButton id="DatePickerToggle" label="日付選択後にフォームを閉じる" onAction="ribbonCallback_DatePickerToggle" getPressed="getDatePickerToggleState" />
 					</menu>
 			</splitButton>
 		</box>

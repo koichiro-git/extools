@@ -84,23 +84,15 @@ On Error GoTo ErrorHandler
     Dim c           As String   '// ’Šo‚³‚ê‚½ˆê•¶Žš‚ðŠi”[‚·‚éƒoƒbƒtƒ@
     Dim dig         As Double   '// Œ»Ý‚ÌˆÊ
     Dim lastKanji   As String   '// Š´‚¶‚ªŒ»‚ê‚½ê‡A‚»‚ÌÅŒã‚ÌŠ¿Žš‚ð•ÛŽi–œA‰­A’›‚Ì‚¢‚¸‚ê‚©j
-    Dim Result      As Double   '// •ÏŠ·‚ÌŒo‰ß‚ð•ÛŽ‚·‚é
-
-'    targetStr = "123’›‚Sç5•S‰­3ç–œ5ç"
-'    targetStr = "2‰­3ç–œ‰~"
-'    targetStr = "230000000"
-'    targetStr = "2"
-'    targetStr = "-2•S"
-'    targetStr = "12’›400‰­325–œ5ç4"
-'    targetStr = "5–œ4ç"
-'    targetStr = "¢12‚R’›4ç00‰­3ç2•S5–œ5ç4•S"
+    Dim result      As Double   '// •ÏŠ·‚ÌŒo‰ß‚ð•ÛŽ‚·‚é
+    
     dig = 1
     i = Len(targetStr)
     Do While i > 0
         c = Mid(targetStr, i, 1)
         
         If IsNumeric(c) Then
-            Result = Result + dig * Int(c)
+            result = result + dig * Int(c)
             dig = dig * 10
         Else
             Select Case c
@@ -143,9 +135,9 @@ On Error GoTo ErrorHandler
     Loop
     '// ƒ}ƒCƒiƒX‘Î‰ž
     If InStr(1, "-£¢", Left(targetStr, 1)) > 0 Then
-        Result = Result * -1
+        result = result * -1
     End If
-    pfConvJapaneseToNumber_sub = Result
+    pfConvJapaneseToNumber_sub = result
     Exit Function
     
 ErrorHandler:
