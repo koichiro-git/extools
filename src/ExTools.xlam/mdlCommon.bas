@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.3.0.61"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.3.0.62"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -64,22 +64,23 @@ Private Const MAX_PATH = 260
 
 '// タイプ
 Private Type BROWSEINFO
-    hwndOwner       As Long
+    hwndOwner       As LongPtr
     pidlRoot        As Long
     pszDisplayName  As String
     lpszTitle       As String
     ulFlags         As Long
-    lpfn            As Long
-    lParam          As Long
+    lpfn            As LongPtr
+    lParam          As LongPtr
     iImage          As Long
 End Type
 
 '// フォルダ選択
-Private Declare PtrSafe Function apiSHBrowseForFolder Lib "shell32.dll" Alias "SHBrowseForFolder" (lpBrowseInfo As BROWSEINFO) As Long
+Private Declare PtrSafe Function apiSHBrowseForFolder Lib "shell32.dll" Alias "SHBrowseForFolder" (lpBrowseInfo As BROWSEINFO) As LongPtr
 '// パス取得
-Private Declare PtrSafe Function apiSHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDList" (ByVal piDL As Long, ByVal strPath As String) As Long
+Private Declare PtrSafe Function apiSHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDList" (ByVal piDL As LongPtr, ByVal strPath As String) As LongPtr
 '//キー割り込み
-Public Declare PtrSafe Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long
+'Public Declare PtrSafe Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long
+Public Declare PtrSafe Function GetAsyncKeyState Lib "user32" (ByVal vKey As Long) As Integer
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -381,7 +382,7 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfShowSelectFolder(ByVal lngHwnd As Long, ByRef strReturnPath) As Boolean
     Dim lngRet        As Long
-    Dim lngReturnCode As Long
+    Dim lngReturnCode As LongPtr
     Dim strPath       As String
     Dim biInfo        As BROWSEINFO
     

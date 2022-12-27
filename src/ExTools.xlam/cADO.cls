@@ -147,7 +147,9 @@ End Sub
 '// 修正履歴：   V2より、DML実行のためReadOnlyを0（更新可能）に変更
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function Initialize(HostString As String, userID As String, password As String, connType As udDbConnType) As Boolean
-On Error GoTo ErrorHandler
+'On Error GoTo ErrorHandler
+    Dim strCNString As String
+    
     Call InitError
     Set AdoConnection = CreateObject("ADODB.Connection")
     
@@ -159,8 +161,15 @@ On Error GoTo ErrorHandler
         Case dct_odbc
             Call AdoConnection.Open("Provider=MSDASQL;DSN=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
         Case dct_excel
-            Call AdoConnection.Open("Driver={Microsoft Excel Driver (*.xls)};DBQ=" & HostString & ";Extended Properies=""Excel 12.0"";HDR=1;ReadOnly=0")
-            pDataSourceName = HostString
+'            Call AdoConnection.Open("Driver={Microsoft Excel Driver (*.xls)};DBQ=" & HostString & ";Extended Properies=""Excel 12.0"";HDR=1;ReadOnly=0")
+            Call AdoConnection.Open("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & HostString & ";Extended Properties=""Excel 12.0;HDR=1;ReadOnly=0"";")
+'strCNString = "Provider=Microsoft.ACE.OLEDB.12.0;" _
+& "Data Source=" & HostString & ";" _
+& "Extended Properties=""Excel 12.0;" _
+& "HDR=Yes"";"
+
+'Call AdoConnection.Open(strCNString)
+    
     End Select
   
     pDbType = connType

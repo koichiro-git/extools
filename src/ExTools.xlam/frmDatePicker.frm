@@ -34,7 +34,7 @@ Private Const THUNDER_FRAME     As String = "ThunderDFrame" '// Excel VBAÉÜÅ[ÉUÅ
 '// https://learn.microsoft.com/ja-jp/windows-hardware/manufacture/desktop/dpi-related-apis-and-registry-settings?view=windows-11
 Private Const LOG_PIXELS        As Long = 96
 
-Private Const CALENDAR_SEP_WIDTH    As Double = 15  '// ÉJÉåÉìÉ_Å[2Ç¬Åi2Ç©åéÅjï™ÇÃä‘äu4.5ptÇ∆ÅAÉtÉHÅ[ÉÄç∂âEÇÃó]îíï™ÇÃçáåvÇ≈15ptÇ∆Ç∑ÇÈ
+Private Const CALENDAR_SEP_WIDTH    As Double = 6  ''''// ÉJÉåÉìÉ_Å[2Ç¬Åi2Ç©åéÅjï™ÇÃä‘äu4.5pt +Å@ó\îı
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -96,11 +96,11 @@ End Type
 '// ÉEÉCÉìÉhÉEê∂ê¨
 Private Declare PtrSafe Function CreateWindowEx Lib "user32" Alias "CreateWindowExA" (ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, ByVal dwStyle As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hWndParent As LongPtr, ByVal hMenu As LongPtr, ByVal hInstance As LongPtr, lpParam As Any) As LongPtr
 '// ÉEÉCÉìÉhÉEç¿ïWê›íË
-Private Declare PtrSafe Function MoveWindow Lib "user32" (ByVal hwnd As LongPtr, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal bRepaint As Long) As Long
+Private Declare PtrSafe Function MoveWindow Lib "user32" (ByVal hWnd As LongPtr, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal bRepaint As Long) As Long
 '// É}ÉEÉXç¿ïWéÊìæ
 Private Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 '// ÉEÉBÉìÉhÉEÉRÉìÉgÉçÅ[ÉãÇÃëÄçÏ
-Private Declare PtrSafe Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As LongPtr, ByVal wMsg As Long, ByVal wParam As LongPtr, lParam As Any) As LongPtr
+Private Declare PtrSafe Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hWnd As LongPtr, ByVal wMsg As Long, ByVal wParam As LongPtr, lParam As Any) As LongPtr
 '// ÉEÉBÉìÉhÉEë∂ç›îªíË
 'Private Declare PtrSafe Function IsWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
 '// ÉEÉBÉìÉhÉEîpä¸ÅiìÒèdãNìÆéûÅj
@@ -116,16 +116,16 @@ Private Declare PtrSafe Function InitCommonControlsEx Lib "ComCtl32" (LPINITCOMM
 
 '// ÉEÉBÉìÉhÉEÉXÉ^ÉCÉãï‚ê≥
 #If Win64 Then
-    Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongPtrA" (ByVal hwnd As LongPtr, ByVal nIndex As Long) As LongPtr
-    Private Declare PtrSafe Function SetWindowLongPtr Lib "user32" Alias "SetWindowLongPtrA" (ByVal hwnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As LongPtr) As LongPtr
+    Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongPtrA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As LongPtr
+    Private Declare PtrSafe Function SetWindowLongPtr Lib "user32" Alias "SetWindowLongPtrA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As LongPtr) As LongPtr
 #Else
-    Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long) As LongPtr
-    Private Declare PtrSafe Function SetWindowLongPtr Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As LongPtr) As LongPtr
+    Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As LongPtr
+    Private Declare PtrSafe Function SetWindowLongPtr Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As LongPtr) As LongPtr
 #End If
     
 '// ////////////////////////////////////////////////////////////////////////////
 '// ïœêî
-Private hwndMonthView           As LongPtr  '// MonthViewÇÃÉEÉBÉìÉhÉEÉnÉìÉhÉã
+'Private hwndMonthView           As LongPtr  '// MonthViewÇÃÉEÉBÉìÉhÉEÉnÉìÉhÉã
 
 
 '// //////////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ End Sub
 
 
 Private Sub psSetupDatePicker()
-'On Error GoTo ErrorHandler
+On Error GoTo ErrorHandler
     Dim icce                As tagINITCOMMONCONTROLSEX
     Dim rc                  As RECT
     Dim lnghWnd_Sub         As LongPtr
@@ -158,15 +158,14 @@ Private Sub psSetupDatePicker()
     lnghWnd_Sub = FindWindowEx(hwndForm, 0, vbNullString, vbNullString)
     
     '// MonthViewÉEÉBÉìÉhÉEê∂ê¨(ÉTÉCÉYÉ[ÉçÇ≈ê∂ê¨Å@https://learn.microsoft.com/ja-jp/windows/win32/controls/mcm-getminreqrect)
-    hwndMonthView = CreateWindowEx(0, MONTHCAL_CLASS, vbNullString, (WS_VISIBLE Or WS_CHILD), 0, 0, 0, 0, lnghWnd_Sub, 0, 0, vbNullString) '//lnghWnd_Sub, 0, lnghInstance, vbNullString)
-    hMonthView = hwndMonthView
+    hMonthView = CreateWindowEx(0, MONTHCAL_CLASS, vbNullString, (WS_VISIBLE Or WS_CHILD), 0, 0, 0, 0, lnghWnd_Sub, 0, 0, vbNullString) '//lnghWnd_Sub, 0, lnghInstance, vbNullString)
+'    hMonthView = hwndMonthView
     '// MonthViewópÉEÉBÉìÉhÉEÇÃÉäÉTÉCÉY
-    lResult = SendMessage(hwndMonthView, MCM_GETMINREQRECT, 0, rc)
+    lResult = SendMessage(hMonthView, MCM_GETMINREQRECT, 0, rc)
     calendarWidth = (rc.Right - rc.Left) * 2 + CALENDAR_SEP_WIDTH
-    Call MoveWindow(hwndMonthView, 0, 0, calendarWidth, rc.Bottom - rc.Top, 1&)
+    Call MoveWindow(hMonthView, 0, 0, calendarWidth, rc.Bottom - rc.Top, 1&)
 
     defaultProcAddress = SetWindowLongPtr(lnghWnd_Sub, GWL_WNDPROC, AddressOf WindowProc)
-
 
     '// âÊñ ï‚ê≥ //////////
     Call SetWindowLongPtr(hwndForm, GWL_EXSTYLE, GetWindowLongPtr(hwndForm, GWL_EXSTYLE) Or WS_EX_TOOLWINDOW)   '// UserFormÇToolWindowÉXÉ^ÉCÉãÇ…ïœçX
@@ -180,7 +179,8 @@ Private Sub psSetupDatePicker()
     Exit Sub
 
 ErrorHandler:
-    '// none
+    Call gsResumeAppEvents
+    Call gsShowErrorMsgDlg("frmDatePicker.psSetupDatePicker", Err)
 End Sub
 
 

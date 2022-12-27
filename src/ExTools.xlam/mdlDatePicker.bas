@@ -13,8 +13,7 @@ Option Base 0
 '// ////////////////////////////////////////////////////////////////////////////
 '// Windows API 関連の宣言
 Private Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As LongPtr)
-Public Declare PtrSafe Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As LongPtr, ByVal hwnd As LongPtr, ByVal Msg As LongPtr, ByVal wParam As LongPtr, ByVal lParam As LongPtr) As LongPtr
-
+Public Declare PtrSafe Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As LongPtr, ByVal hWnd As LongPtr, ByVal Msg As Long, ByVal wParam As LongPtr, ByVal lParam As LongPtr) As LongPtr
 
 Private Const WM_NOTIFY = &H4E           '//0x004E
 Private Const MCN_SELECT = -746
@@ -35,7 +34,7 @@ End Type
 Private Type NMHDR
     hwndFrom        As LongPtr
     idFrom          As LongPtr
-    code            As Long  'Integer
+    code            As Long
 End Type
 
 Private Type tagNMSELCHANGE
@@ -44,7 +43,8 @@ Private Type tagNMSELCHANGE
     stSelEnd        As SYSTEMTIME
 End Type
 
-
+'// ////////////////////////////////////////////////////////////////////////////
+'// 変数
 Public defaultProcAddress   As LongPtr
 Public hMonthView           As LongPtr  '// MonthViewのウィンドウハンドル
 
@@ -57,7 +57,7 @@ Public hMonthView           As LongPtr  '// MonthViewのウィンドウハンドル
 '//              wParam: 追加のメッセージ固有情報
 '//              lParam: 追加のメッセージ固有情報
 '// ////////////////////////////////////////////////////////////////////////////
-Public Function WindowProc(ByVal hwnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As LongPtr
+Public Function WindowProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As LongPtr
 On Error GoTo ErrorHandler
     Dim tagNMHDR    As NMHDR
     Dim prm         As tagNMSELCHANGE
@@ -72,5 +72,5 @@ On Error GoTo ErrorHandler
     End If
     '// 処理の成否にかかわらず必ずデフォルトのウィンドウプロシージャに引き渡す
 ErrorHandler:
-    WindowProc = CallWindowProc(defaultProcAddress, hwnd, uMsg, wParam, lParam)
+    WindowProc = CallWindowProc(defaultProcAddress, hWnd, uMsg, wParam, lParam)
 End Function
