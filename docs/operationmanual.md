@@ -11,6 +11,7 @@
 * [ハイパーリンク](#anchor_hlink)
 * [固定長コピー／Markdown表コピー](#anchor_copy)
 * [グループ処理](#anchor_group)
+* [日付入力(Date Picker)](#anchor_datepicker)
 * [ヘッダ部の罫線を描画](#anchor_headerline)
 * [データ部の罫線を描画](#anchor_data_line)
 * [オブジェクトをセルに合わせる](#anchor_fitshape)
@@ -25,6 +26,7 @@
 * [拡張パック](#anchor_optpack)
   * [電話番号にハイフンを付与](#anchor_phonenum)
   * [翻訳](#anchor_translate)
+  * [日本語表記数値変換](#anchor_convjp2number)
 
 <br>
 
@@ -249,6 +251,15 @@ Excel本体にシート比較機能が実装されたことに伴い、本機能
 処理可能な範囲は８列までです。また、必ずしもＡ列から選択する必要はありません。
 
 ![pict](fig_group_mod_lag.gif)
+
+<br>
+
+# 日付入力（Date Picker）<a id="anchor_datepicker"></a>
+日付入力パレット（Date Picker）を表示します。マウスクリックで日付の入力が可能です。メニュー「本日日付」および「現在時刻」をクリックすることで直接入力することもできます。
+
+> この機能はMicrosoft標準のDate Pickerを表示するため、お使いのPC環境により表示されるカレンダーのデザインが異なります。
+
+![pict](fig_datepicker.gif)
 
 <br>
 
@@ -494,3 +505,12 @@ DeepL社の翻訳機能を利用して、日→英、英→日の翻訳を行い
 本機能を使用するためには、DeepL社のアカウント登録およびアカウント登録後に提供される認証キーが必要です。認証キーの取得については[エクセル拡張ツール インストール方法](installation.md)を参照ください。
 
 本機能は翻訳対象となる文章をDeepL社に随時送信し、翻訳結果を受信します。このためオフラインでの使用はできません。認証キーが正しく設定されていない場合や通信エラーが生じた場合にはセルにエラーが出力されます。
+
+<br>
+
+# 日本語表記数値変換<a id="anchor_convjp2number"></a>
+「2千5百万」のような日本語で表された数字を数値（この場合は 25000000）に変換します。
+
+![pict](fig_convjp2number.gif)
+
+> 現行バージョンでは、小数点は未対応です。
