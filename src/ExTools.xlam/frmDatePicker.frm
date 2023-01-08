@@ -34,98 +34,7 @@ Private Const THUNDER_FRAME     As String = "ThunderDFrame" '// Excel VBAƒ†[ƒU
 '// https://learn.microsoft.com/ja-jp/windows-hardware/manufacture/desktop/dpi-related-apis-and-registry-settings?view=windows-11
 Private Const LOG_PIXELS        As Long = 96
 
-Private Const CALENDAR_SEP_WIDTH    As Double = 6  ''''// ƒJƒŒƒ“ƒ_[2‚Âi2‚©Œj•ª‚ÌŠÔŠu4.5pt +@—\”õ
-
-
-'// ////////////////////////////////////////////////////////////////////////////
-'// Windows API ŠÖ˜A‚ÌéŒ¾
-
-'// ’è”
-Private Const MONTHCAL_CLASS = "SysMonthCal32"
-Private Const ICC_DATE_CLASSES = &H100          '// ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹—p’è”i“ú•t‚Æ‚Ì‘I‘ğƒRƒ“ƒgƒ[ƒ‹j
-
-'// Window Styles
-Private Const WS_VISIBLE = &H10000000
-Private Const WS_CHILD = &H40000000
-'Private Const WS_BORDER = &H800000
-Private Const WS_EX_TOOLWINDOW = &H80
-
-'// Window field offsets for GetWindowLong() and GetWindowWord()
-Private Const GWL_WNDPROC = (-4)
-Private Const GWL_EXSTYLE = (-20)
-
-'// MonthView SendMessage—pƒƒbƒZ[ƒW’è‹`
-Private Const MCM_FIRST = &H1000
-Private Const MCM_GETCURSEL = (MCM_FIRST + 1)           '// ‘I‘ğ‚³‚ê‚½“ú•t‚ğæ“¾
-Private Const MCM_SETCURSEL = (MCM_FIRST + 2)
-Private Const MCM_GETMINREQRECT = (MCM_FIRST + 9)       '// MonthView‚ÌƒTƒCƒY‚ğæ“¾
-
-'// ƒ^ƒCƒv
-'// InitCommonControlsEx—p
-Private Type tagINITCOMMONCONTROLSEX
-    dwSize          As Long
-    dwICC           As Long
-End Type
-
-'// “ú•tiMonthView ‚©‚çMCM_GETCURSELw’è‚Å“ú•t‚ğæ“¾‚·‚éÛ‚Ég—pj
-Private Type SYSTEMTIME
-    wYear As Integer
-    wMonth As Integer
-    wDayOfWeek As Integer
-    wDay As Integer
-    wHour As Integer
-    wMinute As Integer
-    wSecond As Integer
-    wMilliseconds As Integer
-End Type
-
-'// RECTiƒEƒBƒ“ƒhƒEƒTƒCƒYİ’è‚Ég—pB’PˆÊƒsƒNƒZƒ‹j
-Private Type RECT
-    Left        As Long
-    Top         As Long
-    Right       As Long
-    Bottom      As Long
-End Type
-
-'// À•W iƒ}ƒEƒXÀ•Wj
-Private Type POINTAPI
-    x           As Long
-    y           As Long
-End Type
-
-'// ƒEƒCƒ“ƒhƒE¶¬
-Private Declare PtrSafe Function CreateWindowEx Lib "user32" Alias "CreateWindowExA" (ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, ByVal dwStyle As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hWndParent As LongPtr, ByVal hMenu As LongPtr, ByVal hInstance As LongPtr, lpParam As Any) As LongPtr
-'// ƒEƒCƒ“ƒhƒEÀ•Wİ’è
-Private Declare PtrSafe Function MoveWindow Lib "user32" (ByVal hWnd As LongPtr, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal bRepaint As Long) As Long
-'// ƒ}ƒEƒXÀ•Wæ“¾
-Private Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
-'// ƒEƒBƒ“ƒhƒEƒRƒ“ƒgƒ[ƒ‹‚Ì‘€ì
-Private Declare PtrSafe Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hWnd As LongPtr, ByVal wMsg As Long, ByVal wParam As LongPtr, lParam As Any) As LongPtr
-'// ƒEƒBƒ“ƒhƒE‘¶İ”»’è
-'Private Declare PtrSafe Function IsWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
-'// ƒEƒBƒ“ƒhƒE”pŠüi“ñd‹N“®j
-'Private Declare PtrSafe Function DestroyWindow Lib "user32" (ByVal hwnd As LongPtr) As Long
-'// ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹æ“¾
-Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
-Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" (ByVal hWnd1 As LongPtr, ByVal hWnd2 As LongPtr, ByVal lpsz1 As String, ByVal lpsz2 As String) As LongPtr
-'Private Declare PtrSafe Function GetActiveWindow Lib "user32" () As LongPtr
-
-
-'// ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹‰Šú‰»
-Private Declare PtrSafe Function InitCommonControlsEx Lib "ComCtl32" (LPINITCOMMONCONTROLSEX As Any) As Long
-
-'// ƒEƒBƒ“ƒhƒEƒXƒ^ƒCƒ‹•â³
-#If Win64 Then
-    Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongPtrA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As LongPtr
-    Private Declare PtrSafe Function SetWindowLongPtr Lib "user32" Alias "SetWindowLongPtrA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As LongPtr) As LongPtr
-#Else
-    Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As LongPtr
-    Private Declare PtrSafe Function SetWindowLongPtr Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As LongPtr) As LongPtr
-#End If
-    
-'// ////////////////////////////////////////////////////////////////////////////
-'// •Ï”
-'Private hwndMonthView           As LongPtr  '// MonthView‚ÌƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+Private Const CALENDAR_SEP_WIDTH    As Double = 6  '// ƒJƒŒƒ“ƒ_[2‚Âi2‚©Œj•ª‚ÌŠÔŠu4.5pt + —\”õ
 
 
 '// //////////////////////////////////////////////////////////////////
@@ -139,8 +48,8 @@ Private Sub psSetupDatePicker()
 On Error GoTo ErrorHandler
     Dim icce                As tagINITCOMMONCONTROLSEX
     Dim rc                  As RECT
-    Dim lnghWnd_Sub         As LongPtr
-    Dim hwndForm            As LongPtr  '// UserForm‚ÌƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+    Dim hWnd_Sub            As LongPtr
+    Dim hWnd                As LongPtr  '// UserForm‚ÌƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
     Dim lResult             As LongPtr
     Dim calendarWidth       As Long
     
@@ -151,24 +60,23 @@ On Error GoTo ErrorHandler
     If lResult = 0 Then Call Err.Raise(Number:=513, Description:="“ú•tƒsƒbƒJ[‰æ–Ê‚ğ¶¬‚Å‚«‚Ü‚¹‚ñ")
     
     ' ƒ†[ƒU[ƒtƒH[ƒ€‚ÌHWND‚Ìæ“¾
-    hwndForm = FindWindow(THUNDER_FRAME, Me.Caption)
-    If hwndForm = 0 Then Call Err.Raise(Number:=513, Description:="“ú•tƒsƒbƒJ[‰æ–Ê‚ğ¶¬‚Å‚«‚Ü‚¹‚ñ")
+    hWnd = FindWindow(THUNDER_FRAME, Me.Caption)
+    If hWnd = 0 Then Call Err.Raise(Number:=513, Description:="“ú•tƒsƒbƒJ[‰æ–Ê‚ğ¶¬‚Å‚«‚Ü‚¹‚ñ")
 
     ' MonthView”z’u—pƒnƒ“ƒhƒ‹‚Ìæ“¾
-    lnghWnd_Sub = FindWindowEx(hwndForm, 0, vbNullString, vbNullString)
+    hWnd_Sub = FindWindowEx(hWnd, 0, vbNullString, vbNullString)
     
     '// MonthViewƒEƒBƒ“ƒhƒE¶¬(ƒTƒCƒYƒ[ƒ‚Å¶¬@https://learn.microsoft.com/ja-jp/windows/win32/controls/mcm-getminreqrect)
-    hMonthView = CreateWindowEx(0, MONTHCAL_CLASS, vbNullString, (WS_VISIBLE Or WS_CHILD), 0, 0, 0, 0, lnghWnd_Sub, 0, 0, vbNullString) '//lnghWnd_Sub, 0, lnghInstance, vbNullString)
-'    hMonthView = hwndMonthView
+    hMonthView = CreateWindowEx(0, MONTHCAL_CLASS, vbNullString, (WS_VISIBLE Or WS_CHILD), 0, 0, 0, 0, hWnd_Sub, 0, 0, vbNullString) '//hWnd_Sub, 0, lnghInstance, vbNullString)
     '// MonthView—pƒEƒBƒ“ƒhƒE‚ÌƒŠƒTƒCƒY
     lResult = SendMessage(hMonthView, MCM_GETMINREQRECT, 0, rc)
     calendarWidth = (rc.Right - rc.Left) * 2 + CALENDAR_SEP_WIDTH
     Call MoveWindow(hMonthView, 0, 0, calendarWidth, rc.Bottom - rc.Top, 1&)
 
-    defaultProcAddress = SetWindowLongPtr(lnghWnd_Sub, GWL_WNDPROC, AddressOf WindowProc)
+    defaultProcAddress = SetWindowLongPtr(hWnd_Sub, GWL_WNDPROC, AddressOf WindowProc)
 
     '// ‰æ–Ê•â³ //////////
-    Call SetWindowLongPtr(hwndForm, GWL_EXSTYLE, GetWindowLongPtr(hwndForm, GWL_EXSTYLE) Or WS_EX_TOOLWINDOW)   '// UserForm‚ğToolWindowƒXƒ^ƒCƒ‹‚É•ÏX
+    Call SetWindowLongPtr(hWnd, GWL_EXSTYLE, GetWindowLongPtr(hWnd, GWL_EXSTYLE) Or WS_EX_TOOLWINDOW)   '// UserForm‚ğToolWindowƒXƒ^ƒCƒ‹‚É•ÏX
     
     '// ƒtƒH[ƒ€ƒTƒCƒY•â³(px¨pt•ÏŠ·)B‰¡•‚ÍƒJƒŒƒ“ƒ_[•{ƒtƒH[ƒ€˜g•Bc‚‚ÍƒJƒŒƒ“ƒ_[‚{ƒtƒH[ƒ€˜g•
     Me.Width = calendarWidth * 72 / LOG_PIXELS + (Me.Width - Me.InsideWidth)

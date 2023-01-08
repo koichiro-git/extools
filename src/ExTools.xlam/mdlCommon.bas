@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.3.0.62"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.3.0.63"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -53,34 +53,6 @@ Public Const EXCEL_PASSWORD           As String = ""                            
 Public Const STAT_INTERVAL            As Integer = 100                                              '// ステータスバー更新頻度
 Public Const ROW_DIFF_STRIKETHROUGH   As Boolean = True                                             '// $mod
 Private Const MENU_NUM                As Integer = 30                                               '// シートをメニューに表示する際のグループ閾値
-
-
-'// ////////////////////////////////////////////////////////////////////////////
-'// Windows API 関連の宣言
-
-'// 定数
-Private Const BIF_RETURNONLYFSDIRS = &H1
-Private Const MAX_PATH = 260
-
-'// タイプ
-Private Type BROWSEINFO
-    hwndOwner       As LongPtr
-    pidlRoot        As Long
-    pszDisplayName  As String
-    lpszTitle       As String
-    ulFlags         As Long
-    lpfn            As LongPtr
-    lParam          As LongPtr
-    iImage          As Long
-End Type
-
-'// フォルダ選択
-Private Declare PtrSafe Function apiSHBrowseForFolder Lib "shell32.dll" Alias "SHBrowseForFolder" (lpBrowseInfo As BROWSEINFO) As LongPtr
-'// パス取得
-Private Declare PtrSafe Function apiSHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDList" (ByVal piDL As LongPtr, ByVal strPath As String) As LongPtr
-'//キー割り込み
-'Public Declare PtrSafe Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long
-Public Declare PtrSafe Function GetAsyncKeyState Lib "user32" (ByVal vKey As Long) As Integer
 
 
 '// ////////////////////////////////////////////////////////////////////////////
