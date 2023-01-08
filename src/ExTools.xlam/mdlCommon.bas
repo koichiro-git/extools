@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.2.5.60"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.3.0.64"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -53,33 +53,6 @@ Public Const EXCEL_PASSWORD           As String = ""                            
 Public Const STAT_INTERVAL            As Integer = 100                                              '// ステータスバー更新頻度
 Public Const ROW_DIFF_STRIKETHROUGH   As Boolean = True                                             '// $mod
 Private Const MENU_NUM                As Integer = 30                                               '// シートをメニューに表示する際のグループ閾値
-
-
-'// ////////////////////////////////////////////////////////////////////////////
-'// Windows API 関連の宣言
-
-'// 定数
-Private Const BIF_RETURNONLYFSDIRS = &H1
-Private Const MAX_PATH = 260
-
-'// タイプ
-Private Type BROWSEINFO
-    hwndOwner       As Long
-    pidlRoot        As Long
-    pszDisplayName  As String
-    lpszTitle       As String
-    ulFlags         As Long
-    lpfn            As Long
-    lParam          As Long
-    iImage          As Long
-End Type
-
-'// フォルダ選択
-Private Declare Function apiSHBrowseForFolder Lib "shell32.dll" Alias "SHBrowseForFolder" (lpBrowseInfo As BROWSEINFO) As Long
-'// パス取得
-Private Declare Function apiSHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDList" (ByVal piDL As Long, ByVal strPath As String) As Long
-'//キー割り込み
-Public Declare Function GetAsyncKeyState Lib "User32.dll" (ByVal vKey As Long) As Long
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -381,7 +354,7 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfShowSelectFolder(ByVal lngHwnd As Long, ByRef strReturnPath) As Boolean
     Dim lngRet        As Long
-    Dim lngReturnCode As Long
+    Dim lngReturnCode As LongPtr
     Dim strPath       As String
     Dim biInfo        As BROWSEINFO
     
@@ -574,7 +547,10 @@ Public Sub ribbonCallback(control As IRibbonControl)
             Call frmGetRecord.Show
         
         '// 値の操作 /////
-        '// N/A
+        Case "DatePicker"                       '// 日付
+            Call frmDatePicker.Show
+        Case "Today", "Now"                     '// 日付 - 本日日付/現在時刻
+            Call psPutDateTime(control.ID)
             
         '// 罫線、オブジェクト /////
         Case "FitObjects"                   '// オブジェクトをセルに合わせる
@@ -717,6 +693,34 @@ Public Sub gsResumeAppEvents()
     Application.EnableEvents = True
     Application.Cursor = xlDefault
     Application.ScreenUpdating = True
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   本日日付/現在時刻設定
+'// 説明：       アクティブセルに本日日付または現在時刻を設定する
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psPutDateTime(DateTimeMode As String)
+    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
+    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
+        Exit Sub
+    End If
+    
+    Call gsSuppressAppEvents
+    
+    Select Case DateTimeMode
+        Case "Today"
+            ActiveCell.Value = Date
+        Case "Now"
+            ActiveCell.Value = Now
+    End Select
+    
+    Call gsResumeAppEvents
+    Exit Sub
+    
+ErrorHandler:
+    Call gsResumeAppEvents
+    Call gsShowErrorMsgDlg("mdlCommon.psPutDateTime", Err)
 End Sub
 
 

@@ -148,6 +148,8 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function Initialize(HostString As String, userID As String, password As String, connType As udDbConnType) As Boolean
 On Error GoTo ErrorHandler
+    Dim strCNString As String
+    
     Call InitError
     Set AdoConnection = CreateObject("ADODB.Connection")
     
@@ -159,8 +161,7 @@ On Error GoTo ErrorHandler
         Case dct_odbc
             Call AdoConnection.Open("Provider=MSDASQL;DSN=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
         Case dct_excel
-            Call AdoConnection.Open("Driver={Microsoft Excel Driver (*.xls)};DBQ=" & HostString & ";Extended Properies=""Excel 12.0"";HDR=1;ReadOnly=0")
-            pDataSourceName = HostString
+            Call AdoConnection.Open("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & HostString & ";Extended Properties=""Excel 12.0;HDR=1;ReadOnly=0"";")
     End Select
   
     pDbType = connType
@@ -186,20 +187,14 @@ End Function
 Public Function GetRecordset(sql As String) As Object
 On Error GoTo ErrorHandler
     Dim cmd As Object
-'    Dim rst As Object
   
     Set cmd = CreateObject("ADODB.Command")
     Set cmd.ActiveConnection = AdoConnection
     cmd.CommandType = adCmdText
     cmd.CommandText = sql
     Set GetRecordset = cmd.Execute(pDmlRows)
+    Exit Function
 
-  
-'  Set rst = CreateObject("ADODB.RecordSet")
-'  Call rst.Execute(sql, AdoConnection, 0)  '// 0:adOpenForwardOnly
-''  Call rst.Open(sql, AdoConnection, 0)  '// 0:adOpenForwardOnly
-'  Set GetRecordset = rst
-Exit Function
 ErrorHandler:
     Call SetError
     Set GetRecordset = Nothing

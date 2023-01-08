@@ -41,6 +41,19 @@
 		</gallery>
 	</group>
 
+	<!--- **********[Tool Window]********** -->
+	<group idQ="nsExToolsShared:Group7" label="ツールウィンドウ" insertBeforeQ="nsExToolsShared:Group6">
+		<box id="Group7Box1" boxStyle="vertical">
+			<splitButton id="Calendar" size="large" >
+				<button id="DatePicker" label="日付　" imageMso="DataTypeLongDate" onAction="ribbonCallback" />
+				<menu id="Group7Menu1">
+					<button id="Today" label="本日日付(Today)" imageMso="DataTypeLongDate" onAction="ribbonCallback" />
+					<button id="Now" label="現在時刻(Now)" imageMso="DataTypeDateTime" onAction="ribbonCallback" />
+					</menu>
+			</splitButton>
+		</box>
+	</group>
+
 	<!--- **********[Boarders/Charts]********** -->
 	<group idQ="nsExToolsShared:Group4" label="罫線/オブジェクト" insertBeforeQ="nsExToolsShared:Group6">
 		<button id="BorderRowHead" label="行ヘッダの罫線" size="normal" imageMso="TableStyleRowHeaders" onAction="ribbonCallback_DrawLines" />
