@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCopyToClipboard"
 '// プロジェクト   : 拡張ツール
 '// タイトル       : クリップボードへコピー機能
 '// モジュール     : mdlCopyToClipboard
-'// 説明           : 選択範囲を固定長、マークダウン形式でクリップボードにコピーする
+'// 説明           : 選択範囲を固定長、マークダウン形式、または画像形式でクリップボードにコピーする
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
@@ -25,8 +25,10 @@ Public Sub ribbonCallback_Copy2CB(control As IRibbonControl)
     Select Case control.ID
         Case "Copy2Clipboard"               '// 固定長コピー
             Call psCopyToClipboard
-        Case "Copy2CBMarkdown"               '// 固定長コピー
+        Case "Copy2CBMarkdown"              '// マークダウン形式でコピー
             Call psCopyToCB_Markdown
+        Case "Copy2CBImage"                 '// 画像としてコピー
+            Call psCopyToCB_Image
     End Select
 End Sub
 
@@ -186,6 +188,29 @@ On Error GoTo ErrorHandler
     Exit Sub
 ErrorHandler:
     Call gsShowErrorMsgDlg("mdlCommon.psCopyToClipboard_MarkDown", Err)
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   クリップボードへイメージ形式でコピー
+'// 説明：       選択範囲をイメージ形式でクリップボードに格納する。
+'// 引数：       なし
+'// 戻り値：     なし
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub psCopyToCB_Image()
+On Error GoTo ErrorHandler
+        
+    '// 選択範囲が単一であることの確認
+    If Selection.Areas.Count > 1 Then
+        Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)
+        Exit Sub
+    End If
+    '// コピー
+    Call Selection.CopyPicture(xlScreen, xlPicture)
+        
+    Exit Sub
+ErrorHandler:
+    Call gsShowErrorMsgDlg("mdlCommon.psCopyToCB_Image", Err)
 End Sub
 
 
