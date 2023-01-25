@@ -24,7 +24,6 @@ Attribute VB_Exposed = False
 Option Explicit
 Option Base 0
 
-
 '// ////////////////////////////////////////////////////////////////////////////
 '// プライベート変数
 '// 検索結果格納タイプ
@@ -38,8 +37,15 @@ Private Type udMatched
     SavedFile   As Boolean
 End Type
 
-Private pMatched()  As udMatched    '// 検索結果格納用配列
-Private pMatchCnt   As Long         '// 検索結果数
+'// スキップ（エラーにより開けない）ファイル格納タイプ
+Private Type udSkippedFile
+    FileName    As String       '// ファイル名
+    ErrNumber   As Long         '// エラー番号
+    ErrDesc     As String       '// エラー説明
+End Type
+
+Private pMatched()          As udMatched    '// 検索結果格納用配列
+Private pSkippedFile()      As udSkippedFile
 
 
 '// //////////////////////////////////////////////////////////////////
@@ -132,19 +138,28 @@ End Sub
 Private Sub cmdExecute_Click()
     Dim wkSheet   As Worksheet
     Dim fs        As Object
-  
-    '// nullチェック
-    If Trim(txtSearch.Value) = BLANK Then
-      Call MsgBox(MSG_NO_CONDITION, vbOKOnly, APP_TITLE)
-      Call txtSearch.SetFocus
-      Exit Sub
+    
+    '// 事前チェック
+    If Not gfPreCheck() Then
+        Exit Sub
     End If
-  
+    
+    '// 検索文字列チェック
+    If Trim(txtSearch.Value) = BLANK Then           '// nullチェック
+        Call MsgBox(MSG_NO_CONDITION, vbOKOnly, APP_TITLE)
+        Call txtSearch.SetFocus
+        Exit Sub
+    ElseIf Not pfCheckRegExp(txtSearch.Value) Then  '// 正規表現の記載チェック
+        Call MsgBox(MSG_WRONG_COND, vbOKOnly, APP_TITLE)
+        Call txtSearch.SetFocus
+        Exit Sub
+    End If
+    
     Call gsSuppressAppEvents
     
     '// 検索結果クリア
-    pMatchCnt = 0
-    Erase pMatched
+    ReDim pMatched(0)
+    ReDim pSkippedFile(0)
     
     '// 検索実行（psExecSearch呼び出し）
     Select Case cmbTarget.Value
@@ -163,27 +178,28 @@ Private Sub cmdExecute_Click()
                     Call psGetExcelFiles(fs, txtDirectory.Text, txtSearch.Text, ckbCaseSensitive.Value, ckbSubDir.Value)
                 Else
                     Call MsgBox(MSG_DIR_NOT_EXIST, vbOKOnly, APP_TITLE)
+                    Call gsResumeAppEvents
                     Exit Sub
                 End If
                 Set fs = Nothing
             Else
                 Call MsgBox(MSG_NO_DIR, vbOKOnly, APP_TITLE)
                 Call txtDirectory.SetFocus
-                Application.ScreenUpdating = True
+                Call gsResumeAppEvents
                 Exit Sub
             End If
     End Select
     
-    If pMatchCnt > 0 Then   '// 検索結果が1件以上あればシートに出力し、処理完了
+    '// 検索結果が1件以上あればシートに出力し、処理完了
+    If pMatched(0).FileName <> BLANK Then
         Call psShowResult
         Call MsgBox(MSG_FINISHED, vbOKOnly, APP_TITLE)
         Call Me.Hide
     Else
         Call MsgBox(MSG_NO_RESULT, vbOKOnly, APP_TITLE)
     End If
-  
-    Application.StatusBar = False
-    Application.ScreenUpdating = True
+    
+    Call gsResumeAppEvents
 End Sub
 
 
@@ -242,19 +258,19 @@ Private Sub psGetExcelFiles(fs As Object, dirName As String, patternStr As Strin
     '// ファイルの検索
     For Each children In parentDir.files
         With children
-            If LCase(Right(.Name, 3)) = "xls" Then
+            If (LCase(Right(.Name, 4)) = ".xls" Or LCase(Right(.Name, 5)) = ".xlsx") And Not Left(.Name, 2) = "~$" Then     '// エクセルファイルの判定方法は要検討
                 '// 検索
-                '// ブックが既に開かれているかを確認
-                isDuplName = False
-                For Each wkBook In Workbooks
-                    If wkBook.Name = children.Name Then
-                        isDuplName = True
-                        Exit For
-                    End If
-                Next
-                
-                If Not isDuplName Then  '// ブックが開かれている場合は検索対象外
-                    Set wkBook = Workbooks.Open(children.Path, ReadOnly:=True, password:=EXCEL_PASSWORD)
+                '// ＄ToDoブックのオープンを外だししてエラーハンドリングに任せる
+'                '// ブックが既に開かれているかを確認
+'                isDuplName = False
+'                For Each wkBook In Workbooks
+'                    If wkBook.Name = children.Name Then
+'                        isDuplName = True
+'                        Exit For
+'                    End If
+'                Next
+                Set wkBook = pfOpenWorkbook(children)
+                If Not wkBook Is Nothing Then
                     For Each wkSheet In wkBook.Worksheets
                         Call psExecSearch(wkSheet, patternStr, caseSensitive)
                     Next
@@ -276,8 +292,8 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   ディレクトリ内ブック検索
-'// 説明：       指定されたディレクトリ内のブックを検索する
+'// メソッド：   検索処理
+'// 説明：       引数のシートを対象として検索を行う。検索処理の本体
 '// 引数：       wkSheet: 検索対象シート
 '//              patternStr: 検索文字列
 '//              caseSensitive: 大文字小文字の区別フラグ
@@ -307,12 +323,12 @@ Private Sub psExecSearch(wkSheet As Worksheet, patternStr As String, caseSensiti
     regExp.Pattern = patternStr
     regExp.IgnoreCase = caseSensitive
   
-    '// 検索試行（正規表現の記載チェック）
-    If Not pfCheckRegExp(regExp) Then
-        Call MsgBox(MSG_WRONG_COND, vbOKOnly, APP_TITLE)
-        Set regExp = Nothing
-        Exit Sub
-    End If
+'    '// 検索試行（正規表現の記載チェック）
+'    If Not pfCheckRegExp(regExp) Then
+'        Call MsgBox(MSG_WRONG_COND, vbOKOnly, APP_TITLE)
+'        Set regExp = Nothing
+'        Exit Sub
+'    End If
   
     '// セル文字列を検索 //////////
     If ckbSearchText.Value Then
@@ -514,29 +530,41 @@ End Sub
 '// 戻り値：     なし
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psShowResult()
-    Dim wkSheet   As Worksheet
-    Dim idxRow    As Long
+    Dim wkSheet     As Worksheet
+    Dim idx         As Long         '// 配列用インデクス
+    Dim idxRow      As Long         '// 行番号保持インデクス
     
     '// 出力先の設定
     With Workbooks.Add
         Set wkSheet = .ActiveSheet
     End With
-  
-    '// ヘッダの設定
+    
+    '// ヘッダと書式の設定
     Call gsDrawResultHeader(wkSheet, HDR_SEARCH, 1)
-  
     wkSheet.Cells.NumberFormat = "@"
     
-    '// 値の設定
-    For idxRow = 0 To UBound(pMatched) - 1
-        wkSheet.Cells(idxRow + 2, 1).Value = pMatched(idxRow).FileName
-        wkSheet.Cells(idxRow + 2, 2).Value = pMatched(idxRow).SheetName
-        wkSheet.Cells(idxRow + 2, 3).Value = IIf(pMatched(idxRow).Row > 0, mdlCommon.gfGetColIndexString(pMatched(idxRow).Col) & CStr(pMatched(idxRow).Row), BLANK)
-        wkSheet.Cells(idxRow + 2, 4).Value = pMatched(idxRow).TargetText
-        wkSheet.Cells(idxRow + 2, 5).Value = pMatched(idxRow).NoteText
+    '// 値の設定 （エラー）
+    idxRow = wkSheet.UsedRange.Rows.Count + 1
+    If pSkippedFile(0).FileName <> BLANK Then
+        For idx = 0 To UBound(pSkippedFile)
+            wkSheet.Cells(idx + idxRow, 1).Value = pSkippedFile(idx).FileName
+            wkSheet.Cells(idx + idxRow, 5).Value = "エラー:" & pSkippedFile(idx).ErrNumber & " / " & pSkippedFile(idx).ErrDesc
+        Next
+    End If
+    
+    '// 値の設定（検索結果）
+    idxRow = wkSheet.UsedRange.Rows.Count + 1
+    For idx = 0 To UBound(pMatched)
+        wkSheet.Cells(idx + idxRow, 1).Value = pMatched(idx).FileName
+        wkSheet.Cells(idx + idxRow, 2).Value = pMatched(idx).SheetName
+        If pMatched(idx).Row > 0 Then
+            wkSheet.Cells(idx + idxRow, 3).Value = wkSheet.Cells(pMatched(idx).Row, pMatched(idx).Col).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+        End If
+        wkSheet.Cells(idx + idxRow, 4).Value = pMatched(idx).TargetText
+        wkSheet.Cells(idx + idxRow, 5).Value = pMatched(idx).NoteText
         
-        If pMatched(idxRow).SavedFile And pMatched(idxRow).Row > 0 Then '// セーブされているときのみリンク設定
-            ActiveSheet.Hyperlinks.Add Anchor:=wkSheet.Cells(idxRow + 2, 3), Address:=wkSheet.Cells(idxRow + 2, 1).Value, SubAddress:="'" & wkSheet.Cells(idxRow + 2, 2).Value & "'!" & wkSheet.Cells(idxRow + 2, 3).Value
+        If pMatched(idx).SavedFile And pMatched(idx).Row > 0 Then '// セーブされているときのみリンク設定　＄TODOリンク設定の文字列生成を簡素化
+            wkSheet.Hyperlinks.Add Anchor:=wkSheet.Cells(idx + idxRow, 3), Address:=wkSheet.Cells(idx + idxRow, 1).Value, SubAddress:="'" & wkSheet.Cells(idx + idxRow, 2).Value & "'!" & wkSheet.Cells(idx + idxRow, 3).Value
         End If
     Next
   
@@ -549,13 +577,6 @@ Private Sub psShowResult()
     '// 枠線の設定
     Call gsPageSetup_Lines(wkSheet, 1)
     
-'    Call wkSheet.Range(wkSheet.Cells(1, 1), wkSheet.Cells(UBound(pMatched) + 1, 5)).Select
-'    Call mdlCommon.gsDrawLine_Data
-'
-'    '// ヘッダの修飾
-'    Call wkSheet.Range("A1:E1").Select
-'    Call mdlCommon.gsDrawLine_Header
-    
     '//フォント
     wkSheet.Cells.Font.Name = APP_FONT
     wkSheet.Cells.Font.Size = APP_FONT_SIZE
@@ -564,7 +585,7 @@ Private Sub psShowResult()
     
     '// 後処理
     Call wkSheet.Cells(1, 1).Select
-    ActiveWorkbook.Saved = True    '// 閉じるときに保存を求めない
+    wkSheet.Parent.Saved = True    '// 閉じるときに保存を求めない
     Call gsResumeAppEvents
 End Sub
 
@@ -580,17 +601,50 @@ End Sub
 '// 戻り値：     なし
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psSetMatchedRec(wkSheet As Worksheet, Row As Long, Col As Integer, TargetText As String, NoteText As String)
-    ReDim Preserve pMatched(pMatchCnt + 1)
+    Dim idx As Long
     
-    pMatched(pMatchCnt).FileName = wkSheet.Parent.Path & "\" & wkSheet.Parent.Name
-    pMatched(pMatchCnt).SheetName = wkSheet.Name
-    pMatched(pMatchCnt).Row = Row
-    pMatched(pMatchCnt).Col = Col
-    pMatched(pMatchCnt).TargetText = TargetText
-    pMatched(pMatchCnt).NoteText = NoteText
-    pMatched(pMatchCnt).SavedFile = IIf(wkSheet.Parent.Path = BLANK, False, True)
+    If pMatched(0).FileName = "" Then
+        idx = 0
+    Else
+        idx = UBound(pMatched) + 1
+        ReDim Preserve pMatched(idx)
+    End If
     
-    pMatchCnt = pMatchCnt + 1
+    With pMatched(idx)
+        .FileName = wkSheet.Parent.Path & "\" & wkSheet.Parent.Name
+        .SheetName = wkSheet.Name
+        .Row = Row
+        .Col = Col
+        .TargetText = TargetText
+        .NoteText = NoteText
+        .SavedFile = IIf(wkSheet.Parent.Path = BLANK, False, True)
+    End With
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   エラーレコード登録
+'// 説明：       ファイル読み込みエラーの内容を配列に登録する
+'// 引数：       FileName: 対象ファイル名
+'//              ErrNumber: ヒットした値
+'//              ErrDesc: 備考
+'// 戻り値：     なし
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psSetErrorRecord(FileName As String, ErrNumber As Long, ErrDesc As String)
+    Dim idx As Long
+    
+    If pSkippedFile(0).FileName = "" Then
+        idx = 0
+    Else
+        idx = UBound(pSkippedFile) + 1
+        ReDim Preserve pSkippedFile(idx)
+    End If
+    
+    With pSkippedFile(idx)
+        .FileName = FileName
+        .ErrNumber = ErrNumber
+        .ErrDesc = ErrDesc
+    End With
 End Sub
 
 
@@ -614,11 +668,18 @@ End Function
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   検索文字列の妥当性判定
 '// 説明：       指定された検索文字列が正規表現として妥当か（エラーが発生しないか）を確認する
-'// 引数：       regExp: 正規表現オブジェクト
+'// 引数：       patternStr: 検索文字列
 '// 戻り値：     検索の成否
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfCheckRegExp(regExp As Object) As Boolean
+Private Function pfCheckRegExp(patternStr As String) As Boolean
 On Error GoTo ErrorHandler
+    Dim regExp        As Object         '// 正規表現オブジェクト
+    
+    '// 正規表現オブジェクトの作成
+    Set regExp = CreateObject("VBScript.RegExp")
+    regExp.Pattern = patternStr
+    
+    '// 実行テスト。検索文字列が正しい正規表現でない場合はエラー＝例外でFalseを戻す。
     pfCheckRegExp = regExp.test(BLANK)
     pfCheckRegExp = True
     Exit Function
@@ -658,6 +719,41 @@ On Error GoTo ErrorHandler
 
 ErrorHandler:
     pfGetChartTitle = BLANK
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   ブックを開く
+'// 説明：       ファイルパスで指定されたブックを開く。オープン時の例外処理を実装
+'// 引数：       filePath: 対象エクセルファイル名（フルパス）
+'// 戻り値：     成功した場合にはブックオブジェクトを戻す。失敗した場合にはNothingを戻す
+'// ////////////////////////////////////////////////////////////////////////////
+Private Function pfOpenWorkbook(objFile As Object) As Workbook
+On Error GoTo ErrorHandler
+    Dim wkBook       As Workbook
+    
+    '// 重複チェック
+    For Each wkBook In Workbooks
+        If wkBook.Name = objFile.Name Then
+            Set pfOpenWorkbook = Nothing
+            Call psSetErrorRecord(objFile.Path, -1, "重複")
+Debug.Print "duplicated " & objFile.Path
+            Exit Function
+        End If
+    Next
+    
+    
+Debug.Print "開く " & objFile.Path
+    Set wkBook = Workbooks.Open(objFile.Path, ReadOnly:=True, password:=EXCEL_PASSWORD)
+    Set pfOpenWorkbook = wkBook
+Debug.Print "成功 " & objFile.Path
+    Exit Function
+
+ErrorHandler:
+    Set pfOpenWorkbook = Nothing
+    Call psSetErrorRecord(objFile.Path, Err.Number, Err.Description)
+    
+Debug.Print Err.Number & ", " & Err.Description
 End Function
 
 
