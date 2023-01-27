@@ -44,8 +44,9 @@ Private Type udSkippedFile
     ErrDesc     As String       '// エラー説明
 End Type
 
-Private pMatched()          As udMatched    '// 検索結果格納用配列
-Private pSkippedFile()      As udSkippedFile
+
+Private pMatched()          As udMatched        '// 検索結果格納用配列
+Private pSkippedFile()      As udSkippedFile    '// スキップファイル格納用配列
 
 
 '// //////////////////////////////////////////////////////////////////
@@ -157,7 +158,7 @@ Private Sub cmdExecute_Click()
     
     Call gsSuppressAppEvents
     
-    '// 検索結果クリア
+    '// 結果保持配列クリア
     ReDim pMatched(0)
     ReDim pSkippedFile(0)
     
@@ -258,17 +259,8 @@ Private Sub psGetExcelFiles(fs As Object, dirName As String, patternStr As Strin
     '// ファイルの検索
     For Each children In parentDir.files
         With children
-            If (LCase(Right(.Name, 4)) = ".xls" Or LCase(Right(.Name, 5)) = ".xlsx") And Not Left(.Name, 2) = "~$" Then     '// エクセルファイルの判定方法は要検討
+            If (LCase(fs.GetExtensionName(.Name)) = "xls" Or LCase(fs.GetExtensionName(.Name)) = "xlsx") And Not Left(.Name, 2) = "~$" Then       '// エクセルファイルの判定方法は要検討
                 '// 検索
-                '// ＄ToDoブックのオープンを外だししてエラーハンドリングに任せる
-'                '// ブックが既に開かれているかを確認
-'                isDuplName = False
-'                For Each wkBook In Workbooks
-'                    If wkBook.Name = children.Name Then
-'                        isDuplName = True
-'                        Exit For
-'                    End If
-'                Next
                 Set wkBook = pfOpenWorkbook(children)
                 If Not wkBook Is Nothing Then
                     For Each wkSheet In wkBook.Worksheets
@@ -322,13 +314,6 @@ Private Sub psExecSearch(wkSheet As Worksheet, patternStr As String, caseSensiti
     Set regExp = CreateObject("VBScript.RegExp")
     regExp.Pattern = patternStr
     regExp.IgnoreCase = caseSensitive
-  
-'    '// 検索試行（正規表現の記載チェック）
-'    If Not pfCheckRegExp(regExp) Then
-'        Call MsgBox(MSG_WRONG_COND, vbOKOnly, APP_TITLE)
-'        Set regExp = Nothing
-'        Exit Sub
-'    End If
   
     '// セル文字列を検索 //////////
     If ckbSearchText.Value Then
@@ -435,22 +420,22 @@ Private Sub psExecSearch(wkSheet As Worksheet, patternStr As String, caseSensiti
     '// ヘッダとフッタの文字列を検索 //////////
     If ckbSearchHeader.Value Then
         If regExp.test(wkSheet.PageSetup.LeftHeader) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftHeader, "ヘッダ（左）")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftHeader, MSG_HEADER & " (" & MSG_LEFT & ")")
         End If
         If regExp.test(wkSheet.PageSetup.CenterHeader) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterHeader, "ヘッダ（中央）")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterHeader, MSG_HEADER & " (" & MSG_CENTER & ")")
         End If
         If regExp.test(wkSheet.PageSetup.RightHeader) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightHeader, "ヘッダ（右）")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightHeader, MSG_HEADER & " (" & MSG_RIGHT & ")")
         End If
         If regExp.test(wkSheet.PageSetup.LeftFooter) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftFooter, "フッタ（左）")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftFooter, MSG_FOOTER & " (" & MSG_LEFT & ")")
         End If
         If regExp.test(wkSheet.PageSetup.CenterFooter) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterFooter, "フッタ（中央）")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterFooter, MSG_FOOTER & " (" & MSG_CENTER & ")")
         End If
         If regExp.test(wkSheet.PageSetup.RightFooter) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightFooter, "フッタ（右）")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightFooter, MSG_FOOTER & " (" & MSG_RIGHT & ")")
         End If
     End If
   
@@ -459,12 +444,12 @@ Private Sub psExecSearch(wkSheet As Worksheet, patternStr As String, caseSensiti
         For idxChart = 1 To wkSheet.ChartObjects.Count  '// チャートの配列は１から開始
             Set chartObj = wkSheet.ChartObjects(idxChart).Chart
             If regExp.test(pfGetChartTitle(chartObj)) Then
-                Call psSetMatchedRec(wkSheet, 1, 1, chartObj.ChartTitle.Characters.Text, "チャートタイトル")
+                Call psSetMatchedRec(wkSheet, -1, -1, chartObj.ChartTitle.Characters.Text, MSG_CHART_TITLE)
             End If
             
             For Each seriesObj In chartObj.SeriesCollection
                 If regExp.test(seriesObj.Name) Then
-                    Call psSetMatchedRec(wkSheet, 1, 1, seriesObj.Name, "チャート系列名")
+                    Call psSetMatchedRec(wkSheet, -1, -1, seriesObj.Name, MSG_CHART_SERIES)
                 End If
             Next
         Next
@@ -548,7 +533,7 @@ Private Sub psShowResult()
     If pSkippedFile(0).FileName <> BLANK Then
         For idx = 0 To UBound(pSkippedFile)
             wkSheet.Cells(idx + idxRow, 1).Value = pSkippedFile(idx).FileName
-            wkSheet.Cells(idx + idxRow, 5).Value = "エラー:" & pSkippedFile(idx).ErrNumber & " / " & pSkippedFile(idx).ErrDesc
+            wkSheet.Cells(idx + idxRow, 5).Value = MSG_FILE_ERROR & pSkippedFile(idx).ErrNumber & " / " & pSkippedFile(idx).ErrDesc
         Next
     End If
     
@@ -563,7 +548,7 @@ Private Sub psShowResult()
         wkSheet.Cells(idx + idxRow, 4).Value = pMatched(idx).TargetText
         wkSheet.Cells(idx + idxRow, 5).Value = pMatched(idx).NoteText
         
-        If pMatched(idx).SavedFile And pMatched(idx).Row > 0 Then '// セーブされているときのみリンク設定　＄TODOリンク設定の文字列生成を簡素化
+        If pMatched(idx).SavedFile And pMatched(idx).Row > 0 Then '// セーブされているときのみリンク設定
             wkSheet.Hyperlinks.Add Anchor:=wkSheet.Cells(idx + idxRow, 3), Address:=wkSheet.Cells(idx + idxRow, 1).Value, SubAddress:="'" & wkSheet.Cells(idx + idxRow, 2).Value & "'!" & wkSheet.Cells(idx + idxRow, 3).Value
         End If
     Next
@@ -626,8 +611,8 @@ End Sub
 '// メソッド：   エラーレコード登録
 '// 説明：       ファイル読み込みエラーの内容を配列に登録する
 '// 引数：       FileName: 対象ファイル名
-'//              ErrNumber: ヒットした値
-'//              ErrDesc: 備考
+'//              ErrNumber: エラー番号
+'//              ErrDesc: エラーメッセージ
 '// 戻り値：     なし
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psSetErrorRecord(FileName As String, ErrNumber As Long, ErrDesc As String)
@@ -724,8 +709,9 @@ End Function
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   ブックを開く
-'// 説明：       ファイルパスで指定されたブックを開く。オープン時の例外処理を実装
-'// 引数：       filePath: 対象エクセルファイル名（フルパス）
+'// 説明：       引数のファイル名（オブジェクト）で指定されたブックを開く。
+'//              オープン時の例外処理を実装
+'// 引数：       objFile: 対象エクセルファイルを保持するオブジェクト
 '// 戻り値：     成功した場合にはブックオブジェクトを戻す。失敗した場合にはNothingを戻す
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfOpenWorkbook(objFile As Object) As Workbook
@@ -736,24 +722,18 @@ On Error GoTo ErrorHandler
     For Each wkBook In Workbooks
         If wkBook.Name = objFile.Name Then
             Set pfOpenWorkbook = Nothing
-            Call psSetErrorRecord(objFile.Path, -1, "重複")
-Debug.Print "duplicated " & objFile.Path
+            Call psSetErrorRecord(objFile.Path, -1, MSG_DUP_FILE)
             Exit Function
         End If
     Next
     
-    
-Debug.Print "開く " & objFile.Path
     Set wkBook = Workbooks.Open(objFile.Path, ReadOnly:=True, password:=EXCEL_PASSWORD)
     Set pfOpenWorkbook = wkBook
-Debug.Print "成功 " & objFile.Path
     Exit Function
 
 ErrorHandler:
     Set pfOpenWorkbook = Nothing
     Call psSetErrorRecord(objFile.Path, Err.Number, Err.Description)
-    
-Debug.Print Err.Number & ", " & Err.Description
 End Function
 
 
