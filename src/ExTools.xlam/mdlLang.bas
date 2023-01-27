@@ -103,7 +103,15 @@ Public Const MSG_SEL_DEFAULT_COLOR              As String = "‘I‘ğ‚³‚ê‚½ƒZƒ‹‚Íƒfƒ
 Public Const MSG_SHAPE_NOT_SELECTED             As String = "ƒVƒFƒCƒv‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
 Public Const MSG_PROCESSING                     As String = "Às’†‚Å‚·..."
 Public Const MSG_SHAPE_MULTI_SELECT             As String = "2‚ÂˆÈã‚ÌƒVƒFƒCƒv‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B"
-Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "ƒo[ƒR[ƒh‚ÍExcel2016ˆÈ~‚Åg—p‰Â”\‚Å‚·B"
+'Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "ƒo[ƒR[ƒh‚ÍExcel2016ˆÈ~‚Åg—p‰Â”\‚Å‚·B"
+Public Const MSG_HEADER                         As String = "ƒwƒbƒ_"
+Public Const MSG_FOOTER                         As String = "ƒtƒbƒ^"
+Public Const MSG_LEFT                           As String = "¶"
+Public Const MSG_RIGHT                          As String = "‰E"
+Public Const MSG_CENTER                         As String = "’†‰›"
+Public Const MSG_CHART_TITLE                    As String = "ƒ`ƒƒ[ƒgƒ^ƒCƒgƒ‹"
+Public Const MSG_CHART_SERIES                   As String = "ƒ`ƒƒ[ƒgŒn—ñ–¼"
+
 
 '// ƒƒbƒZ[ƒWFfrmCompSheet
 Public Const MSG_ERROR_NEED_BOOKNAME            As String = "ƒuƒbƒN‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B"
@@ -148,6 +156,9 @@ Public Const MSG_NEED_EXCEL_SAVED               As String = "Œ»İ‚ÌƒuƒbƒN‚Í•Û‘¶‚
 '// ƒƒbƒZ[ƒWFfrmSearch
 Public Const MSG_NO_CONDITION                   As String = "ŒŸõğŒ‚ğw’è‚µ‚Ä‰º‚³‚¢B"
 Public Const MSG_WRONG_COND                     As String = "ŒŸõğŒ‚Éw’è‚³‚ê‚½•¶š—ñ‚Í–³Œø‚Å‚·B"
+Public Const MSG_DUP_FILE                       As String = "‘ÎÛƒtƒ@ƒCƒ‹‚ÌƒuƒbƒN–¼‚ªƒI[ƒvƒ“’†‚ÌƒuƒbƒN‚Æd•¡‚µ‚Ä‚¢‚Ü‚·B"
+Public Const MSG_FILE_ERROR                     As String = "ƒGƒ‰[: "
+
 
 '// ƒƒbƒZ[ƒWFfrmFileList
 Public Const MSG_MAX_DEPTH                      As String = "Å‘å[“x‚É’B‚µ‚Ü‚µ‚½B"
@@ -352,7 +363,7 @@ Public Const CMB_ORD_HEIGHT                     As String = "0,ƒZƒ‹‚ÉƒtƒBƒbƒg;1,
 Public Const CMB_ORD_WIDTH                      As String = "0,ƒZƒ‹‚ÉƒtƒBƒbƒg;1,¶’[‘µ‚¦;2,‰E’[‘µ‚¦;3,‰½‚à‚µ‚È‚¢"
 
 '// frmSearch (SRC)
-Public Const CMB_SRC_TARGET                     As String = "0,Œ»İ‚ÌƒV[ƒg;1,ƒuƒbƒN‘S‘Ì;2,ƒtƒ@ƒCƒ‹"
+Public Const CMB_SRC_TARGET                     As String = "0,Œ»İ‚ÌƒV[ƒg;1,ƒuƒbƒN‘S‘Ì;2,ƒfƒBƒŒƒNƒgƒŠ“à‚Ìƒtƒ@ƒCƒ‹"
 Public Const CMB_SRC_OUTPUT                     As String = "0,‰½‚à‚µ‚È‚¢;1,•¶š‚ğ’…F;2,ƒZƒ‹‚ğ’…F;3,˜g‚ğ’…F"
 
 '// frmFileList (LST)
@@ -466,7 +477,14 @@ Public Const MSG_SEL_DEFAULT_COLOR              As String = "Default color is se
 Public Const MSG_SHAPE_NOT_SELECTED             As String = "Shapes not selected."
 Public Const MSG_PROCESSING                     As String = "Processing..."
 Public Const MSG_SHAPE_MULTI_SELECT             As String = "Please select 2 or more target shapes."
-Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "Barcode function is available on Excel 2016 or higher."
+'Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "Barcode function is available on Excel 2016 or higher."
+Public Const MSG_HEADER                         As String = "Header"
+Public Const MSG_FOOTER                         As String = "Footer"
+Public Const MSG_LEFT                           As String = "Left"
+Public Const MSG_RIGHT                          As String = "Right"
+Public Const MSG_CENTER                         As String = "Center"
+Public Const MSG_CHART_TITLE                    As String = "Chart Title"
+Public Const MSG_CHART_SERIES                   As String = "Chart Series"
 
 '// ƒƒbƒZ[ƒWFfrmCompSheet
 Public Const MSG_ERROR_NEED_BOOKNAME            As String = "No book identified."
@@ -511,6 +529,8 @@ Public Const MSG_NEED_EXCEL_SAVED               As String = "Current workbook is
 '// ƒƒbƒZ[ƒWFfrmSearch
 Public Const MSG_NO_CONDITION                   As String = "Please specify search condition."
 Public Const MSG_WRONG_COND                     As String = "Invalid search condition."
+Public Const MSG_DUP_FILE                       As String = "Cannot open the target file. Duplicated book name."
+Public Const MSG_FILE_ERROR                     As String = "Error: "
 
 '// ƒƒbƒZ[ƒWFfrmFileList
 Public Const MSG_MAX_DEPTH                      As String = "Max depth reached."
