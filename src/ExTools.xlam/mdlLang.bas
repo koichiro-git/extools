@@ -529,7 +529,7 @@ Public Const MSG_NEED_EXCEL_SAVED               As String = "Current workbook is
 '// メッセージ：frmSearch
 Public Const MSG_NO_CONDITION                   As String = "Please specify search condition."
 Public Const MSG_WRONG_COND                     As String = "Invalid search condition."
-Public Const MSG_DUP_FILE                       As String = "Cannot open the target file. Duplicated book name."
+Public Const MSG_DUP_FILE                       As String = "Cannot open the target file with duplicated book name."
 Public Const MSG_FILE_ERROR                     As String = "Error: "
 
 '// メッセージ：frmFileList

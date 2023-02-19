@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.3.1.67"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.3.2.68"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -159,7 +159,12 @@ Private Sub psSortWorksheet(sortMode As String)
     Dim j           As Integer
     Dim wkSheet     As Worksheet
     Dim isOrderAsc  As Boolean
-  
+    
+    '// 事前チェック（シート有無）
+    If Not gfPreCheck() Then
+        Exit Sub
+    End If
+    
     '// ブックが保護されている場合にはエラーとする
     If ActiveWorkbook.ProtectStructure Then
         Call MsgBox(MSG_BOOK_PROTECTED, vbOKOnly, APP_TITLE)
@@ -484,6 +489,10 @@ Public Sub sheetMenu_getContent(control As IRibbonControl, ByRef content)
     Dim stMenu        As String
     
     '// $todo:シートが多数ある場合の処理追加
+    '// 事前チェック（ブックの有無）
+    If Not gfPreCheck() Then
+        Exit Sub
+    End If
     
     Set wkBook = ActiveWorkbook
     idx = 1

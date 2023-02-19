@@ -18,7 +18,7 @@ Attribute VB_Exposed = False
 '// タイトル       : シート比較フォーム
 '// モジュール     : frmCompSheet
 '// 説明           : シートの比較を行う
-'//                  Excel2013から標準機能で実装されたため、将来的にはこの機能を削除予定。
+'//                  Excel2013から標準機能で実装されたため、この機能のメンテナンスは今後行わない。
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
@@ -58,8 +58,14 @@ Private pMatched()              As udRowPair    '// 適合行の一覧
 '// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム アクティブ時
 Private Sub UserForm_Activate()
-  Call psSetSheetCombo(cmbSheet_1.Name)
-  Call psSetSheetCombo(cmbSheet_2.Name)
+    '// 事前チェック（シート有無）
+    If Not gfPreCheck() Then
+        Call Me.Hide
+        Exit Sub
+    End If
+    
+    Call psSetSheetCombo(cmbSheet_1.Name)
+    Call psSetSheetCombo(cmbSheet_2.Name)
 End Sub
 
 

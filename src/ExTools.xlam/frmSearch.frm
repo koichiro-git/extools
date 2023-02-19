@@ -50,6 +50,17 @@ Private pSkippedFile()      As udSkippedFile    '// スキップファイル格納用配列
 
 
 '// //////////////////////////////////////////////////////////////////
+'// イベント： フォーム アクティブ時
+Private Sub UserForm_Activate()
+    '// ブックが開かれていない場合は終了
+    If Workbooks.Count = 0 Then
+        Call MsgBox(MSG_NO_BOOK, vbOKOnly, APP_TITLE)
+        Call Me.Hide
+        Exit Sub
+    End If
+End Sub
+
+'// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム初期化時
 Private Sub UserForm_Initialize()
     '// 文字列の検索はデフォルトでON
