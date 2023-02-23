@@ -36,13 +36,12 @@ Private Const pMAX_COLS  As Integer = 60  '// 列数コンボボックスの最大値
 '// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム アクティブ時
 Private Sub UserForm_Activate()
-    '// ブックが開かれていない場合は終了
-    If Workbooks.Count = 0 Then
-        Call MsgBox(MSG_NO_BOOK, vbOKOnly, APP_TITLE)
+    '// 事前チェック（シート有無）
+    If Not gfPreCheck() Then
         Call Me.Hide
         Exit Sub
     End If
-    
+
     If ActiveWorkbook.MultiUserEditing Or (cmbOutput.Value = "0") Then
         ckbHyperLink.Value = False
         ckbHyperLink.Enabled = False
@@ -143,12 +142,6 @@ Private Sub psShowSheetList(wkBook As Workbook, maxRow As Integer, maxCol As Int
     Dim idxRow      As Integer
     Dim idxCol      As Integer
     Dim statGauge   As cStatusGauge
-    
-    '// ブックが開かれていない場合は終了
-    If Workbooks.Count = 0 Then
-        Call MsgBox(MSG_NO_BOOK, vbOKOnly, APP_TITLE)
-        Exit Sub
-    End If
     
     Call gsSuppressAppEvents
     Set statGauge = New cStatusGauge

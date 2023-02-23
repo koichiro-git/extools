@@ -120,6 +120,16 @@ End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
+'// イベント： フォーム アクティブ時
+Private Sub UserForm_Activate()
+    '// 事前チェック（シート有無）
+    If Not gfPreCheck() Then
+        Call Me.Hide
+        Exit Sub
+    End If
+End Sub
+
+'// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
     Call gsSetCombo(cmbDateFormat, "0,yyyy/mm/dd;1,yyyy/mm/dd hh:mm:ss", 0)
@@ -219,7 +229,7 @@ On Error GoTo ErrorHandler
 ErrorHandler:
     Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("frmGetRecord.psExecSearch", Err, gADO)
-    Application.StatusBar = False
+'    Application.StatusBar = False
 '    pAutoSave = False
 End Function
 

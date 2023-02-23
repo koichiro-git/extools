@@ -77,7 +77,7 @@ End Sub
 '//              psFormatPhoneNumbers から呼び出される実処理
 '// 引数：       日本語表記数値
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfConvJapaneseToNumber_sub(targetStr As String) As Double
+Private Function pfConvJapaneseToNumber_sub(targetStr As String) As String
 On Error GoTo ErrorHandler
 '    Dim targetStr   As String
     Dim i           As Integer  '// 文字を抽出する際のインデクス
@@ -85,6 +85,11 @@ On Error GoTo ErrorHandler
     Dim dig         As Double   '// 現在の位
     Dim lastKanji   As String   '// 感じが現れた場合、その最後の漢字を保持（万、億、兆のいずれか）
     Dim result      As Double   '// 変換の経過を保持する
+    
+    If targetStr = BLANK Then
+        pfConvJapaneseToNumber_sub = BLANK
+        Exit Function
+    End If
     
     dig = 1
     i = Len(targetStr)
@@ -141,6 +146,7 @@ On Error GoTo ErrorHandler
     Exit Function
     
 ErrorHandler:
+    pfConvJapaneseToNumber_sub = BLANK
     Call gsResumeAppEvents
     Call gsShowErrorMsgDlg_VBA("mdlConvJapaneseNumber.pfConvJapaneseToNumber_sub", Err)
 End Function
