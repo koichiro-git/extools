@@ -1,16 +1,16 @@
 Attribute VB_Name = "mdlLang"
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒvƒƒWƒFƒNƒg   : Šg’£ƒc[ƒ‹
-'// ƒ^ƒCƒgƒ‹       : ƒ[ƒJƒ‰ƒCƒYİ’è
-'// ƒ‚ƒWƒ…[ƒ‹     : mdlLang
-'// à–¾           : ŠeŒ¾Œê“Á—L‚Ìİ’è
+'// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ   : æ‹¡å¼µãƒ„ãƒ¼ãƒ«
+'// ã‚¿ã‚¤ãƒˆãƒ«       : ãƒ­ãƒ¼ã‚«ãƒ©ã‚¤ã‚ºè¨­å®š
+'// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«     : mdlLang
+'// èª¬æ˜           : å„è¨€èªç‰¹æœ‰ã®è¨­å®š
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
 Option Explicit
 
-'// Œ¾ŒêƒR[ƒh Application.LanguageSettings.LanguageID(msoLanguageIDInstall) ‚Å“¾‚ç‚ê‚é’l
-#Const cLANG = 1041   '// “ú–{Œê
+'// è¨€èªã‚³ãƒ¼ãƒ‰ Application.LanguageSettings.LanguageID(msoLanguageIDInstall) ã§å¾—ã‚‰ã‚Œã‚‹å€¤
+#Const cLANG = 1041   '// æ—¥æœ¬èª
 '#Const cLANG = 1033  '// English
 
 
@@ -20,370 +20,370 @@ Option Explicit
 
 
 '// ////////////////////
-'// ƒAƒvƒŠ‹¤’Ê•Ï” (•Ï”‘®: APP_{string} )
-Public Const APP_TITLE                          As String = "Šg’£ƒc[ƒ‹"
-'Public Const APP_SQL_FILE                       As String = "SQLƒtƒ@ƒCƒ‹ (*.sql; *.txt),*.sql;*.txt"
-Public Const APP_EXL_FILE                       As String = "ƒGƒNƒZƒ‹Œ`® ƒtƒ@ƒCƒ‹ (#),#"
-'Public Const APP_XML_FILE                       As String = "XMLƒtƒ@ƒCƒ‹ (*.xml),*.xml"
+'// ã‚¢ãƒ—ãƒªå…±é€šå¤‰æ•° (å¤‰æ•°æ›¸å¼: APP_{string} )
+Public Const APP_TITLE                          As String = "æ‹¡å¼µãƒ„ãƒ¼ãƒ«"
+'Public Const APP_SQL_FILE                       As String = "SQLãƒ•ã‚¡ã‚¤ãƒ« (*.sql; *.txt),*.sql;*.txt"
+Public Const APP_EXL_FILE                       As String = "ã‚¨ã‚¯ã‚»ãƒ«å½¢å¼ ãƒ•ã‚¡ã‚¤ãƒ« (#),#"
+'Public Const APP_XML_FILE                       As String = "XMLãƒ•ã‚¡ã‚¤ãƒ« (*.xml),*.xml"
 
 
 '// ////////////////////
-'// ƒƒjƒ…[ (•Ï”‘®: MENU_{string} )
-'Public Const MENU_SHEET_MENU                    As String = "ƒV[ƒg(&S)"
-'Public Const MENU_EXTOOL                        As String = "Šg’£(&X)"
-'Public Const MENU_SHEET_GROUP                   As String = "ƒV[ƒg # ` @"
-'Public Const MENU_COMP_SHEET                    As String = "ƒV[ƒg/ƒuƒbƒN”äŠr..."
-'Public Const MENU_SELECT                        As String = "SQL•¶Às..."
-''Public Const MENU_FILE_EXP                      As String = "DML/ƒf[ƒ^o—Í..."
-'Public Const MENU_SORT                          As String = "ƒV[ƒg‚Ìƒ\[ƒg"
-'Public Const MENU_SORT_ASC                      As String = "¸‡ƒ\[ƒg"
-'Public Const MENU_SORT_DESC                     As String = "~‡ƒ\[ƒg"
-'Public Const MENU_SHEET_LIST                    As String = "ƒV[ƒgˆê——‚ğo—Í..."
-'Public Const MENU_SHEET_SETTING                 As String = "ƒV[ƒg‚Ìİ’è..."
-Public Const MENU_CHANGE_CHAR                   As String = "•¶ší‚Ì•ÏŠ·"
-Public Const MENU_CAPITAL                       As String = "‘å•¶š"
-Public Const MENU_SMALL                         As String = "¬•¶š"
-Public Const MENU_PROPER                        As String = "’PŒê‚Ìæ“ª•¶š‚ğ‘å•¶š"
-Public Const MENU_ZEN                           As String = "‘SŠp"
-Public Const MENU_HAN                           As String = "”¼Šp"
-Public Const MENU_TRIM                          As String = "’l‚ÌƒgƒŠƒ€"
-'Public Const MENU_SELECTION                     As String = "‘I‘ğ”ÍˆÍ‚Ìİ’è"
-'Public Const MENU_SELECTION_UNIT                As String = "#s–ˆ"
-'Public Const MENU_CLIPBOARD                     As String = "ƒNƒŠƒbƒvƒ{[ƒh‚ÖƒRƒs[(&C)"
-'Public Const MENU_DRAW_LINE_H                   As String = "ƒwƒbƒ_•”‚ÌŒrü‚ğ•`‰æ"
-'Public Const MENU_DRAW_LINE_D                   As String = "ƒf[ƒ^•”‚ÌŒrü‚ğ•`‰æ"
-'Public Const MENU_RESET                         As String = "Šg’£ƒc[ƒ‹‚Ì‰Šú‰»"
-'Public Const MENU_VERSION                       As String = "ƒo[ƒWƒ‡ƒ“î•ñ"
-'Public Const MENU_LINK                          As String = "ƒnƒCƒp[ƒŠƒ“ƒN"
-'Public Const MENU_LINK_ADD                      As String = "ƒnƒCƒp[ƒŠƒ“ƒN‚Ìİ’è"
-'Public Const MENU_LINK_REMOVE                   As String = "ƒnƒCƒp[ƒŠƒ“ƒN‚Ìíœ"
-'Public Const MENU_DRAW_LINE_H_HORIZ             As String = "•\‚Ìã•”i‰¡²j"
-'Public Const MENU_DRAW_LINE_H_VERT              As String = "•\‚Ì¶ic²j"
-'Public Const MENU_XML                           As String = "XML‘€ì..."
-'Public Const MENU_FILE                          As String = "ƒtƒ@ƒCƒ‹ˆê——o—Í..."
-'Public Const MENU_GROUP                         As String = "ƒOƒ‹[ƒvˆ—"
-'Public Const MENU_GROUP_SET_ROW                 As String = "ƒOƒ‹[ƒv‰»isj"
-'Public Const MENU_GROUP_SET_COL                 As String = "ƒOƒ‹[ƒv‰»i—ñj"
-'Public Const MENU_GROUP_DISTINCT                As String = "d•¡ƒf[ƒ^‚ÌW–ñ"
-'Public Const MENU_GROUP_VALUE                   As String = "d•¡ƒf[ƒ^‚ğŠK‘w•—‚É•â³"
-'Public Const MENU_DRAW_CHART                    As String = "ŠÈˆÕƒ`ƒƒ[ƒg‚ğ•`‰æ..."
-'Public Const MENU_SEARCH                        As String = "Šg’£ŒŸõ(&S)..."
-'Public Const MENU_RESIZE_SHAPE                  As String = "ƒVƒFƒCƒv‚ğƒZƒ‹‚É‡‚í‚¹‚é..."
-'Public Const MENU_SELECTION_BACK_COLR           As String = "“¯‚¶”wŒiF"
-'Public Const MENU_SELECTION_FONT_COLR           As String = "“¯‚¶ƒtƒHƒ“ƒgF"
+'// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ (å¤‰æ•°æ›¸å¼: MENU_{string} )
+'Public Const MENU_SHEET_MENU                    As String = "ã‚·ãƒ¼ãƒˆ(&S)"
+'Public Const MENU_EXTOOL                        As String = "æ‹¡å¼µ(&X)"
+'Public Const MENU_SHEET_GROUP                   As String = "ã‚·ãƒ¼ãƒˆ # ï½ @"
+'Public Const MENU_COMP_SHEET                    As String = "ã‚·ãƒ¼ãƒˆ/ãƒ–ãƒƒã‚¯æ¯”è¼ƒ..."
+'Public Const MENU_SELECT                        As String = "SQLæ–‡å®Ÿè¡Œ..."
+''Public Const MENU_FILE_EXP                      As String = "DML/ãƒ‡ãƒ¼ã‚¿å‡ºåŠ›..."
+'Public Const MENU_SORT                          As String = "ã‚·ãƒ¼ãƒˆã®ã‚½ãƒ¼ãƒˆ"
+'Public Const MENU_SORT_ASC                      As String = "æ˜‡é †ã‚½ãƒ¼ãƒˆ"
+'Public Const MENU_SORT_DESC                     As String = "é™é †ã‚½ãƒ¼ãƒˆ"
+'Public Const MENU_SHEET_LIST                    As String = "ã‚·ãƒ¼ãƒˆä¸€è¦§ã‚’å‡ºåŠ›..."
+'Public Const MENU_SHEET_SETTING                 As String = "ã‚·ãƒ¼ãƒˆã®è¨­å®š..."
+Public Const MENU_CHANGE_CHAR                   As String = "æ–‡å­—ç¨®ã®å¤‰æ›"
+Public Const MENU_CAPITAL                       As String = "å¤§æ–‡å­—"
+Public Const MENU_SMALL                         As String = "å°æ–‡å­—"
+Public Const MENU_PROPER                        As String = "å˜èªã®å…ˆé ­æ–‡å­—ã‚’å¤§æ–‡å­—"
+Public Const MENU_ZEN                           As String = "å…¨è§’"
+Public Const MENU_HAN                           As String = "åŠè§’"
+Public Const MENU_TRIM                          As String = "å€¤ã®ãƒˆãƒªãƒ "
+'Public Const MENU_SELECTION                     As String = "é¸æŠç¯„å›²ã®è¨­å®š"
+'Public Const MENU_SELECTION_UNIT                As String = "#è¡Œæ¯"
+'Public Const MENU_CLIPBOARD                     As String = "ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã¸ã‚³ãƒ”ãƒ¼(&C)"
+'Public Const MENU_DRAW_LINE_H                   As String = "ãƒ˜ãƒƒãƒ€éƒ¨ã®ç½«ç·šã‚’æç”»"
+'Public Const MENU_DRAW_LINE_D                   As String = "ãƒ‡ãƒ¼ã‚¿éƒ¨ã®ç½«ç·šã‚’æç”»"
+'Public Const MENU_RESET                         As String = "æ‹¡å¼µãƒ„ãƒ¼ãƒ«ã®åˆæœŸåŒ–"
+'Public Const MENU_VERSION                       As String = "ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±"
+'Public Const MENU_LINK                          As String = "ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯"
+'Public Const MENU_LINK_ADD                      As String = "ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯ã®è¨­å®š"
+'Public Const MENU_LINK_REMOVE                   As String = "ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯ã®å‰Šé™¤"
+'Public Const MENU_DRAW_LINE_H_HORIZ             As String = "è¡¨ã®ä¸Šéƒ¨ï¼ˆæ¨ªè»¸ï¼‰"
+'Public Const MENU_DRAW_LINE_H_VERT              As String = "è¡¨ã®å·¦ï¼ˆç¸¦è»¸ï¼‰"
+'Public Const MENU_XML                           As String = "XMLæ“ä½œ..."
+'Public Const MENU_FILE                          As String = "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§å‡ºåŠ›..."
+'Public Const MENU_GROUP                         As String = "ã‚°ãƒ«ãƒ¼ãƒ—å‡¦ç†"
+'Public Const MENU_GROUP_SET_ROW                 As String = "ã‚°ãƒ«ãƒ¼ãƒ—åŒ–ï¼ˆè¡Œï¼‰"
+'Public Const MENU_GROUP_SET_COL                 As String = "ã‚°ãƒ«ãƒ¼ãƒ—åŒ–ï¼ˆåˆ—ï¼‰"
+'Public Const MENU_GROUP_DISTINCT                As String = "é‡è¤‡ãƒ‡ãƒ¼ã‚¿ã®é›†ç´„"
+'Public Const MENU_GROUP_VALUE                   As String = "é‡è¤‡ãƒ‡ãƒ¼ã‚¿ã‚’éšå±¤é¢¨ã«è£œæ­£"
+'Public Const MENU_DRAW_CHART                    As String = "ç°¡æ˜“ãƒãƒ£ãƒ¼ãƒˆã‚’æç”»..."
+'Public Const MENU_SEARCH                        As String = "æ‹¡å¼µæ¤œç´¢(&S)..."
+'Public Const MENU_RESIZE_SHAPE                  As String = "ã‚·ã‚§ã‚¤ãƒ—ã‚’ã‚»ãƒ«ã«åˆã‚ã›ã‚‹..."
+'Public Const MENU_SELECTION_BACK_COLR           As String = "åŒã˜èƒŒæ™¯è‰²"
+'Public Const MENU_SELECTION_FONT_COLR           As String = "åŒã˜ãƒ•ã‚©ãƒ³ãƒˆè‰²"
 
 
 '// ////////////////////
-'// ƒƒbƒZ[ƒW (•Ï”‘®: MSG_{string} )
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ (å¤‰æ•°æ›¸å¼: MSG_{string} )
 
-'// ‹¤’Ê
-Public Const MSG_ERR                            As String = "ˆ—’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B"
-Public Const MSG_NO_BOOK                        As String = "ƒuƒbƒN‚ª‚ ‚è‚Ü‚¹‚ñB"
-Public Const MSG_FINISHED                       As String = "ˆ—‚ªI—¹‚µ‚Ü‚µ‚½B"
-Public Const MSG_PROCEED_CREATE_SHEET           As String = "ƒV[ƒgì¬‚ÍAŒ»İ‚ÌƒuƒbƒN‚ÉƒV[ƒg‚ğ’Ç‰Á‚µ‚Ü‚·B‚æ‚ë‚µ‚¢‚Å‚·‚©H"
-Public Const MSG_TOO_MANY_RANGE                 As String = "‚±‚ÌƒRƒ}ƒ“ƒh‚Í•¡”‚Ì‘I‘ğ”ÍˆÍ‚É‘Î‚µ‚ÄÀs‚Å‚«‚Ü‚¹‚ñB"
-Public Const MSG_NOT_NUMERIC                    As String = "”’l‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B"
-Public Const MSG_ZERO_NOT_ACCEPTED              As String = "ƒ[ƒ‚Í“ü—Í‚Å‚«‚Ü‚¹‚ñB"
-Public Const MSG_NO_DIR                         As String = "ŒŸõƒpƒX‚ªw’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_DIR_NOT_EXIST                  As String = "w’è‚³‚ê‚½ŒŸõƒpƒX‚Í‘¶İ‚µ‚Ü‚¹‚ñB"
-Public Const MSG_NO_RESULT                      As String = "ŒŸõŒ‹‰Ê‚Íƒ[ƒŒ‚Å‚·B"
-Public Const MSG_SHEET_PROTECTED                As String = "ƒV[ƒg‚ª•ÛŒì‚³‚ê‚Ä‚¢‚Ü‚·BƒV[ƒg‚Ì•ÛŒì‚ğ‰ğœ‚µ‚Ä‰º‚³‚¢B"
-Public Const MSG_BOOK_PROTECTED                 As String = "ƒuƒbƒN‚ª•ÛŒì‚³‚ê‚Ä‚¢‚Ü‚·BƒuƒbƒN‚Ì•ÛŒì‚ğ‰ğœ‚µ‚Ä‰º‚³‚¢B"
-Public Const MSG_INVALID_NUM                    As String = "—LŒø‚È”’l‚ğİ’è‚µ‚Ä‚­‚¾‚³‚¢B"
-Public Const MSG_CONFIRM                        As String = "Às‚µ‚Ü‚·B‚æ‚ë‚µ‚¢‚Å‚·‚©H"
-Public Const MSG_NO_SHEET                       As String = "ƒV[ƒg‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB"
-Public Const MSG_INVALID_RANGE                  As String = "—LŒø‚È’l‚Ì‚ ‚é”ÍˆÍ‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B"
-Public Const MSG_TOO_MANY_COLS_8                As String = "‚W—ñˆÈã‚Ì‘I‘ğ”ÍˆÍ‚Íˆ—‚Å‚«‚Ü‚¹‚ñB"
-Public Const MSG_NOT_RANGE_SELECT               As String = "ƒZƒ‹‚ğ‘I‘ğ‚µ‚Ä‰º‚³‚¢B"
-Public Const MSG_VLOOKUP_MASTER_2COLS           As String = "VLOOKUP‚Ìƒ}ƒXƒ^•\‚Æ‚µ‚Ä2—ñˆÈã‚ğ‘I‘ğ‚µ‚Ä‰º‚³‚¢B"
-Public Const MSG_VLOOKUP_SET_2COLS              As String = "VLOOKUP‚Ì“\‚è•t‚¯æ‚Æ‚µ‚Ä2—ñˆÈã‚ğ‘I‘ğ‚µ‚Ä‰º‚³‚¢B"
-Public Const MSG_VLOOKUP_SEL_DUPLICATED         As String = "VLOOKUP‚Ìƒ}ƒXƒ^•\‚Æ“\‚è•t‚¯æ‚ªd•¡‚µ‚Ä‚¢‚Ü‚·B"
-Public Const MSG_VLOOKUP_NO_MASTER              As String = "VLOOKUP‚Ìƒ}ƒXƒ^•\‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_SEL_DEFAULT_COLOR              As String = "‘I‘ğ‚³‚ê‚½ƒZƒ‹‚ÍƒfƒtƒHƒ‹ƒgF‚ªw’è‚³‚ê‚Ä‚¢‚Ü‚·Bˆ—‚ğ‘±‚¯‚Ü‚·‚©H"
-Public Const MSG_SHAPE_NOT_SELECTED             As String = "ƒVƒFƒCƒv‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_PROCESSING                     As String = "Às’†‚Å‚·..."
-Public Const MSG_SHAPE_MULTI_SELECT             As String = "2‚ÂˆÈã‚ÌƒVƒFƒCƒv‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B"
-'Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "ƒo[ƒR[ƒh‚ÍExcel2016ˆÈ~‚Åg—p‰Â”\‚Å‚·B"
-Public Const MSG_HEADER                         As String = "ƒwƒbƒ_"
-Public Const MSG_FOOTER                         As String = "ƒtƒbƒ^"
-Public Const MSG_LEFT                           As String = "¶"
-Public Const MSG_RIGHT                          As String = "‰E"
-Public Const MSG_CENTER                         As String = "’†‰›"
-Public Const MSG_CHART_TITLE                    As String = "ƒ`ƒƒ[ƒgƒ^ƒCƒgƒ‹"
-Public Const MSG_CHART_SERIES                   As String = "ƒ`ƒƒ[ƒgŒn—ñ–¼"
-
-
-'// ƒƒbƒZ[ƒWFfrmCompSheet
-Public Const MSG_ERROR_NEED_BOOKNAME            As String = "ƒuƒbƒN‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B"
-Public Const MSG_NO_FILE                        As String = "ƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚Ü‚¹‚ñ"
-Public Const MSG_UNMATCH_SHEET                  As String = "ƒV[ƒg\¬‚ªˆÙ‚È‚è‚Ü‚·B"
-Public Const MSG_NO_DIFF                        As String = "ƒf[ƒ^‚Í“¯‚¶‚Å‚·B"
-Public Const MSG_SHEET_NAME                     As String = "ƒV[ƒg–¼‚ªˆÙ‚È‚è‚Ü‚·"
-Public Const MSG_INS_ROW                        As String = "s’Ç‰Á"
-Public Const MSG_DEL_ROW                        As String = "síœ"
-
-'// ƒƒbƒZ[ƒWFfrmSheetManage
-Public Const MSG_VAL_10_400                     As String = "ƒY[ƒ€’l‚É—LŒø‚È”’l‚ğ“ü—Í‚µ‚Ä‰º‚³‚¢B(10`400)"
-Public Const MSG_SHEETS_PROTECTED               As String = "•ÛŒì‚³‚ê‚Ä‚¢‚éƒV[ƒg‚ª‚P‚ÂˆÈã‚ ‚è‚Ü‚·BƒV[ƒg‚Ì•ÛŒì‚ğ‰ğœ‚µ‚Ä‰º‚³‚¢B"
-Public Const MSG_COMPLETED_FILES                As String = "ˆÈ‰º‚Ìƒtƒ@ƒCƒ‹‚É‚Â‚¢‚Ä‚Ìˆ—‚ÍI—¹‚µ‚Ä‚¢‚Ü‚·B”O‚Ì‚½‚ßƒtƒ@ƒCƒ‹‚ÌXV“ú•t‚ğŠm”F‚µ‚Ä‰º‚³‚¢B"
-
-'// ƒƒbƒZ[ƒWFfrmGetRecord
-Public Const MSG_TOO_MANY_ROWS                  As String = "o—Í‰Â”\‚ÈÅ‘åŒ”‚É’B‚µ‚Ü‚µ‚½BˆÈ~‚Ìƒf[ƒ^‚ÍØ‚èÌ‚Ä‚ç‚ê‚Ü‚·B"
-Public Const MSG_TOO_MANY_COLS                  As String = "—ñ”‚ª§ŒÀ’l‚ğ‰z‚¦‚Ä‚¢‚Ü‚·B§ŒÀ‚ğ‰z‚¦‚½—ñ‚ÍØ‚èÌ‚Ä‚ç‚ê‚Ü‚·B"
-Public Const MSG_QUERY                          As String = "–â‚¢‡‚í‚¹’†"
-Public Const MSG_EXTRACT_SHEET                  As String = "ƒV[ƒg‚Öo—Í’†"
-Public Const MSG_PAGE_SETUP                     As String = "‘®İ’è’†"
-Public Const MSG_ROWS_PROCESSED                 As String = "s‚ªˆ—‚³‚ê‚Ü‚µ‚½B"
-Public Const MSG_NOT_LOGGEDIN                   As String = "ƒƒOƒCƒ“‚µ‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_NOT_SAVED                      As String = "ƒuƒbƒN‚ª•Û‘¶‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB•Û‘¶‚µ‚ÄŒŸõ‚ğŒp‘±‚µ‚Ü‚·‚©H" & vbLf & "¦Ÿ‰ñ‚©‚ç‚ÍƒuƒbƒN‚ğ•Â‚¶‚é‚Ü‚Å–ˆ‰ñ©“®•Û‘¶‚³‚ê‚Ü‚·"
-
-'// ƒƒbƒZ[ƒWFfrmDataExport
-'Public Const MSG_TABLE_NAME                     As String = "•\˜_—–¼Ì"
-'Public Const MSG_COLUMN_NAME                    As String = "—ñ–¼Ì"
-
-'// ƒƒbƒZ[ƒWFfrmDrawChart
-'Public Const MSG_INVALID_COL_MIN                As String = "ƒOƒ‰ƒt‚ÍA—ñ‚æ‚è¶‚É‚Í•`‰æ‚Å‚«‚Ü‚¹‚ñB"
-'Public Const MSG_INVALID_COL_MAX                As String = "ƒOƒ‰ƒt‚ÍÅ‘å—ñ‚æ‚è‰E‚É‚Í•`‰æ‚Å‚«‚Ü‚¹‚ñB"
-
-'// ƒƒbƒZ[ƒWFfrmLogin
-Public Const MSG_LOG_ON_SUCCESS                 As String = "ƒƒOƒCƒ“‚µ‚Ü‚µ‚½B"
-Public Const MSG_LOG_ON_FAILED                  As String = "ƒƒOƒCƒ“‚É¸”s‚µ‚Ü‚µ‚½B"
-Public Const MSG_NEED_FILL_ID                   As String = "ƒ†[ƒU‚h‚c‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_NEED_FILL_PWD                  As String = "ƒpƒXƒ[ƒh‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_NEED_FILL_TNS                  As String = "Ú‘±•¶š—ñ‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
-Public Const MSG_NEED_EXCEL_SAVED               As String = "Œ»İ‚ÌƒuƒbƒN‚Í•Û‘¶‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBƒuƒbƒN‚ğ•Û‘¶‚µ‚Ü‚·‚©H"
-
-'// ƒƒbƒZ[ƒWFfrmSearch
-Public Const MSG_NO_CONDITION                   As String = "ŒŸõğŒ‚ğw’è‚µ‚Ä‰º‚³‚¢B"
-Public Const MSG_WRONG_COND                     As String = "ŒŸõğŒ‚Éw’è‚³‚ê‚½•¶š—ñ‚Í–³Œø‚Å‚·B"
-Public Const MSG_DUP_FILE                       As String = "‘ÎÛƒtƒ@ƒCƒ‹‚ÌƒuƒbƒN–¼‚ªƒI[ƒvƒ“’†‚ÌƒuƒbƒN‚Æd•¡‚µ‚Ä‚¢‚Ü‚·B"
-Public Const MSG_FILE_ERROR                     As String = "ƒGƒ‰[: "
+'// å…±é€š
+Public Const MSG_ERR                            As String = "å‡¦ç†ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚"
+Public Const MSG_NO_BOOK                        As String = "ãƒ–ãƒƒã‚¯ãŒã‚ã‚Šã¾ã›ã‚“ã€‚"
+Public Const MSG_FINISHED                       As String = "å‡¦ç†ãŒçµ‚äº†ã—ã¾ã—ãŸã€‚"
+Public Const MSG_PROCEED_CREATE_SHEET           As String = "ã‚·ãƒ¼ãƒˆä½œæˆã¯ã€ç¾åœ¨ã®ãƒ–ãƒƒã‚¯ã«ã‚·ãƒ¼ãƒˆã‚’è¿½åŠ ã—ã¾ã™ã€‚ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ"
+Public Const MSG_TOO_MANY_RANGE                 As String = "ã“ã®ã‚³ãƒãƒ³ãƒ‰ã¯è¤‡æ•°ã®é¸æŠç¯„å›²ã«å¯¾ã—ã¦å®Ÿè¡Œã§ãã¾ã›ã‚“ã€‚"
+Public Const MSG_NOT_NUMERIC                    As String = "æ•°å€¤ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚"
+Public Const MSG_ZERO_NOT_ACCEPTED              As String = "ã‚¼ãƒ­ã¯å…¥åŠ›ã§ãã¾ã›ã‚“ã€‚"
+Public Const MSG_NO_DIR                         As String = "æ¤œç´¢ãƒ‘ã‚¹ãŒæŒ‡å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
+Public Const MSG_DIR_NOT_EXIST                  As String = "æŒ‡å®šã•ã‚ŒãŸæ¤œç´¢ãƒ‘ã‚¹ã¯å­˜åœ¨ã—ã¾ã›ã‚“ã€‚"
+Public Const MSG_NO_RESULT                      As String = "æ¤œç´¢çµæœã¯ã‚¼ãƒ­ä»¶ã§ã™ã€‚"
+Public Const MSG_SHEET_PROTECTED                As String = "ã‚·ãƒ¼ãƒˆãŒä¿è­·ã•ã‚Œã¦ã„ã¾ã™ã€‚ã‚·ãƒ¼ãƒˆã®ä¿è­·ã‚’è§£é™¤ã—ã¦ä¸‹ã•ã„ã€‚"
+Public Const MSG_BOOK_PROTECTED                 As String = "ãƒ–ãƒƒã‚¯ãŒä¿è­·ã•ã‚Œã¦ã„ã¾ã™ã€‚ãƒ–ãƒƒã‚¯ã®ä¿è­·ã‚’è§£é™¤ã—ã¦ä¸‹ã•ã„ã€‚"
+Public Const MSG_INVALID_NUM                    As String = "æœ‰åŠ¹ãªæ•°å€¤ã‚’è¨­å®šã—ã¦ãã ã•ã„ã€‚"
+Public Const MSG_CONFIRM                        As String = "å®Ÿè¡Œã—ã¾ã™ã€‚ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ"
+Public Const MSG_NO_SHEET                       As String = "ã‚·ãƒ¼ãƒˆãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚"
+Public Const MSG_INVALID_RANGE                  As String = "æœ‰åŠ¹ãªå€¤ã®ã‚ã‚‹ç¯„å›²ã‚’é¸æŠã—ã¦ãã ã•ã„ã€‚"
+Public Const MSG_TOO_MANY_COLS_8                As String = "ï¼˜åˆ—ä»¥ä¸Šã®é¸æŠç¯„å›²ã¯å‡¦ç†ã§ãã¾ã›ã‚“ã€‚"
+Public Const MSG_NOT_RANGE_SELECT               As String = "ã‚»ãƒ«ã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚"
+Public Const MSG_VLOOKUP_MASTER_2COLS           As String = "VLOOKUPã®ãƒã‚¹ã‚¿è¡¨ã¨ã—ã¦2åˆ—ä»¥ä¸Šã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚"
+Public Const MSG_VLOOKUP_SET_2COLS              As String = "VLOOKUPã®è²¼ã‚Šä»˜ã‘å…ˆã¨ã—ã¦2åˆ—ä»¥ä¸Šã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚"
+Public Const MSG_VLOOKUP_SEL_DUPLICATED         As String = "VLOOKUPã®ãƒã‚¹ã‚¿è¡¨ã¨è²¼ã‚Šä»˜ã‘å…ˆãŒé‡è¤‡ã—ã¦ã„ã¾ã™ã€‚"
+Public Const MSG_VLOOKUP_NO_MASTER              As String = "VLOOKUPã®ãƒã‚¹ã‚¿è¡¨ãŒé¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
+Public Const MSG_SEL_DEFAULT_COLOR              As String = "é¸æŠã•ã‚ŒãŸã‚»ãƒ«ã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè‰²ãŒæŒ‡å®šã•ã‚Œã¦ã„ã¾ã™ã€‚å‡¦ç†ã‚’ç¶šã‘ã¾ã™ã‹ï¼Ÿ"
+Public Const MSG_SHAPE_NOT_SELECTED             As String = "ã‚·ã‚§ã‚¤ãƒ—ãŒé¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
+Public Const MSG_PROCESSING                     As String = "å®Ÿè¡Œä¸­ã§ã™..."
+Public Const MSG_SHAPE_MULTI_SELECT             As String = "2ã¤ä»¥ä¸Šã®ã‚·ã‚§ã‚¤ãƒ—ã‚’é¸æŠã—ã¦ãã ã•ã„ã€‚"
+'Public Const MSG_BARCODE_NOT_AVAILABLE          As String = "ãƒãƒ¼ã‚³ãƒ¼ãƒ‰ã¯Excel2016ä»¥é™ã§ä½¿ç”¨å¯èƒ½ã§ã™ã€‚"
+Public Const MSG_HEADER                         As String = "ãƒ˜ãƒƒãƒ€"
+Public Const MSG_FOOTER                         As String = "ãƒ•ãƒƒã‚¿"
+Public Const MSG_LEFT                           As String = "å·¦"
+Public Const MSG_RIGHT                          As String = "å³"
+Public Const MSG_CENTER                         As String = "ä¸­å¤®"
+Public Const MSG_CHART_TITLE                    As String = "ãƒãƒ£ãƒ¼ãƒˆã‚¿ã‚¤ãƒˆãƒ«"
+Public Const MSG_CHART_SERIES                   As String = "ãƒãƒ£ãƒ¼ãƒˆç³»åˆ—å"
 
 
-'// ƒƒbƒZ[ƒWFfrmFileList
-Public Const MSG_MAX_DEPTH                      As String = "Å‘å[“x‚É’B‚µ‚Ü‚µ‚½B"
-Public Const MSG_ERR_PRIV                       As String = "ƒGƒ‰[FƒAƒNƒZƒXŒ ‚È‚Ç‚É–â‘è‚ª‚ ‚é‰Â”\«‚ª‚ ‚è‚Ü‚·B"
-Public Const MSG_EMPTY_DIR                      As String = "‹óƒfƒBƒŒƒNƒgƒŠ"
-Public Const MSG_ZERO_BYTE                      As String = "ƒ[ƒƒoƒCƒg"
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmCompSheet
+Public Const MSG_ERROR_NEED_BOOKNAME            As String = "ãƒ–ãƒƒã‚¯ã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚"
+Public Const MSG_NO_FILE                        As String = "ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“"
+Public Const MSG_UNMATCH_SHEET                  As String = "ã‚·ãƒ¼ãƒˆæ§‹æˆãŒç•°ãªã‚Šã¾ã™ã€‚"
+Public Const MSG_NO_DIFF                        As String = "ãƒ‡ãƒ¼ã‚¿ã¯åŒã˜ã§ã™ã€‚"
+Public Const MSG_SHEET_NAME                     As String = "ã‚·ãƒ¼ãƒˆåãŒç•°ãªã‚Šã¾ã™"
+Public Const MSG_INS_ROW                        As String = "è¡Œè¿½åŠ "
+Public Const MSG_DEL_ROW                        As String = "è¡Œå‰Šé™¤"
+
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmSheetManage
+Public Const MSG_VAL_10_400                     As String = "ã‚ºãƒ¼ãƒ å€¤ã«æœ‰åŠ¹ãªæ•°å€¤ã‚’å…¥åŠ›ã—ã¦ä¸‹ã•ã„ã€‚(10ï½400)"
+Public Const MSG_SHEETS_PROTECTED               As String = "ä¿è­·ã•ã‚Œã¦ã„ã‚‹ã‚·ãƒ¼ãƒˆãŒï¼‘ã¤ä»¥ä¸Šã‚ã‚Šã¾ã™ã€‚ã‚·ãƒ¼ãƒˆã®ä¿è­·ã‚’è§£é™¤ã—ã¦ä¸‹ã•ã„ã€‚"
+Public Const MSG_COMPLETED_FILES                As String = "ä»¥ä¸‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã«ã¤ã„ã¦ã®å‡¦ç†ã¯çµ‚äº†ã—ã¦ã„ã¾ã™ã€‚å¿µã®ãŸã‚ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥ä»˜ã‚’ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚"
+
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmGetRecord
+Public Const MSG_TOO_MANY_ROWS                  As String = "å‡ºåŠ›å¯èƒ½ãªæœ€å¤§ä»¶æ•°ã«é”ã—ã¾ã—ãŸã€‚ä»¥é™ã®ãƒ‡ãƒ¼ã‚¿ã¯åˆ‡ã‚Šæ¨ã¦ã‚‰ã‚Œã¾ã™ã€‚"
+Public Const MSG_TOO_MANY_COLS                  As String = "åˆ—æ•°ãŒåˆ¶é™å€¤ã‚’è¶Šãˆã¦ã„ã¾ã™ã€‚åˆ¶é™ã‚’è¶ŠãˆãŸåˆ—ã¯åˆ‡ã‚Šæ¨ã¦ã‚‰ã‚Œã¾ã™ã€‚"
+Public Const MSG_QUERY                          As String = "å•ã„åˆã‚ã›ä¸­"
+Public Const MSG_EXTRACT_SHEET                  As String = "ã‚·ãƒ¼ãƒˆã¸å‡ºåŠ›ä¸­"
+Public Const MSG_PAGE_SETUP                     As String = "æ›¸å¼è¨­å®šä¸­"
+Public Const MSG_ROWS_PROCESSED                 As String = "è¡ŒãŒå‡¦ç†ã•ã‚Œã¾ã—ãŸã€‚"
+Public Const MSG_NOT_LOGGEDIN                   As String = "ãƒ­ã‚°ã‚¤ãƒ³ã—ã¦ã„ã¾ã›ã‚“ã€‚"
+Public Const MSG_NOT_SAVED                      As String = "ãƒ–ãƒƒã‚¯ãŒä¿å­˜ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚ä¿å­˜ã—ã¦æ¤œç´¢ã‚’ç¶™ç¶šã—ã¾ã™ã‹ï¼Ÿ" & vbLf & "â€»æ¬¡å›ã‹ã‚‰ã¯ãƒ–ãƒƒã‚¯ã‚’é–‰ã˜ã‚‹ã¾ã§æ¯å›è‡ªå‹•ä¿å­˜ã•ã‚Œã¾ã™"
+
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmDataExport
+'Public Const MSG_TABLE_NAME                     As String = "è¡¨è«–ç†åç§°"
+'Public Const MSG_COLUMN_NAME                    As String = "åˆ—åç§°"
+
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmDrawChart
+'Public Const MSG_INVALID_COL_MIN                As String = "ã‚°ãƒ©ãƒ•ã¯Aåˆ—ã‚ˆã‚Šå·¦ã«ã¯æç”»ã§ãã¾ã›ã‚“ã€‚"
+'Public Const MSG_INVALID_COL_MAX                As String = "ã‚°ãƒ©ãƒ•ã¯æœ€å¤§åˆ—ã‚ˆã‚Šå³ã«ã¯æç”»ã§ãã¾ã›ã‚“ã€‚"
+
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmLogin
+Public Const MSG_LOG_ON_SUCCESS                 As String = "ãƒ­ã‚°ã‚¤ãƒ³ã—ã¾ã—ãŸã€‚"
+Public Const MSG_LOG_ON_FAILED                  As String = "ãƒ­ã‚°ã‚¤ãƒ³ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"
+Public Const MSG_NEED_FILL_ID                   As String = "ãƒ¦ãƒ¼ã‚¶ï¼©ï¼¤ãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
+Public Const MSG_NEED_FILL_PWD                  As String = "ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
+Public Const MSG_NEED_FILL_TNS                  As String = "æ¥ç¶šæ–‡å­—åˆ—ãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
+Public Const MSG_NEED_EXCEL_SAVED               As String = "ç¾åœ¨ã®ãƒ–ãƒƒã‚¯ã¯ä¿å­˜ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚ãƒ–ãƒƒã‚¯ã‚’ä¿å­˜ã—ã¾ã™ã‹ï¼Ÿ"
+
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmSearch
+Public Const MSG_NO_CONDITION                   As String = "æ¤œç´¢æ¡ä»¶ã‚’æŒ‡å®šã—ã¦ä¸‹ã•ã„ã€‚"
+Public Const MSG_WRONG_COND                     As String = "æ¤œç´¢æ¡ä»¶ã«æŒ‡å®šã•ã‚ŒãŸæ–‡å­—åˆ—ã¯ç„¡åŠ¹ã§ã™ã€‚"
+Public Const MSG_DUP_FILE                       As String = "å¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ–ãƒƒã‚¯åãŒã‚ªãƒ¼ãƒ—ãƒ³ä¸­ã®ãƒ–ãƒƒã‚¯ã¨é‡è¤‡ã—ã¦ã„ã¾ã™ã€‚"
+Public Const MSG_FILE_ERROR                     As String = "ã‚¨ãƒ©ãƒ¼: "
+
+
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmFileList
+Public Const MSG_MAX_DEPTH                      As String = "æœ€å¤§æ·±åº¦ã«é”ã—ã¾ã—ãŸã€‚"
+Public Const MSG_ERR_PRIV                       As String = "ã‚¨ãƒ©ãƒ¼ï¼šã‚¢ã‚¯ã‚»ã‚¹æ¨©ãªã©ã«å•é¡ŒãŒã‚ã‚‹å¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚"
+Public Const MSG_EMPTY_DIR                      As String = "ç©ºãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª"
+Public Const MSG_ZERO_BYTE                      As String = "ã‚¼ãƒ­ãƒã‚¤ãƒˆ"
 
 
 
 '// ////////////////////
-'// ƒtƒH[ƒ€ƒ‰ƒxƒ‹ (•Ï”‘®: LBL_{form code}_{string} )
+'// ãƒ•ã‚©ãƒ¼ãƒ ãƒ©ãƒ™ãƒ« (å¤‰æ•°æ›¸å¼: LBL_{form code}_{string} )
 
-'// ‹¤’Ê
-Public Const LBL_COM_EXEC                       As String = "Às"
-Public Const LBL_COM_CLOSE                      As String = "•Â‚¶‚é"
-Public Const LBL_COM_BROWSE                     As String = "QÆ..."
-Public Const LBL_COM_TARGET                     As String = "o—Í‘ÎÛ"
-Public Const LBL_COM_OPTIONS                    As String = "o—ÍƒIƒvƒVƒ‡ƒ“"
-Public Const LBL_COM_CHAR_SET                   As String = "•¶šƒR[ƒh"
-Public Const LBL_COM_CR_CODE                    As String = "‰üsƒR[ƒh"
-Public Const LBL_COM_NEW_SHEET                  As String = "ƒV[ƒgì¬"
-Public Const LBL_COM_CHECK_ALL                  As String = "‚·‚×‚Ä‘I‘ğ"
-Public Const LBL_COM_UNCHECK                    As String = "‘I‘ğ‰ğœ"
-Public Const LBL_COM_HYPERLINK                  As String = "ƒnƒCƒp[ƒŠƒ“ƒN‚Ìİ’è"
+'// å…±é€š
+Public Const LBL_COM_EXEC                       As String = "å®Ÿè¡Œ"
+Public Const LBL_COM_CLOSE                      As String = "é–‰ã˜ã‚‹"
+Public Const LBL_COM_BROWSE                     As String = "å‚ç…§..."
+Public Const LBL_COM_TARGET                     As String = "å‡ºåŠ›å¯¾è±¡"
+Public Const LBL_COM_OPTIONS                    As String = "å‡ºåŠ›ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+Public Const LBL_COM_CHAR_SET                   As String = "æ–‡å­—ã‚³ãƒ¼ãƒ‰"
+Public Const LBL_COM_CR_CODE                    As String = "æ”¹è¡Œã‚³ãƒ¼ãƒ‰"
+Public Const LBL_COM_NEW_SHEET                  As String = "ã‚·ãƒ¼ãƒˆä½œæˆ"
+Public Const LBL_COM_CHECK_ALL                  As String = "ã™ã¹ã¦é¸æŠ"
+Public Const LBL_COM_UNCHECK                    As String = "é¸æŠè§£é™¤"
+Public Const LBL_COM_HYPERLINK                  As String = "ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯ã®è¨­å®š"
 
 '// frmCompSheet (CMP)
-Public Const LBL_CMP_FORM                       As String = "ƒV[ƒg/ƒuƒbƒN”äŠr"
-Public Const LBL_CMP_MODE_SHEET                 As String = "ƒV[ƒg”äŠr"
-Public Const LBL_CMP_MODE_BOOK                  As String = "ƒuƒbƒN”äŠr"
-Public Const LBL_CMP_SHEET1                     As String = "”äŠrŒ³ƒV[ƒg"
-Public Const LBL_CMP_SHEET2                     As String = "”äŠræƒV[ƒg"
-Public Const LBL_CMP_BOOK1                      As String = "”äŠrŒ³ƒuƒbƒN"
-Public Const LBL_CMP_BOOK2                      As String = "”äŠræƒuƒbƒN"
-Public Const LBL_CMP_OPTIONS                    As String = "”äŠrƒIƒvƒVƒ‡ƒ“"
-Public Const LBL_CMP_RESULT                     As String = "o—Íæ"
-Public Const LBL_CMP_MARKER                     As String = "ƒ}[ƒJ["
-Public Const LBL_CMP_METHOD                     As String = "”äŠr•û–@"
-Public Const LBL_CMP_SHOW_COMMENT               As String = "•ÏX‰ÓŠ‚ÌƒRƒƒ“ƒg‚ğ•\¦"
+Public Const LBL_CMP_FORM                       As String = "ã‚·ãƒ¼ãƒˆ/ãƒ–ãƒƒã‚¯æ¯”è¼ƒ"
+Public Const LBL_CMP_MODE_SHEET                 As String = "ã‚·ãƒ¼ãƒˆæ¯”è¼ƒ"
+Public Const LBL_CMP_MODE_BOOK                  As String = "ãƒ–ãƒƒã‚¯æ¯”è¼ƒ"
+Public Const LBL_CMP_SHEET1                     As String = "æ¯”è¼ƒå…ƒã‚·ãƒ¼ãƒˆ"
+Public Const LBL_CMP_SHEET2                     As String = "æ¯”è¼ƒå…ˆã‚·ãƒ¼ãƒˆ"
+Public Const LBL_CMP_BOOK1                      As String = "æ¯”è¼ƒå…ƒãƒ–ãƒƒã‚¯"
+Public Const LBL_CMP_BOOK2                      As String = "æ¯”è¼ƒå…ˆãƒ–ãƒƒã‚¯"
+Public Const LBL_CMP_OPTIONS                    As String = "æ¯”è¼ƒã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+Public Const LBL_CMP_RESULT                     As String = "å‡ºåŠ›å…ˆ"
+Public Const LBL_CMP_MARKER                     As String = "ãƒãƒ¼ã‚«ãƒ¼"
+Public Const LBL_CMP_METHOD                     As String = "æ¯”è¼ƒæ–¹æ³•"
+Public Const LBL_CMP_SHOW_COMMENT               As String = "å¤‰æ›´ç®‡æ‰€ã®ã‚³ãƒ¡ãƒ³ãƒˆã‚’è¡¨ç¤º"
 
 '// frmShowSheetList (SSL)
-Public Const LBL_SSL_FORM                       As String = "ƒV[ƒgˆê——o—Í"
-Public Const LBL_SSL_TARGET                     As String = "o—Íæ"
-Public Const LBL_SSL_OPTIONS                    As String = "ƒV[ƒg‚Ì’l‚Ìo—Í"
-Public Const LBL_SSL_ROWS                       As String = "s”"
-Public Const LBL_SSL_COLS                       As String = "—ñ”"
+Public Const LBL_SSL_FORM                       As String = "ã‚·ãƒ¼ãƒˆä¸€è¦§å‡ºåŠ›"
+Public Const LBL_SSL_TARGET                     As String = "å‡ºåŠ›å…ˆ"
+Public Const LBL_SSL_OPTIONS                    As String = "ã‚·ãƒ¼ãƒˆã®å€¤ã®å‡ºåŠ›"
+Public Const LBL_SSL_ROWS                       As String = "è¡Œæ•°"
+Public Const LBL_SSL_COLS                       As String = "åˆ—æ•°"
 
 '// frmSheetManage (SMG)
-Public Const LBL_SMG_FORM                       As String = "ƒV[ƒg‘€ì"
-Public Const LBL_SMG_TARGET                     As String = "ˆ—‘ÎÛ"
-Public Const LBL_SMG_SCROLL                     As String = "ƒXƒNƒ[ƒ‹‚ğ‰Šú‰»"
-Public Const LBL_SMG_FONT_COLOR                 As String = "ƒtƒHƒ“ƒgF‚ğ‰Šú‰»"
-Public Const LBL_SMG_HYPERLINK                  As String = "ƒnƒCƒp[ƒŠƒ“ƒN‚ğíœ"
-Public Const LBL_SMG_COMMENT                    As String = "ƒRƒƒ“ƒg‚ğíœ"
-Public Const LBL_SMG_HEAD_FOOT                  As String = "ƒwƒbƒ_‚Æƒtƒbƒ^‚Ì•\¦İ’è"
-Public Const LBL_SMG_MARGIN                     As String = "ƒ}[ƒWƒ“‚ğİ’è"
-Public Const LBL_SMG_PAGEBREAK                  As String = "‰üƒy[ƒW‚Æˆóü”ÍˆÍ‚ğƒNƒŠƒA"
-Public Const LBL_SMG_PRINT_OPT                  As String = "ˆóü‚ÌŠg‘å/k¬"
-Public Const LBL_SMG_PRINT_NONE                 As String = "İ’è‚È‚µ"
+Public Const LBL_SMG_FORM                       As String = "ã‚·ãƒ¼ãƒˆæ“ä½œ"
+Public Const LBL_SMG_TARGET                     As String = "å‡¦ç†å¯¾è±¡"
+Public Const LBL_SMG_SCROLL                     As String = "ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã‚’åˆæœŸåŒ–"
+Public Const LBL_SMG_FONT_COLOR                 As String = "ãƒ•ã‚©ãƒ³ãƒˆè‰²ã‚’åˆæœŸåŒ–"
+Public Const LBL_SMG_HYPERLINK                  As String = "ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯ã‚’å‰Šé™¤"
+Public Const LBL_SMG_COMMENT                    As String = "ã‚³ãƒ¡ãƒ³ãƒˆã‚’å‰Šé™¤"
+Public Const LBL_SMG_HEAD_FOOT                  As String = "ãƒ˜ãƒƒãƒ€ã¨ãƒ•ãƒƒã‚¿ã®è¡¨ç¤ºè¨­å®š"
+Public Const LBL_SMG_MARGIN                     As String = "ãƒãƒ¼ã‚¸ãƒ³ã‚’è¨­å®š"
+Public Const LBL_SMG_PAGEBREAK                  As String = "æ”¹ãƒšãƒ¼ã‚¸ã¨å°åˆ·ç¯„å›²ã‚’ã‚¯ãƒªã‚¢"
+Public Const LBL_SMG_PRINT_OPT                  As String = "å°åˆ·ã®æ‹¡å¤§/ç¸®å°"
+Public Const LBL_SMG_PRINT_NONE                 As String = "è¨­å®šãªã—"
 Public Const LBL_SMG_PRINT_100                  As String = "100%"
-Public Const LBL_SMG_PRINT_HRZ                  As String = "‰¡‚P–‡/c‰Â•Ï"
-Public Const LBL_SMG_PRINT_1_PAGE               As String = "‰¡‚P–‡/c‚P–‡"
-Public Const LBL_SMG_VIEW                       As String = "ƒrƒ…["
-Public Const LBL_SMG_ZOOM                       As String = "ƒY[ƒ€(%)"
-Public Const LBL_SMG_AUTOFILTER                 As String = "ƒI[ƒgƒtƒBƒ‹ƒ^"
+Public Const LBL_SMG_PRINT_HRZ                  As String = "æ¨ªï¼‘æš/ç¸¦å¯å¤‰"
+Public Const LBL_SMG_PRINT_1_PAGE               As String = "æ¨ªï¼‘æš/ç¸¦ï¼‘æš"
+Public Const LBL_SMG_VIEW                       As String = "ãƒ“ãƒ¥ãƒ¼"
+Public Const LBL_SMG_ZOOM                       As String = "ã‚ºãƒ¼ãƒ (%)"
+Public Const LBL_SMG_AUTOFILTER                 As String = "ã‚ªãƒ¼ãƒˆãƒ•ã‚£ãƒ«ã‚¿"
 
 '// frmGetRecord (GRC)
-Public Const LBL_GRC_FORM                       As String = "SQL•¶Às"
-Public Const LBL_GRC_FILE                       As String = "ƒtƒ@ƒCƒ‹"
-Public Const LBL_GRC_OPTIONS                    As String = "o—ÍƒIƒvƒVƒ‡ƒ“"
-Public Const LBL_GRC_DATE_FORMAT                As String = "“ú•t‘®"
-Public Const LBL_GRC_HEADER                     As String = "ƒwƒbƒ_o—Í"
-Public Const LBL_GRC_GROUPING                   As String = "ƒOƒ‹[ƒv‰»"
-Public Const LBL_GRC_BORDERS                    As String = "˜gü‚ğ•\¦"
-Public Const LBL_GRC_BG_COLOR                   As String = "s‚ğ“h‚è•ª‚¯"
-Public Const LBL_GRC_SCRIPT                     As String = "SQLƒXƒNƒŠƒvƒg"
-Public Const LBL_GRC_LOGIN                      As String = "ƒƒOƒCƒ“"
-Public Const LBL_GRC_FILE_OPEN                  As String = "ƒtƒ@ƒCƒ‹‚ğŠJ‚­"
-Public Const LBL_GRC_SEARCH                     As String = "Às"
+Public Const LBL_GRC_FORM                       As String = "SQLæ–‡å®Ÿè¡Œ"
+Public Const LBL_GRC_FILE                       As String = "ãƒ•ã‚¡ã‚¤ãƒ«"
+Public Const LBL_GRC_OPTIONS                    As String = "å‡ºåŠ›ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+Public Const LBL_GRC_DATE_FORMAT                As String = "æ—¥ä»˜æ›¸å¼"
+Public Const LBL_GRC_HEADER                     As String = "ãƒ˜ãƒƒãƒ€å‡ºåŠ›"
+Public Const LBL_GRC_GROUPING                   As String = "ã‚°ãƒ«ãƒ¼ãƒ—åŒ–"
+Public Const LBL_GRC_BORDERS                    As String = "æ ç·šã‚’è¡¨ç¤º"
+Public Const LBL_GRC_BG_COLOR                   As String = "è¡Œã‚’å¡—ã‚Šåˆ†ã‘"
+Public Const LBL_GRC_SCRIPT                     As String = "SQLã‚¹ã‚¯ãƒªãƒ—ãƒˆ"
+Public Const LBL_GRC_LOGIN                      As String = "ãƒ­ã‚°ã‚¤ãƒ³"
+Public Const LBL_GRC_FILE_OPEN                  As String = "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã"
+Public Const LBL_GRC_SEARCH                     As String = "å®Ÿè¡Œ"
 
 ''// frmDataExport (EXP)
-'Public Const LBL_EXP_FORM                       As String = "DML/ƒf[ƒ^o—Í"
-'Public Const LBL_EXP_FILE_TYPE                  As String = "o—ÍŒ`®"
-'Public Const LBL_EXP_TARGET                     As String = "o—Í‘ÎÛ"
-'Public Const LBL_EXP_OPTIONS                    As String = "o—ÍƒIƒvƒVƒ‡ƒ“"
-'Public Const LBL_EXP_DATE_FORMAT                As String = "“ú•t‘®"
-'Public Const LBL_EXP_QUOTE                      As String = "ƒNƒH[ƒg"
-'Public Const LBL_EXP_SEPARATOR                  As String = "‹æØ‚è•¶š"
-'Public Const LBL_EXP_CHAR_SET                   As String = "•¶šƒR[ƒh"
-'Public Const LBL_EXP_CR_CODE                    As String = "‰üsƒR[ƒh"
-'Public Const LBL_EXP_QUOTE_ALL                  As String = "”’lE“ú•t‚àƒNƒH[ƒg"
-'Public Const LBL_EXP_FORMAT_DML                 As String = "DML‚ğ‰üs‚Å®Œ`"
-'Public Const LBL_EXP_HEADER                     As String = "ƒwƒbƒ_Eƒtƒbƒ^‚ğo—Í"
-'Public Const LBL_EXP_COL_NAME                   As String = "€–Ú–¼‚ğo—Í"
-'Public Const LBL_EXP_SEMICOLON                  As String = "ƒZƒ~ƒRƒƒ“‚ğo—Í‚µ‚È‚¢"
-'Public Const LBL_EXP_NUM_POINT                  As String = "”’l‚Ì¬”“_‚ğo—Í‚µ‚È‚¢"
-'Public Const LBL_EXP_CREATE_SHEET               As String = "ƒV[ƒgì¬"
+'Public Const LBL_EXP_FORM                       As String = "DML/ãƒ‡ãƒ¼ã‚¿å‡ºåŠ›"
+'Public Const LBL_EXP_FILE_TYPE                  As String = "å‡ºåŠ›å½¢å¼"
+'Public Const LBL_EXP_TARGET                     As String = "å‡ºåŠ›å¯¾è±¡"
+'Public Const LBL_EXP_OPTIONS                    As String = "å‡ºåŠ›ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+'Public Const LBL_EXP_DATE_FORMAT                As String = "æ—¥ä»˜æ›¸å¼"
+'Public Const LBL_EXP_QUOTE                      As String = "ã‚¯ã‚©ãƒ¼ãƒˆ"
+'Public Const LBL_EXP_SEPARATOR                  As String = "åŒºåˆ‡ã‚Šæ–‡å­—"
+'Public Const LBL_EXP_CHAR_SET                   As String = "æ–‡å­—ã‚³ãƒ¼ãƒ‰"
+'Public Const LBL_EXP_CR_CODE                    As String = "æ”¹è¡Œã‚³ãƒ¼ãƒ‰"
+'Public Const LBL_EXP_QUOTE_ALL                  As String = "æ•°å€¤ãƒ»æ—¥ä»˜ã‚‚ã‚¯ã‚©ãƒ¼ãƒˆ"
+'Public Const LBL_EXP_FORMAT_DML                 As String = "DMLã‚’æ”¹è¡Œã§æ•´å½¢"
+'Public Const LBL_EXP_HEADER                     As String = "ãƒ˜ãƒƒãƒ€ãƒ»ãƒ•ãƒƒã‚¿ã‚’å‡ºåŠ›"
+'Public Const LBL_EXP_COL_NAME                   As String = "é …ç›®åã‚’å‡ºåŠ›"
+'Public Const LBL_EXP_SEMICOLON                  As String = "ã‚»ãƒŸã‚³ãƒ­ãƒ³ã‚’å‡ºåŠ›ã—ãªã„"
+'Public Const LBL_EXP_NUM_POINT                  As String = "æ•°å€¤ã®å°æ•°ç‚¹ã‚’å‡ºåŠ›ã—ãªã„"
+'Public Const LBL_EXP_CREATE_SHEET               As String = "ã‚·ãƒ¼ãƒˆä½œæˆ"
 '
 ''// frmXmlManage (XML)
-'Public Const LBL_XML_FORM                       As String = "XML‘€ì"
-'Public Const LBL_XML_INDENT                     As String = "ƒCƒ“ƒfƒ“ƒg"
-'Public Const LBL_XML_PUT_DEF                    As String = "XMLéŒ¾‚Ìo—Í"
-'Public Const LBL_XML_LOAD                       As String = "“Ç"
-'Public Const LBL_XML_WRITE                      As String = "o—Í"
+'Public Const LBL_XML_FORM                       As String = "XMLæ“ä½œ"
+'Public Const LBL_XML_INDENT                     As String = "ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆ"
+'Public Const LBL_XML_PUT_DEF                    As String = "XMLå®£è¨€ã®å‡ºåŠ›"
+'Public Const LBL_XML_LOAD                       As String = "èª­è¾¼"
+'Public Const LBL_XML_WRITE                      As String = "å‡ºåŠ›"
 '
 ''// frmDrawChart (CHT)
-'Public Const LBL_CHT_FORM                       As String = "ŠÈˆÕƒ`ƒƒ[ƒg‚Ì•`‰æ"
-'Public Const LBL_CHT_MAX_VAL                    As String = "Å‘å’l"
-'Public Const LBL_CHT_INTERVAL                   As String = "•â•üŠÔŠu"
-'Public Const LBL_CHT_POSITION                   As String = "•`‰æˆÊ’u"
-'Public Const LBL_CHT_DIRECTION                  As String = "Œü‚«"
-'Public Const LBL_CHT_GRADATION                  As String = "ƒOƒ‰ƒf[ƒVƒ‡ƒ“"
-'Public Const LBL_CHT_LEGEND                     As String = "–}—á‚Ì•\¦"
-'Public Const LBL_CHT_LINE_FRONT                 As String = "•â•ü‚ğè‘O‚É•\¦"
+'Public Const LBL_CHT_FORM                       As String = "ç°¡æ˜“ãƒãƒ£ãƒ¼ãƒˆã®æç”»"
+'Public Const LBL_CHT_MAX_VAL                    As String = "æœ€å¤§å€¤"
+'Public Const LBL_CHT_INTERVAL                   As String = "è£œåŠ©ç·šé–“éš”"
+'Public Const LBL_CHT_POSITION                   As String = "æç”»ä½ç½®"
+'Public Const LBL_CHT_DIRECTION                  As String = "å‘ã"
+'Public Const LBL_CHT_GRADATION                  As String = "ã‚°ãƒ©ãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³"
+'Public Const LBL_CHT_LEGEND                     As String = "å‡¡ä¾‹ã®è¡¨ç¤º"
+'Public Const LBL_CHT_LINE_FRONT                 As String = "è£œåŠ©ç·šã‚’æ‰‹å‰ã«è¡¨ç¤º"
 
 '// frmOrderShape (ORD)
-Public Const LBL_ORD_FORM                       As String = "ƒVƒFƒCƒv‚Ì”z’u"
-Public Const LBL_ORD_MARGIN                     As String = "ƒ}[ƒWƒ“"
-Public Const LBL_ORD_OPTIONS                    As String = "Ú×İ’è"
-Public Const LBL_ORD_HEIGHT                     As String = "ã‰º•‚Ìİ’è"
-Public Const LBL_ORD_WIDTH                      As String = "¶‰E•‚Ìİ’è"
+Public Const LBL_ORD_FORM                       As String = "ã‚·ã‚§ã‚¤ãƒ—ã®é…ç½®"
+Public Const LBL_ORD_MARGIN                     As String = "ãƒãƒ¼ã‚¸ãƒ³"
+Public Const LBL_ORD_OPTIONS                    As String = "è©³ç´°è¨­å®š"
+Public Const LBL_ORD_HEIGHT                     As String = "ä¸Šä¸‹å¹…ã®è¨­å®š"
+Public Const LBL_ORD_WIDTH                      As String = "å·¦å³å¹…ã®è¨­å®š"
 
 '// frmSearch (SRC)
-Public Const LBL_SRC_FORM                       As String = "Šg’£ŒŸõ"
-Public Const LBL_SRC_STRING                     As String = "ŒŸõ‚·‚é•¶š—ñ"
-Public Const LBL_SRC_TARGET                     As String = "ŒŸõ‘ÎÛ"
-Public Const LBL_SRC_MARK                       As String = "ƒ}[ƒJ[‚Ì•\¦"
-Public Const LBL_SRC_DIR                        As String = "ŒŸõ‚·‚éƒtƒHƒ‹ƒ_"
-Public Const LBL_SRC_SUB_DIR                    As String = "ƒTƒuƒtƒHƒ‹ƒ_‚àŒŸõ"
-Public Const LBL_SRC_IGNORE_CASE                As String = "‘å•¶š¬•¶š‚ğ‹æ•Ê‚µ‚È‚¢"
-Public Const LBL_SRC_OBJECT                     As String = "ŒŸõ‚·‚éƒIƒuƒWƒFƒNƒg"
-Public Const LBL_SRC_CELL_TEXT                  As String = "ƒZƒ‹‚Ì•¶š—ñ‚ğŒŸõ"
-Public Const LBL_SRC_CELL_FORMULA               As String = "ƒZƒ‹‚Ì”®‚ğŒŸõ"
-Public Const LBL_SRC_SHAPE                      As String = "ƒVƒFƒCƒv‚ğŒŸõ"
-Public Const LBL_SRC_COMMENT                    As String = "ƒRƒƒ“ƒg‚ğŒŸõ"
-Public Const LBL_SRC_CELL_NAME                  As String = "ƒZƒ‹–¼Ì‚ğŒŸõ"
-Public Const LBL_SRC_SHEET_NAME                 As String = "ƒV[ƒg–¼‚ğŒŸõ"
-Public Const LBL_SRC_HYPERLINK                  As String = "ƒnƒCƒp[ƒŠƒ“ƒN‚ğŒŸõ"
-Public Const LBL_SRC_HEADER                     As String = "ƒwƒbƒ_Eƒtƒbƒ^‚ğŒŸõ"
-Public Const LBL_SRC_GRAPH                      As String = "ƒOƒ‰ƒt‚ğŒŸõ"
+Public Const LBL_SRC_FORM                       As String = "æ‹¡å¼µæ¤œç´¢"
+Public Const LBL_SRC_STRING                     As String = "æ¤œç´¢ã™ã‚‹æ–‡å­—åˆ—"
+Public Const LBL_SRC_TARGET                     As String = "æ¤œç´¢å¯¾è±¡"
+Public Const LBL_SRC_MARK                       As String = "ãƒãƒ¼ã‚«ãƒ¼ã®è¡¨ç¤º"
+Public Const LBL_SRC_DIR                        As String = "æ¤œç´¢ã™ã‚‹ãƒ•ã‚©ãƒ«ãƒ€"
+Public Const LBL_SRC_SUB_DIR                    As String = "ã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ã‚‚æ¤œç´¢"
+Public Const LBL_SRC_IGNORE_CASE                As String = "å¤§æ–‡å­—å°æ–‡å­—ã‚’åŒºåˆ¥ã—ãªã„"
+Public Const LBL_SRC_OBJECT                     As String = "æ¤œç´¢ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ"
+Public Const LBL_SRC_CELL_TEXT                  As String = "ã‚»ãƒ«ã®æ–‡å­—åˆ—ã‚’æ¤œç´¢"
+Public Const LBL_SRC_CELL_FORMULA               As String = "ã‚»ãƒ«ã®æ•°å¼ã‚’æ¤œç´¢"
+Public Const LBL_SRC_SHAPE                      As String = "ã‚·ã‚§ã‚¤ãƒ—ã‚’æ¤œç´¢"
+Public Const LBL_SRC_COMMENT                    As String = "ã‚³ãƒ¡ãƒ³ãƒˆã‚’æ¤œç´¢"
+Public Const LBL_SRC_CELL_NAME                  As String = "ã‚»ãƒ«åç§°ã‚’æ¤œç´¢"
+Public Const LBL_SRC_SHEET_NAME                 As String = "ã‚·ãƒ¼ãƒˆåã‚’æ¤œç´¢"
+Public Const LBL_SRC_HYPERLINK                  As String = "ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯ã‚’æ¤œç´¢"
+Public Const LBL_SRC_HEADER                     As String = "ãƒ˜ãƒƒãƒ€ãƒ»ãƒ•ãƒƒã‚¿ã‚’æ¤œç´¢"
+Public Const LBL_SRC_GRAPH                      As String = "ã‚°ãƒ©ãƒ•ã‚’æ¤œç´¢"
 
 '// frmFileList (LST)
-Public Const LBL_LST_FORM                       As String = "ƒtƒ@ƒCƒ‹ˆê——o—Í"
-Public Const LBL_LST_ROOT                       As String = "o—Íƒ‹[ƒg"
-Public Const LBL_LST_DEPTH                      As String = "Å‘å[“x"
-Public Const LBL_LST_TARGET                     As String = "‘ÎÛƒtƒ@ƒCƒ‹"
-Public Const LBL_LST_EXT                        As String = "Šg’£q"
-Public Const LBL_LST_SIZE                       As String = "ƒTƒCƒY’PˆÊ"
-Public Const LBL_LST_REL_PATH                   As String = "‘Š‘ÎƒpƒX‚Å•\¦"
+Public Const LBL_LST_FORM                       As String = "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§å‡ºåŠ›"
+Public Const LBL_LST_ROOT                       As String = "å‡ºåŠ›ãƒ«ãƒ¼ãƒˆ"
+Public Const LBL_LST_DEPTH                      As String = "æœ€å¤§æ·±åº¦"
+Public Const LBL_LST_TARGET                     As String = "å¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«"
+Public Const LBL_LST_EXT                        As String = "æ‹¡å¼µå­"
+Public Const LBL_LST_SIZE                       As String = "ã‚µã‚¤ã‚ºå˜ä½"
+Public Const LBL_LST_REL_PATH                   As String = "ç›¸å¯¾ãƒ‘ã‚¹ã§è¡¨ç¤º"
 
 '// frmLogin (LGI)
 Public Const LBL_LGI_FORM                       As String = "Login"
-Public Const LBL_LGI_UID                        As String = "ƒ†[ƒUID"
-Public Const LBL_LGI_PASSWORD                   As String = "ƒpƒXƒ[ƒh"
-Public Const LBL_LGI_STRING                     As String = "Ú‘±•¶š—ñ"
-Public Const LBL_LGI_CONN_TO                    As String = "Ú‘±æ"
-Public Const LBL_LGI_LOGIN                      As String = "ƒƒOƒCƒ“"
-Public Const LBL_LGI_CANCEL                     As String = "ƒLƒƒƒ“ƒZƒ‹"
+Public Const LBL_LGI_UID                        As String = "ãƒ¦ãƒ¼ã‚¶ID"
+Public Const LBL_LGI_PASSWORD                   As String = "ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰"
+Public Const LBL_LGI_STRING                     As String = "æ¥ç¶šæ–‡å­—åˆ—"
+Public Const LBL_LGI_CONN_TO                    As String = "æ¥ç¶šå…ˆ"
+Public Const LBL_LGI_LOGIN                      As String = "ãƒ­ã‚°ã‚¤ãƒ³"
+Public Const LBL_LGI_CANCEL                     As String = "ã‚­ãƒ£ãƒ³ã‚»ãƒ«"
 
 
 '// ////////////////////
-'// ƒRƒ“ƒ{ƒ{ƒbƒNƒX (•Ï”‘®: CMB_{form code}_{string} )
+'// ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹ (å¤‰æ•°æ›¸å¼: CMB_{form code}_{string} )
 
-'// ‹¤’Ê
+'// å…±é€š
 Public Const CMB_COM_CHAR_SET                   As String = "0,S-JIS;1,JIS;2,EUC;3,Unicode(UTF-8)"
 Public Const CMB_COM_CR_CODE                    As String = "0,CR(#13) + LF(#10);1,LF(#10);2,CR(#13)"
 
 '// frmCompSheet (CMP)
-Public Const CMB_CMP_MARKER                     As String = "0,‰½‚à‚µ‚È‚¢;1,•¶š‚ğ’…F;2,ƒZƒ‹‚ğ’…F;3,˜g‚ğ’…F"
-Public Const CMB_CMP_METHOD                     As String = "0,ƒeƒLƒXƒg;1,’l;2,ƒeƒLƒXƒg‚Ü‚½‚Í’l"
-Public Const CMB_CMP_OUTPUT                     As String = "0,•ÊƒuƒbƒN;1,”äŠræƒuƒbƒN‚Ì––”ö"
+Public Const CMB_CMP_MARKER                     As String = "0,ä½•ã‚‚ã—ãªã„;1,æ–‡å­—ã‚’ç€è‰²;2,ã‚»ãƒ«ã‚’ç€è‰²;3,æ ã‚’ç€è‰²"
+Public Const CMB_CMP_METHOD                     As String = "0,ãƒ†ã‚­ã‚¹ãƒˆ;1,å€¤;2,ãƒ†ã‚­ã‚¹ãƒˆã¾ãŸã¯å€¤"
+Public Const CMB_CMP_OUTPUT                     As String = "0,åˆ¥ãƒ–ãƒƒã‚¯;1,æ¯”è¼ƒå…ˆãƒ–ãƒƒã‚¯ã®æœ«å°¾"
 
 '// frmShowSheetList (SSL)
-Public Const CMB_SSL_OUTPUT                     As String = "0,•ÊƒuƒbƒN;1,“¯ˆêƒuƒbƒN‚Ìæ“ª;2,“¯ˆêƒuƒbƒN‚Ì––”ö"
+Public Const CMB_SSL_OUTPUT                     As String = "0,åˆ¥ãƒ–ãƒƒã‚¯;1,åŒä¸€ãƒ–ãƒƒã‚¯ã®å…ˆé ­;2,åŒä¸€ãƒ–ãƒƒã‚¯ã®æœ«å°¾"
 
 '// frmSheetManage (SMG)
-Public Const CMB_SMG_TARGET                     As String = "0,Œ»İ‚ÌƒV[ƒg;1,ƒuƒbƒN‘S‘Ì;2,ƒfƒBƒŒƒNƒgƒŠ’PˆÊ"
-Public Const CMB_SMG_VIEW                       As String = "0,w’è–³‚µ;1,•W€;2,‰üƒy[ƒW"
-Public Const CMB_SMG_ZOOM                       As String = "0,w’è–³‚µ;1,100;2,75;3,50,4,25"
-Public Const CMB_SMG_FILTER                     As String = "0,w’è–³‚µ;1,ƒtƒBƒ‹ƒ^‰ğœ;2,‘S‚Ä•\¦;3,1s–Ú‚ÅƒtƒBƒ‹ƒ^"
+Public Const CMB_SMG_TARGET                     As String = "0,ç¾åœ¨ã®ã‚·ãƒ¼ãƒˆ;1,ãƒ–ãƒƒã‚¯å…¨ä½“;2,ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå˜ä½"
+Public Const CMB_SMG_VIEW                       As String = "0,æŒ‡å®šç„¡ã—;1,æ¨™æº–;2,æ”¹ãƒšãƒ¼ã‚¸"
+Public Const CMB_SMG_ZOOM                       As String = "0,æŒ‡å®šç„¡ã—;1,100;2,75;3,50,4,25"
+Public Const CMB_SMG_FILTER                     As String = "0,æŒ‡å®šç„¡ã—;1,ãƒ•ã‚£ãƒ«ã‚¿è§£é™¤;2,å…¨ã¦è¡¨ç¤º;3,1è¡Œç›®ã§ãƒ•ã‚£ãƒ«ã‚¿"
 
 '// frmGetRecord (GRC)
-Public Const CMB_GRC_HEADER                     As String = "0,—ñ–¼Ì‚Ì‚İ;1,—ñ–¼Ì‚Æ’è‹`;2,ƒwƒbƒ_–³‚µ"
-Public Const CMB_GRC_GROUP                      As String = "0,‚È‚µ;1,‚P—ñ;2,‚Q—ñ;3,‚R—ñ;4,‚S—ñ"
+Public Const CMB_GRC_HEADER                     As String = "0,åˆ—åç§°ã®ã¿;1,åˆ—åç§°ã¨å®šç¾©;2,ãƒ˜ãƒƒãƒ€ç„¡ã—"
+Public Const CMB_GRC_GROUP                      As String = "0,ãªã—;1,ï¼‘åˆ—;2,ï¼’åˆ—;3,ï¼“åˆ—;4,ï¼”åˆ—"
 
 '// frmDataExport (EXP)
-'Public Const CMB_EXP_FILE_TYPE                  As String = "0,DML•¶;1,ŒÅ’è’·ƒtƒ@ƒCƒ‹;2,CSVƒtƒ@ƒCƒ‹"
-'Public Const CMB_EXP_QUOTE                      As String = "0,"" ƒ_ƒuƒ‹ƒNƒH[ƒg(#34);1,' ƒVƒ“ƒOƒ‹ƒNƒH[ƒg(#39);2,‚È‚µ"
-'Public Const CMB_EXP_SEPARATOR                  As String = "0,ƒJƒ“ƒ}(#44);1,ƒZƒ~ƒRƒƒ“(#59);2,ƒ^ƒu(#09);3,ƒXƒy[ƒX(#32);4,‚È‚µ"
+'Public Const CMB_EXP_FILE_TYPE                  As String = "0,DMLæ–‡;1,å›ºå®šé•·ãƒ•ã‚¡ã‚¤ãƒ«;2,CSVãƒ•ã‚¡ã‚¤ãƒ«"
+'Public Const CMB_EXP_QUOTE                      As String = "0,"" ãƒ€ãƒ–ãƒ«ã‚¯ã‚©ãƒ¼ãƒˆ(#34);1,' ã‚·ãƒ³ã‚°ãƒ«ã‚¯ã‚©ãƒ¼ãƒˆ(#39);2,ãªã—"
+'Public Const CMB_EXP_SEPARATOR                  As String = "0,ã‚«ãƒ³ãƒ(#44);1,ã‚»ãƒŸã‚³ãƒ­ãƒ³(#59);2,ã‚¿ãƒ–(#09);3,ã‚¹ãƒšãƒ¼ã‚¹(#32);4,ãªã—"
 'Public Const CMB_EXP_DATE_FORMAT                As String = "0,yyyy/mm/dd;1,yyyy/mm/dd hh:mm:ss;2,yyyymmdd;3,yyyymmddhhmmss;4,yyyy-mm-dd;5,yyyy-mm-dd hh:mm:ss;6,yyyy-mm-dd-hh.mm.ss"
 
 '// frmXmlManage (XML)
-'Public Const CMB_XML_INDENT                     As String = "0,‚È‚µ;1,ƒ^ƒu(#09);2,ƒXƒy[ƒX(#32)F ‚QƒoƒCƒg;3,ƒXƒy[ƒX(#32)F ‚SƒoƒCƒg;4,ƒXƒy[ƒX(#32)F ‚WƒoƒCƒg"
+'Public Const CMB_XML_INDENT                     As String = "0,ãªã—;1,ã‚¿ãƒ–(#09);2,ã‚¹ãƒšãƒ¼ã‚¹(#32)ï¼š ï¼’ãƒã‚¤ãƒˆ;3,ã‚¹ãƒšãƒ¼ã‚¹(#32)ï¼š ï¼”ãƒã‚¤ãƒˆ;4,ã‚¹ãƒšãƒ¼ã‚¹(#32)ï¼š ï¼˜ãƒã‚¤ãƒˆ"
 
 '// frmDrawChart (CHT)
-Public Const CMB_CHT_POSITION                   As String = "1,‘I‘ğƒZƒ‹‚Ì‰E;-1,‘I‘ğƒZƒ‹‚Ì¶;0,‘I‘ğƒZƒ‹ã"
-Public Const CMB_CHT_DIRECTION                  As String = "0,¶‚©‚ç;1,‰E‚©‚ç"
-Public Const CMB_CHT_GRADATION                  As String = "0,‚È‚µ;1,‰¡•ûŒü‚ÌƒOƒ‰ƒf[ƒVƒ‡ƒ“;2,c•ûŒü‚ÌƒOƒ‰ƒf[ƒVƒ‡ƒ“(1);3,c•ûŒü‚ÌƒOƒ‰ƒf[ƒVƒ‡ƒ“(2)"
-Public Const CMB_CHT_INTERVAL                   As String = "0,‚È‚µ;1,#•ª‚Ì1;2,#•ª‚Ì1;3,#•ª‚Ì1;4,#•ª‚Ì1;5,#•ª‚Ì1;6,#•ª‚Ì1;7,#•ª‚Ì1;8,#•ª‚Ì1;9,#•ª‚Ì1"
+Public Const CMB_CHT_POSITION                   As String = "1,é¸æŠã‚»ãƒ«ã®å³;-1,é¸æŠã‚»ãƒ«ã®å·¦;0,é¸æŠã‚»ãƒ«ä¸Š"
+Public Const CMB_CHT_DIRECTION                  As String = "0,å·¦ã‹ã‚‰;1,å³ã‹ã‚‰"
+Public Const CMB_CHT_GRADATION                  As String = "0,ãªã—;1,æ¨ªæ–¹å‘ã®ã‚°ãƒ©ãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³;2,ç¸¦æ–¹å‘ã®ã‚°ãƒ©ãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³(1);3,ç¸¦æ–¹å‘ã®ã‚°ãƒ©ãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³(2)"
+Public Const CMB_CHT_INTERVAL                   As String = "0,ãªã—;1,#åˆ†ã®1;2,#åˆ†ã®1;3,#åˆ†ã®1;4,#åˆ†ã®1;5,#åˆ†ã®1;6,#åˆ†ã®1;7,#åˆ†ã®1;8,#åˆ†ã®1;9,#åˆ†ã®1"
 
 '// frmOrderShape (ORD)
-Public Const CMB_ORD_HEIGHT                     As String = "0,ƒZƒ‹‚ÉƒtƒBƒbƒg;1,ã’[‘µ‚¦;2,‰º’[‘µ‚¦;3,‰½‚à‚µ‚È‚¢"
-Public Const CMB_ORD_WIDTH                      As String = "0,ƒZƒ‹‚ÉƒtƒBƒbƒg;1,¶’[‘µ‚¦;2,‰E’[‘µ‚¦;3,‰½‚à‚µ‚È‚¢"
+Public Const CMB_ORD_HEIGHT                     As String = "0,ã‚»ãƒ«ã«ãƒ•ã‚£ãƒƒãƒˆ;1,ä¸Šç«¯æƒãˆ;2,ä¸‹ç«¯æƒãˆ;3,ä½•ã‚‚ã—ãªã„"
+Public Const CMB_ORD_WIDTH                      As String = "0,ã‚»ãƒ«ã«ãƒ•ã‚£ãƒƒãƒˆ;1,å·¦ç«¯æƒãˆ;2,å³ç«¯æƒãˆ;3,ä½•ã‚‚ã—ãªã„"
 
 '// frmSearch (SRC)
-Public Const CMB_SRC_TARGET                     As String = "0,Œ»İ‚ÌƒV[ƒg;1,ƒuƒbƒN‘S‘Ì;2,ƒfƒBƒŒƒNƒgƒŠ“à‚Ìƒtƒ@ƒCƒ‹"
-Public Const CMB_SRC_OUTPUT                     As String = "0,‰½‚à‚µ‚È‚¢;1,•¶š‚ğ’…F;2,ƒZƒ‹‚ğ’…F;3,˜g‚ğ’…F"
+Public Const CMB_SRC_TARGET                     As String = "0,ç¾åœ¨ã®ã‚·ãƒ¼ãƒˆ;1,ãƒ–ãƒƒã‚¯å…¨ä½“;2,ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®ãƒ•ã‚¡ã‚¤ãƒ«"
+Public Const CMB_SRC_OUTPUT                     As String = "0,ä½•ã‚‚ã—ãªã„;1,æ–‡å­—ã‚’ç€è‰²;2,ã‚»ãƒ«ã‚’ç€è‰²;3,æ ã‚’ç€è‰²"
 
 '// frmFileList (LST)
-Public Const CMB_LST_TARGET                     As String = "0,‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹;1,ˆÈ‰º‚ÌŠg’£q‚Ì‚İ;2,ˆÈ‰º‚ÌŠg’£q‚ğœŠO"
-Public Const CMB_LST_SIZE                       As String = "0,ƒoƒCƒg(B);1,ƒLƒƒoƒCƒg (KB);2,ƒƒKƒoƒCƒg (MB)"
-Public Const CMB_LST_DEPTH                      As String = "0,w’èƒfƒBƒŒƒNƒgƒŠ‚Ì‚İ;1,1;2,2;3,3;4,4;5,5;6,6;7,7;8,8;9,–³§ŒÀ"
+Public Const CMB_LST_TARGET                     As String = "0,ã™ã¹ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«;1,ä»¥ä¸‹ã®æ‹¡å¼µå­ã®ã¿;2,ä»¥ä¸‹ã®æ‹¡å¼µå­ã‚’é™¤å¤–"
+Public Const CMB_LST_SIZE                       As String = "0,ãƒã‚¤ãƒˆ(B);1,ã‚­ãƒ­ãƒã‚¤ãƒˆ (KB);2,ãƒ¡ã‚¬ãƒã‚¤ãƒˆ (MB)"
+Public Const CMB_LST_DEPTH                      As String = "0,æŒ‡å®šãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ã¿;1,1;2,2;3,3;4,4;5,5;6,6;7,7;8,8;9,ç„¡åˆ¶é™"
 
 
 '// ////////////////////
-'// ˆê——o—Íƒwƒbƒ_
-Public Const HDR_DISTINCT                       As String = "’l@ƒJƒEƒ“ƒg"   '// uƒJƒEƒ“ƒgv‚Ì•\¦—ñ‚ª‰Â•Ï‚Èˆ×A"@" ‚ğReplace‚·‚é
+'// ä¸€è¦§å‡ºåŠ›ãƒ˜ãƒƒãƒ€
+Public Const HDR_DISTINCT                       As String = "å€¤@ã‚«ã‚¦ãƒ³ãƒˆ"   '// ã€Œã‚«ã‚¦ãƒ³ãƒˆã€ã®è¡¨ç¤ºåˆ—ãŒå¯å¤‰ãªç‚ºã€"@" ã‚’Replaceã™ã‚‹
 
 '// frmShowSheetList (SSL)
-Public Const HDR_SSL                            As String = "ƒV[ƒg”Ô†;ƒV[ƒg–¼Ì"
+Public Const HDR_SSL                            As String = "ã‚·ãƒ¼ãƒˆç•ªå·;ã‚·ãƒ¼ãƒˆåç§°"
 
 '// frmSearch (SEARCH)
-Public Const HDR_SEARCH                         As String = "ƒtƒ@ƒCƒ‹;ƒV[ƒg;ƒZƒ‹;’l;”õl"
+Public Const HDR_SEARCH                         As String = "ãƒ•ã‚¡ã‚¤ãƒ«;ã‚·ãƒ¼ãƒˆ;ã‚»ãƒ«;å€¤;å‚™è€ƒ"
 
 '// frmFileList (LST)
-Public Const HDR_LST                            As String = "ƒpƒX;ƒtƒ@ƒCƒ‹–¼;ì¬“ú;XV“ú;ƒTƒCƒY($);ƒtƒ@ƒCƒ‹ƒ^ƒCƒv;‘®«;”õl"
+Public Const HDR_LST                            As String = "ãƒ‘ã‚¹;ãƒ•ã‚¡ã‚¤ãƒ«å;ä½œæˆæ—¥;æ›´æ–°æ—¥;ã‚µã‚¤ã‚º($);ãƒ•ã‚¡ã‚¤ãƒ«ã‚¿ã‚¤ãƒ—;å±æ€§;å‚™è€ƒ"
 
 
 
@@ -394,7 +394,7 @@ Public Const HDR_LST                            As String = "ƒpƒX;ƒtƒ@ƒCƒ‹–¼;ì
 
 
 '// ////////////////////
-'// ƒAƒvƒŠ‹¤’Ê•Ï” (•Ï”‘®: APP_{string} )
+'// ã‚¢ãƒ—ãƒªå…±é€šå¤‰æ•° (å¤‰æ•°æ›¸å¼: APP_{string} )
 Public Const APP_TITLE                          As String = "Excel Extentions"
 'Public Const APP_SQL_FILE                       As String = "SQL file (*.sql; *.txt),*.sql;*.txt"
 Public Const APP_EXL_FILE                       As String = "Excel file (#),#"
@@ -402,7 +402,7 @@ Public Const APP_EXL_FILE                       As String = "Excel file (#),#"
 
 
 '// ////////////////////
-'// ƒƒjƒ…[ (•Ï”‘®: MENU_{string} )
+'// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ (å¤‰æ•°æ›¸å¼: MENU_{string} )
 'Public Const MENU_SHEET_MENU                    As String = "Sheets(&S)"
 'Public Const MENU_EXTOOL                        As String = "Extentions(&X)"
 'Public Const MENU_SHEET_GROUP                   As String = "Sheet # - @"
@@ -448,9 +448,9 @@ Public Const MENU_TRIM                          As String = "Trim Values"
 
 
 '// ////////////////////
-'// ƒƒbƒZ[ƒW (•Ï”‘®: MSG_{string} )
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ (å¤‰æ•°æ›¸å¼: MSG_{string} )
 
-'// ‹¤’Ê
+'// å…±é€š
 Public Const MSG_ERR                            As String = "An error occured during the operation."
 Public Const MSG_NO_BOOK                        As String = "No books opened."
 Public Const MSG_FINISHED                       As String = "Operation finished successfully."
@@ -486,7 +486,7 @@ Public Const MSG_CENTER                         As String = "Center"
 Public Const MSG_CHART_TITLE                    As String = "Chart Title"
 Public Const MSG_CHART_SERIES                   As String = "Chart Series"
 
-'// ƒƒbƒZ[ƒWFfrmCompSheet
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmCompSheet
 Public Const MSG_ERROR_NEED_BOOKNAME            As String = "No book identified."
 Public Const MSG_NO_FILE                        As String = "Cannot open the file."
 Public Const MSG_UNMATCH_SHEET                  As String = "Sheet structure is not the same."
@@ -495,12 +495,12 @@ Public Const MSG_SHEET_NAME                     As String = "Different sheet nam
 Public Const MSG_INS_ROW                        As String = "Inserted"
 Public Const MSG_DEL_ROW                        As String = "Removed"
 
-'// ƒƒbƒZ[ƒWFfrmSheetManage
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmSheetManage
 Public Const MSG_VAL_10_400                     As String = "Specify the zoom value between 10 and 400."
 Public Const MSG_SHEETS_PROTECTED               As String = "Some of the sheets are protected.  Please unprotect them and execute again."
 Public Const MSG_COMPLETED_FILES                As String = "The operations on the files below are completed.  Please check the timestamps for confirmation."
 
-'// ƒƒbƒZ[ƒWFfrmGetRecord
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmGetRecord
 Public Const MSG_TOO_MANY_ROWS                  As String = "Rows reached Excel limitation.  Further rows omitted."
 Public Const MSG_TOO_MANY_COLS                  As String = "Columns reached Excel limitation.  Further columns omitted."
 Public Const MSG_QUERY                          As String = "Query to data source"
@@ -510,15 +510,15 @@ Public Const MSG_ROWS_PROCESSED                 As String = " row(s) processed."
 Public Const MSG_NOT_LOGGEDIN                   As String = "Not logged in."
 Public Const MSG_NOT_SAVED                      As String = "Book is not saved. Do you want to save this book and continue query?" & vbLf & "(Auto save on every query)"
 
-'// ƒƒbƒZ[ƒWFfrmDataExport
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmDataExport
 'Public Const MSG_TABLE_NAME                     As String = "Table Name"
 'Public Const MSG_COLUMN_NAME                    As String = "Column Name"
 
-'// ƒƒbƒZ[ƒWFfrmDrawChart
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmDrawChart
 'Public Const MSG_INVALID_COL_MIN                As String = "Invalid draw position."
 'Public Const MSG_INVALID_COL_MAX                As String = "Invalid draw position."
 
-'// ƒƒbƒZ[ƒWFfrmLogin
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmLogin
 Public Const MSG_LOG_ON_SUCCESS                 As String = "Login successfully."
 Public Const MSG_LOG_ON_FAILED                  As String = "Login failed."
 Public Const MSG_NEED_FILL_ID                   As String = "User ID required."
@@ -526,13 +526,13 @@ Public Const MSG_NEED_FILL_PWD                  As String = "Password required."
 Public Const MSG_NEED_FILL_TNS                  As String = "Connection string required."
 Public Const MSG_NEED_EXCEL_SAVED               As String = "Current workbook is not saved. Do you save and continue?"
 
-'// ƒƒbƒZ[ƒWFfrmSearch
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmSearch
 Public Const MSG_NO_CONDITION                   As String = "Please specify search condition."
 Public Const MSG_WRONG_COND                     As String = "Invalid search condition."
 Public Const MSG_DUP_FILE                       As String = "Cannot open the target file with duplicated book name."
 Public Const MSG_FILE_ERROR                     As String = "Error: "
 
-'// ƒƒbƒZ[ƒWFfrmFileList
+'// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ï¼šfrmFileList
 Public Const MSG_MAX_DEPTH                      As String = "Max depth reached."
 Public Const MSG_ERR_PRIV                       As String = "Error: Please check your privileges or other settings."
 Public Const MSG_EMPTY_DIR                      As String = "Empty"
@@ -540,9 +540,9 @@ Public Const MSG_ZERO_BYTE                      As String = "Zero byte file"
 
 
 '// ////////////////////
-'// ƒtƒH[ƒ€ƒ‰ƒxƒ‹ (•Ï”‘®: LBL_{form code}_{string} )
+'// ãƒ•ã‚©ãƒ¼ãƒ ãƒ©ãƒ™ãƒ« (å¤‰æ•°æ›¸å¼: LBL_{form code}_{string} )
 
-'// ‹¤’Ê
+'// å…±é€š
 Public Const LBL_COM_EXEC                       As String = "Execute"
 Public Const LBL_COM_CLOSE                      As String = "Close"
 Public Const LBL_COM_BROWSE                     As String = "Browse"
@@ -690,9 +690,9 @@ Public Const LBL_LGI_CANCEL                     As String = "Cancel"
 
 
 '// ////////////////////
-'// ƒRƒ“ƒ{ƒ{ƒbƒNƒX (•Ï”‘®: CMB_{form code}_{string} )
+'// ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹ (å¤‰æ•°æ›¸å¼: CMB_{form code}_{string} )
 
-'// ‹¤’Ê
+'// å…±é€š
 Public Const CMB_COM_CHAR_SET                   As String = "0,S-JIS;1,JIS;2,EUC;3,Unicode(UTF-8)"
 Public Const CMB_COM_CR_CODE                    As String = "0,CR(#13) + LF(#10);1,LF(#10);2,CR(#13)"
 
@@ -744,7 +744,7 @@ Public Const CMB_LST_DEPTH                      As String = "0,Current directory
 
 
 '// ////////////////////
-'// ˆê——o—Íƒwƒbƒ_
+'// ä¸€è¦§å‡ºåŠ›ãƒ˜ãƒƒãƒ€
 
 '// mdlCommon
 Public Const HDR_DISTINCT                       As String = "Value@Count"
