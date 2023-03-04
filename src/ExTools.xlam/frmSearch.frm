@@ -1,12 +1,12 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmSearch 
-   Caption         =   "Šg’£ŒŸõ"
+   Caption         =   "æ‹¡å¼µæ¤œç´¢"
    ClientHeight    =   6375
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   6210
    OleObjectBlob   =   "frmSearch.frx":0000
-   StartUpPosition =   1  'ƒI[ƒi[ ƒtƒH[ƒ€‚Ì’†‰›
+   StartUpPosition =   1  'ã‚ªãƒ¼ãƒŠãƒ¼ ãƒ•ã‚©ãƒ¼ãƒ ã®ä¸­å¤®
 End
 Attribute VB_Name = "frmSearch"
 Attribute VB_GlobalNameSpace = False
@@ -14,20 +14,19 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒvƒƒWƒFƒNƒg   : Šg’£ƒc[ƒ‹
-'// ƒ^ƒCƒgƒ‹       : Šg’£ŒŸõƒtƒH[ƒ€
-'// ƒ‚ƒWƒ…[ƒ‹     : frmSearch
-'// à–¾           : ³‹K•\Œ»‚Å‚ÌŒŸõ‚ğs‚¤
+'// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ   : æ‹¡å¼µãƒ„ãƒ¼ãƒ«
+'// ã‚¿ã‚¤ãƒˆãƒ«       : æ‹¡å¼µæ¤œç´¢ãƒ•ã‚©ãƒ¼ãƒ 
+'// ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«     : frmSearch
+'// èª¬æ˜           : æ­£è¦è¡¨ç¾ã§ã®æ¤œç´¢ã‚’è¡Œã†
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
 Option Explicit
 Option Base 0
 
-
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒvƒ‰ƒCƒx[ƒg•Ï”
-'// ŒŸõŒ‹‰ÊŠi”[ƒ^ƒCƒv
+'// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆå¤‰æ•°
+'// æ¤œç´¢çµæœæ ¼ç´ã‚¿ã‚¤ãƒ—
 Private Type udMatched
     FileName    As String
     SheetName   As String
@@ -38,21 +37,40 @@ Private Type udMatched
     SavedFile   As Boolean
 End Type
 
-Private pMatched()  As udMatched    '// ŒŸõŒ‹‰ÊŠi”[—p”z—ñ
-Private pMatchCnt   As Long         '// ŒŸõŒ‹‰Ê”
+'// ã‚¹ã‚­ãƒƒãƒ—ï¼ˆã‚¨ãƒ©ãƒ¼ã«ã‚ˆã‚Šé–‹ã‘ãªã„ï¼‰ãƒ•ã‚¡ã‚¤ãƒ«æ ¼ç´ã‚¿ã‚¤ãƒ—
+Private Type udSkippedFile
+    FileName    As String       '// ãƒ•ã‚¡ã‚¤ãƒ«å
+    ErrNumber   As Long         '// ã‚¨ãƒ©ãƒ¼ç•ªå·
+    ErrDesc     As String       '// ã‚¨ãƒ©ãƒ¼èª¬æ˜
+End Type
+
+
+Private pMatched()          As udMatched        '// æ¤œç´¢çµæœæ ¼ç´ç”¨é…åˆ—
+Private pSkippedFile()      As udSkippedFile    '// ã‚¹ã‚­ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«æ ¼ç´ç”¨é…åˆ—
 
 
 '// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF ƒtƒH[ƒ€‰Šú‰»
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š ãƒ•ã‚©ãƒ¼ãƒ  ã‚¢ã‚¯ãƒ†ã‚£ãƒ–æ™‚
+Private Sub UserForm_Activate()
+    '// ãƒ–ãƒƒã‚¯ãŒé–‹ã‹ã‚Œã¦ã„ãªã„å ´åˆã¯çµ‚äº†
+    If Workbooks.Count = 0 Then
+        Call MsgBox(MSG_NO_BOOK, vbOKOnly, APP_TITLE)
+        Call Me.Hide
+        Exit Sub
+    End If
+End Sub
+
+'// //////////////////////////////////////////////////////////////////
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š ãƒ•ã‚©ãƒ¼ãƒ åˆæœŸåŒ–æ™‚
 Private Sub UserForm_Initialize()
-    '// •¶š—ñ‚ÌŒŸõ‚ÍƒfƒtƒHƒ‹ƒg‚ÅON
+    '// æ–‡å­—åˆ—ã®æ¤œç´¢ã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ON
     ckbSearchText.Value = True
     
-    '// ƒRƒ“ƒ{ƒ{ƒbƒNƒXİ’è
+    '// ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹è¨­å®š
     Call gsSetCombo(cmbTarget, CMB_SRC_TARGET, 0)
     Call gsSetCombo(cmbOutput, CMB_SRC_OUTPUT, 0)
     
-    '// ƒLƒƒƒvƒVƒ‡ƒ“İ’è
+    '// ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³è¨­å®š
     frmSearch.Caption = LBL_SRC_FORM
     cmdDir.Caption = LBL_COM_BROWSE
     ckbSubDir.Caption = LBL_SRC_SUB_DIR
@@ -79,14 +97,14 @@ End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF •Â‚¶‚éƒ{ƒ^ƒ“ ƒNƒŠƒbƒN
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š é–‰ã˜ã‚‹ãƒœã‚¿ãƒ³ ã‚¯ãƒªãƒƒã‚¯æ™‚
 Private Sub cmdClose_Click()
     Call Me.Hide
 End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF QÆƒ{ƒ^ƒ“ ƒNƒŠƒbƒN
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š å‚ç…§ãƒœã‚¿ãƒ³ ã‚¯ãƒªãƒƒã‚¯æ™‚
 Private Sub cmdDir_Click()
     Dim FilePath  As String
     
@@ -99,24 +117,24 @@ End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF ŒŸõ‘ÎÛƒRƒ“ƒ{ •ÏX
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š æ¤œç´¢å¯¾è±¡ã‚³ãƒ³ãƒœ å¤‰æ›´æ™‚
 Private Sub cmbTarget_Change()
     Select Case cmbTarget.Value
-        Case 0  '// Œ»İ‚ÌƒV[ƒg
+        Case 0  '// ç¾åœ¨ã®ã‚·ãƒ¼ãƒˆ
             cmdDir.Enabled = False
             ckbSubDir.Enabled = False
             txtDirectory.Enabled = False
             txtDirectory.BackColor = CLR_DISABLED
             ckbSearchSheetName.Enabled = False
             cmbOutput.Enabled = True
-        Case 1  '// ƒuƒbƒN‘S‘Ì
+        Case 1  '// ãƒ–ãƒƒã‚¯å…¨ä½“
             cmdDir.Enabled = False
             ckbSubDir.Enabled = False
             txtDirectory.Enabled = False
             txtDirectory.BackColor = CLR_DISABLED
             ckbSearchSheetName.Enabled = True
             cmbOutput.Enabled = True
-        Case 2  '// ƒfƒBƒŒƒNƒgƒŠ’PˆÊ
+        Case 2  '// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå˜ä½
             cmdDir.Enabled = True
             ckbSubDir.Enabled = True
             txtDirectory.Enabled = True
@@ -128,84 +146,94 @@ End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF Àsƒ{ƒ^ƒ“ ƒNƒŠƒbƒN
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š å®Ÿè¡Œãƒœã‚¿ãƒ³ ã‚¯ãƒªãƒƒã‚¯æ™‚
 Private Sub cmdExecute_Click()
     Dim wkSheet   As Worksheet
     Dim fs        As Object
-  
-    '// nullƒ`ƒFƒbƒN
-    If Trim(txtSearch.Value) = BLANK Then
-      Call MsgBox(MSG_NO_CONDITION, vbOKOnly, APP_TITLE)
-      Call txtSearch.SetFocus
-      Exit Sub
+    
+    '// äº‹å‰ãƒã‚§ãƒƒã‚¯
+    If Not gfPreCheck() Then
+        Exit Sub
     End If
-  
+    
+    '// æ¤œç´¢æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯
+    If Trim(txtSearch.Value) = BLANK Then           '// nullãƒã‚§ãƒƒã‚¯
+        Call MsgBox(MSG_NO_CONDITION, vbOKOnly, APP_TITLE)
+        Call txtSearch.SetFocus
+        Exit Sub
+    ElseIf Not pfCheckRegExp(txtSearch.Value) Then  '// æ­£è¦è¡¨ç¾ã®è¨˜è¼‰ãƒã‚§ãƒƒã‚¯
+        Call MsgBox(MSG_WRONG_COND, vbOKOnly, APP_TITLE)
+        Call txtSearch.SetFocus
+        Exit Sub
+    End If
+    
     Call gsSuppressAppEvents
     
-    '// ŒŸõŒ‹‰ÊƒNƒŠƒA
-    pMatchCnt = 0
-    Erase pMatched
+    '// çµæœä¿æŒé…åˆ—ã‚¯ãƒªã‚¢
+    ReDim pMatched(0)
+    ReDim pSkippedFile(0)
     
-    '// ŒŸõÀsipsExecSearchŒÄ‚Ño‚µj
+    '// æ¤œç´¢å®Ÿè¡Œï¼ˆpsExecSearchå‘¼ã³å‡ºã—ï¼‰
     Select Case cmbTarget.Value
-        Case 0  '// Œ»İ‚ÌƒV[ƒg
+        Case 0  '// ç¾åœ¨ã®ã‚·ãƒ¼ãƒˆ
             Call psExecSearch(ActiveSheet, txtSearch.Text, ckbCaseSensitive.Value)
-        Case 1  '// ƒuƒbƒN‘S‘Ì
+        Case 1  '// ãƒ–ãƒƒã‚¯å…¨ä½“
             For Each wkSheet In ActiveWorkbook.Sheets
                 Call psExecSearch(wkSheet, txtSearch.Text, ckbCaseSensitive.Value)
             Next
-        Case 2  '// ƒfƒBƒŒƒNƒgƒŠ’PˆÊ
+        Case 2  '// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå˜ä½
             If Trim(txtDirectory.Text) <> BLANK Then
                 Set fs = CreateObject("Scripting.FileSystemObject")
                 
-                '// ŒŸõƒpƒXŠm”F
+                '// æ¤œç´¢ãƒ‘ã‚¹ç¢ºèª
                 If fs.FolderExists(txtDirectory.Text) Then
                     Call psGetExcelFiles(fs, txtDirectory.Text, txtSearch.Text, ckbCaseSensitive.Value, ckbSubDir.Value)
                 Else
                     Call MsgBox(MSG_DIR_NOT_EXIST, vbOKOnly, APP_TITLE)
+                    Call gsResumeAppEvents
                     Exit Sub
                 End If
                 Set fs = Nothing
             Else
                 Call MsgBox(MSG_NO_DIR, vbOKOnly, APP_TITLE)
                 Call txtDirectory.SetFocus
-                Application.ScreenUpdating = True
+                Call gsResumeAppEvents
                 Exit Sub
             End If
     End Select
     
-    If pMatchCnt > 0 Then   '// ŒŸõŒ‹‰Ê‚ª1ŒˆÈã‚ ‚ê‚ÎƒV[ƒg‚Éo—Í‚µAˆ—Š®—¹
+    '// æ¤œç´¢çµæœãŒ1ä»¶ä»¥ä¸Šã‚ã‚Œã°ã‚·ãƒ¼ãƒˆã«å‡ºåŠ›ã—ã€å‡¦ç†å®Œäº†
+    If pMatched(0).FileName <> BLANK Then
         Call psShowResult
         Call MsgBox(MSG_FINISHED, vbOKOnly, APP_TITLE)
         Call Me.Hide
     Else
         Call MsgBox(MSG_NO_RESULT, vbOKOnly, APP_TITLE)
     End If
-  
-    Application.StatusBar = False
-    Application.ScreenUpdating = True
+    
+    Call gsResumeAppEvents
 End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF ‘S‚Ä‚ğ‘I‘ğƒ{ƒ^ƒ“ ƒNƒŠƒbƒN
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š å…¨ã¦ã‚’é¸æŠãƒœã‚¿ãƒ³ ã‚¯ãƒªãƒƒã‚¯æ™‚
 Private Sub cmdSelectAll_Click()
     Call psSetCheckBoxes(True)
 End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
-'// ƒCƒxƒ“ƒgF ‘I‘ğ‰ğœƒ{ƒ^ƒ“ ƒNƒŠƒbƒN
+'// ã‚¤ãƒ™ãƒ³ãƒˆï¼š é¸æŠè§£é™¤ãƒœã‚¿ãƒ³ ã‚¯ãƒªãƒƒã‚¯æ™‚
 Private Sub cmdClear_Click()
     Call psSetCheckBoxes(False)
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ŒŸõ‘ÎÛƒ`ƒFƒbƒNƒ{ƒbƒNƒXİ’è
-'// à–¾F       ŒŸõ‘ÎÛƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì’l‚ğˆø”‚Ì^‹U’l‚ÉˆêŠ‡İ’è‚·‚éB
-'// ˆø”F       newValue: ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ìİ’è’l
-'// –ß‚è’lF     ‚È‚µ
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   æ¤œç´¢å¯¾è±¡ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹è¨­å®š
+'// èª¬æ˜ï¼š       æ¤œç´¢å¯¾è±¡ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®å€¤ã‚’å¼•æ•°ã®çœŸå½å€¤ã«ä¸€æ‹¬è¨­å®šã™ã‚‹ã€‚
+'// å¼•æ•°ï¼š       newValue: ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®è¨­å®šå€¤
+'// æˆ»ã‚Šå€¤ï¼š     ãªã—
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psSetCheckBoxes(newValue As Boolean)
     ckbSearchText.Value = newValue
@@ -221,40 +249,31 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒfƒBƒŒƒNƒgƒŠ“àƒuƒbƒNŒŸõ
-'// à–¾F       w’è‚³‚ê‚½ƒfƒBƒŒƒNƒgƒŠ“à‚ÌƒuƒbƒN‚ğŒŸõ‚·‚é
-'// ˆø”F       fs: ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€ƒIƒuƒWƒFƒNƒg
-'//              dirName: ŒŸõ‘ÎÛƒfƒBƒŒƒNƒgƒŠ
-'//              patternStr: ŒŸõ•¶š—ñ
-'//              caseSensitive: ‘å•¶š¬•¶š‚Ì‹æ•Êƒtƒ‰ƒO
-'//              searchSubDir: ƒTƒuƒfƒBƒŒƒNƒgƒŠŒŸõƒtƒ‰ƒO
-'// –ß‚è’lF     ‚È‚µ
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ãƒ–ãƒƒã‚¯æ¤œç´¢
+'// èª¬æ˜ï¼š       æŒ‡å®šã•ã‚ŒãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®ãƒ–ãƒƒã‚¯ã‚’æ¤œç´¢ã™ã‚‹
+'// å¼•æ•°ï¼š       fs: ãƒ•ã‚¡ã‚¤ãƒ«ã‚·ã‚¹ãƒ†ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+'//              dirName: æ¤œç´¢å¯¾è±¡ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+'//              patternStr: æ¤œç´¢æ–‡å­—åˆ—
+'//              caseSensitive: å¤§æ–‡å­—å°æ–‡å­—ã®åŒºåˆ¥ãƒ•ãƒ©ã‚°
+'//              searchSubDir: ã‚µãƒ–ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªæ¤œç´¢ãƒ•ãƒ©ã‚°
+'// æˆ»ã‚Šå€¤ï¼š     ãªã—
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psGetExcelFiles(fs As Object, dirName As String, patternStr As String, caseSensitive As Boolean, searchSubDir As Boolean)
     Dim parentDir   As Object
     Dim children    As Object
     Dim wkBook      As Workbook
     Dim wkSheet     As Worksheet
-    Dim isDuplName  As Boolean    '// ‘ÎÛ‚Æ‚È‚éƒuƒbƒN‚ªŠJ‚©‚ê‚Ä‚¢‚éê‡True
+    Dim isDuplName  As Boolean    '// å¯¾è±¡ã¨ãªã‚‹ãƒ–ãƒƒã‚¯ãŒé–‹ã‹ã‚Œã¦ã„ã‚‹å ´åˆTrue
     
     Set parentDir = fs.GetFolder(dirName)
     
-    '// ƒtƒ@ƒCƒ‹‚ÌŒŸõ
+    '// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ¤œç´¢
     For Each children In parentDir.files
         With children
-            If LCase(Right(.Name, 3)) = "xls" Then
-                '// ŒŸõ
-                '// ƒuƒbƒN‚ªŠù‚ÉŠJ‚©‚ê‚Ä‚¢‚é‚©‚ğŠm”F
-                isDuplName = False
-                For Each wkBook In Workbooks
-                    If wkBook.Name = children.Name Then
-                        isDuplName = True
-                        Exit For
-                    End If
-                Next
-                
-                If Not isDuplName Then  '// ƒuƒbƒN‚ªŠJ‚©‚ê‚Ä‚¢‚éê‡‚ÍŒŸõ‘ÎÛŠO
-                    Set wkBook = Workbooks.Open(children.Path, ReadOnly:=True, password:=EXCEL_PASSWORD)
+            If (LCase(fs.GetExtensionName(.Name)) = "xls" Or LCase(fs.GetExtensionName(.Name)) = "xlsx") And Not Left(.Name, 2) = "~$" Then       '// ã‚¨ã‚¯ã‚»ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã®åˆ¤å®šæ–¹æ³•ã¯è¦æ¤œè¨
+                '// æ¤œç´¢
+                Set wkBook = pfOpenWorkbook(children)
+                If Not wkBook Is Nothing Then
                     For Each wkSheet In wkBook.Worksheets
                         Call psExecSearch(wkSheet, patternStr, caseSensitive)
                     Next
@@ -265,10 +284,10 @@ Private Sub psGetExcelFiles(fs As Object, dirName As String, patternStr As Strin
         End With
     Next
     
-    '// ƒTƒuƒtƒHƒ‹ƒ_‚ª‚ ‚éê‡AŒŸõ
+    '// ã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ãŒã‚ã‚‹å ´åˆã€æ¤œç´¢
     If searchSubDir Then
         For Each children In parentDir.SubFolders
-          '// qƒfƒBƒŒƒNƒgƒŠ‚ÌÄ‹AŒÄ‚Ño‚µ
+          '// å­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®å†å¸°å‘¼ã³å‡ºã—
           Call psGetExcelFiles(fs, children.Path, patternStr, caseSensitive, True)
         Next
     End If
@@ -276,15 +295,15 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒfƒBƒŒƒNƒgƒŠ“àƒuƒbƒNŒŸõ
-'// à–¾F       w’è‚³‚ê‚½ƒfƒBƒŒƒNƒgƒŠ“à‚ÌƒuƒbƒN‚ğŒŸõ‚·‚é
-'// ˆø”F       wkSheet: ŒŸõ‘ÎÛƒV[ƒg
-'//              patternStr: ŒŸõ•¶š—ñ
-'//              caseSensitive: ‘å•¶š¬•¶š‚Ì‹æ•Êƒtƒ‰ƒO
-'// –ß‚è’lF     ‚È‚µ
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   æ¤œç´¢å‡¦ç†
+'// èª¬æ˜ï¼š       å¼•æ•°ã®ã‚·ãƒ¼ãƒˆã‚’å¯¾è±¡ã¨ã—ã¦æ¤œç´¢ã‚’è¡Œã†ã€‚æ¤œç´¢å‡¦ç†ã®æœ¬ä½“
+'// å¼•æ•°ï¼š       wkSheet: æ¤œç´¢å¯¾è±¡ã‚·ãƒ¼ãƒˆ
+'//              patternStr: æ¤œç´¢æ–‡å­—åˆ—
+'//              caseSensitive: å¤§æ–‡å­—å°æ–‡å­—ã®åŒºåˆ¥ãƒ•ãƒ©ã‚°
+'// æˆ»ã‚Šå€¤ï¼š     ãªã—
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psExecSearch(wkSheet As Worksheet, patternStr As String, caseSensitive As Boolean)
-    Dim regExp        As Object         '// ³‹K•\Œ»ƒIƒuƒWƒFƒNƒg
+    Dim regExp        As Object         '// æ­£è¦è¡¨ç¾ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     Dim targetCell    As Range
     Dim hLink         As Hyperlink
     Dim rangeName     As Name
@@ -294,161 +313,154 @@ Private Sub psExecSearch(wkSheet As Worksheet, patternStr As String, caseSensiti
     Dim seriesObj     As Series
     Dim bffText       As String
     Dim idxChart      As Long
-    Dim idxCellSrch   As Long           '// ŒŸõƒZƒ‹”ƒJƒEƒ“ƒ^
-    Dim numCellCnt    As Long           '// ŒŸõ‘ÎÛƒZƒ‹”
+    Dim idxCellSrch   As Long           '// æ¤œç´¢ã‚»ãƒ«æ•°ã‚«ã‚¦ãƒ³ã‚¿
+    Dim numCellCnt    As Long           '// æ¤œç´¢å¯¾è±¡ã‚»ãƒ«æ•°
   
     numCellCnt = numCellCnt + IIf(ckbSearchText.Value, wkSheet.UsedRange.Count, 0)
     If pfGetCellCount(wkSheet.UsedRange, xlCellTypeFormulas) > -1 Then
         numCellCnt = numCellCnt + IIf(ckbSearchFormula.Value, wkSheet.UsedRange.SpecialCells(xlCellTypeFormulas).Count, 0)
     End If
   
-    '// ³‹K•\Œ»ƒIƒuƒWƒFƒNƒg‚Ìì¬
+    '// æ­£è¦è¡¨ç¾ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
     Set regExp = CreateObject("VBScript.RegExp")
     regExp.Pattern = patternStr
     regExp.IgnoreCase = caseSensitive
   
-    '// ŒŸõsi³‹K•\Œ»‚Ì‹LÚƒ`ƒFƒbƒNj
-    If Not pfCheckRegExp(regExp) Then
-        Call MsgBox(MSG_WRONG_COND, vbOKOnly, APP_TITLE)
-        Set regExp = Nothing
-        Exit Sub
-    End If
-  
-    '// ƒZƒ‹•¶š—ñ‚ğŒŸõ //////////
+    '// ã‚»ãƒ«æ–‡å­—åˆ—ã‚’æ¤œç´¢ //////////
     If ckbSearchText.Value Then
         For Each targetCell In wkSheet.UsedRange
             If regExp.test(targetCell.Text) Then
                 Call psSetMatchedRec(wkSheet, targetCell.Row, targetCell.Column, targetCell.Text, BLANK)
                 
-                '// ƒZƒ‹’…F‚È‚Ç
+                '// ã‚»ãƒ«ç€è‰²ãªã©
                 Select Case cmbOutput.Value
-                    Case 0  '// ‰½‚à‚µ‚È‚¢
-                    Case 1  '// •¶š‚ğ’…F
+                    Case 0  '// ä½•ã‚‚ã—ãªã„
+                    Case 1  '// æ–‡å­—ã‚’ç€è‰²
                       targetCell.Font.ColorIndex = COLOR_DIFF_CELL
-                    Case 2  '// ƒZƒ‹‚ğ’…F
+                    Case 2  '// ã‚»ãƒ«ã‚’ç€è‰²
                       targetCell.Interior.ColorIndex = COLOR_DIFF_CELL
-                    Case 3  '// ˜g‚ğ’…F
+                    Case 3  '// æ ã‚’ç€è‰²
                       targetCell.Borders.LineStyle = xlContinuous
                       targetCell.Borders.ColorIndex = COLOR_DIFF_CELL
-                    Case 4  '// ŠY“–ƒZƒ‹‚ğŠÜ‚ŞsˆÈŠO‚ğ”ñ•\¦
-                      '// «—ˆ‹@”\
+                    Case 4  '// è©²å½“ã‚»ãƒ«ã‚’å«ã‚€è¡Œä»¥å¤–ã‚’éè¡¨ç¤º
+                      '// å°†æ¥æ©Ÿèƒ½
                 End Select
             End If
             
             idxCellSrch = idxCellSrch + 1
             If idxCellSrch Mod 1000 = 0 Then
-                Application.StatusBar = "ŒŸõ’†... [ " & wkSheet.Name & " " & CStr(CInt(idxCellSrch / numCellCnt)) & " ]"
+                Application.StatusBar = "æ¤œç´¢ä¸­... [ " & wkSheet.Name & " " & CStr(CInt(idxCellSrch / numCellCnt)) & " ]"
             End If
         Next
     End If
     
-    '// ®‚ğŒŸõ //////////
+    '// å¼ã‚’æ¤œç´¢ //////////
     If ckbSearchFormula.Value And pfGetCellCount(wkSheet.UsedRange, xlCellTypeFormulas) > -1 Then
         For Each targetCell In wkSheet.UsedRange.SpecialCells(xlCellTypeFormulas)
             If regExp.test(targetCell.FormulaLocal) Then
-                Call psSetMatchedRec(wkSheet, targetCell.Row, targetCell.Column, targetCell.FormulaLocal, "”®")
+                Call psSetMatchedRec(wkSheet, targetCell.Row, targetCell.Column, targetCell.FormulaLocal, "æ•°å¼")
                 
-                '// ƒZƒ‹’…F‚È‚Ç
+                '// ã‚»ãƒ«ç€è‰²ãªã©
                 Select Case cmbOutput.Value
-                  Case 0  '// ‰½‚à‚µ‚È‚¢
-                  Case 1  '// •¶š‚ğ’…F
+                  Case 0  '// ä½•ã‚‚ã—ãªã„
+                  Case 1  '// æ–‡å­—ã‚’ç€è‰²
                     targetCell.Font.ColorIndex = COLOR_DIFF_CELL
-                  Case 2  '// ƒZƒ‹‚ğ’…F
+                  Case 2  '// ã‚»ãƒ«ã‚’ç€è‰²
                     targetCell.Interior.ColorIndex = COLOR_DIFF_CELL
-                  Case 3  '// ˜g‚ğ’…F
+                  Case 3  '// æ ã‚’ç€è‰²
                     targetCell.Borders.LineStyle = xlContinuous
                     targetCell.Borders.ColorIndex = COLOR_DIFF_CELL
-                  Case 4  '// ŠY“–ƒZƒ‹‚ğŠÜ‚ŞsˆÈŠO‚ğ”ñ•\¦
+                  Case 4  '// è©²å½“ã‚»ãƒ«ã‚’å«ã‚€è¡Œä»¥å¤–ã‚’éè¡¨ç¤º
                 End Select
             End If
             
             idxCellSrch = idxCellSrch + 1
             If idxCellSrch Mod 1000 = 0 Then
-                Application.StatusBar = "ŒŸõ’†... [ " & wkSheet.Name & " " & CStr(CInt(idxCellSrch / numCellCnt)) & " ]"
+                Application.StatusBar = "æ¤œç´¢ä¸­... [ " & wkSheet.Name & " " & CStr(CInt(idxCellSrch / numCellCnt)) & " ]"
             End If
         Next
     End If
   
-    '// ƒVƒFƒCƒv“à‚Ì•¶š—ñ‚ğŒŸõ //////////
+    '// ã‚·ã‚§ã‚¤ãƒ—å†…ã®æ–‡å­—åˆ—ã‚’æ¤œç´¢ //////////
     If ckbSearchShape.Value Then
         For Each shapeObj In wkSheet.Shapes
-            If shapeObj.Type <> msoComment Then '// ƒVƒFƒCƒv‚Ì‚¤‚¿ƒRƒƒ“ƒg‚É‚Â‚¢‚Ä‚ÍƒRƒƒ“ƒg©‘Ì‚ğŒŸõ‚·‚é‚½‚ßœŠO
+            If shapeObj.Type <> msoComment Then '// ã‚·ã‚§ã‚¤ãƒ—ã®ã†ã¡ã‚³ãƒ¡ãƒ³ãƒˆã«ã¤ã„ã¦ã¯ã‚³ãƒ¡ãƒ³ãƒˆè‡ªä½“ã‚’æ¤œç´¢ã™ã‚‹ãŸã‚é™¤å¤–
                 Call psExecSearch_Shape(regExp, wkSheet, shapeObj, False)
             End If
         Next
     End If
   
-    '// ƒRƒƒ“ƒg“à‚Ì•¶š—ñ‚ğŒŸõ //////////
+    '// ã‚³ãƒ¡ãƒ³ãƒˆå†…ã®æ–‡å­—åˆ—ã‚’æ¤œç´¢ //////////
     If ckbSearchComment.Value Then
         For Each commentObj In wkSheet.Comments
             If regExp.test(commentObj.Text) Then
-                Call psSetMatchedRec(wkSheet, commentObj.Parent.Cells.Row, commentObj.Parent.Cells.Column, commentObj.Text, "ƒRƒƒ“ƒg")
+                Call psSetMatchedRec(wkSheet, commentObj.Parent.Cells.Row, commentObj.Parent.Cells.Column, commentObj.Text, "ã‚³ãƒ¡ãƒ³ãƒˆ")
             End If
         Next
     End If
   
-    '// ƒZƒ‹–¼Ì‚ğŒŸõ //////////
-    '// –³Œø‚ÈName‚ª‚ ‚éê‡‚ÌƒGƒ‰[‚ğ‰ñ”ğ‚·‚é‚½‚ßA”»’èƒƒWƒbƒN‚ğŠO‚¾‚µipfCheckRangeNamej
+    '// ã‚»ãƒ«åç§°ã‚’æ¤œç´¢ //////////
+    '// ç„¡åŠ¹ãªNameãŒã‚ã‚‹å ´åˆã®ã‚¨ãƒ©ãƒ¼ã‚’å›é¿ã™ã‚‹ãŸã‚ã€åˆ¤å®šãƒ­ã‚¸ãƒƒã‚¯ã‚’å¤–ã ã—ï¼ˆpfCheckRangeNameï¼‰
     If ckbSearchName.Value Then
-        For Each rangeName In wkSheet.Parent.Names  '// ƒuƒbƒN‚ÌNamesƒvƒƒpƒeƒB‚ğQÆ‚·‚é•K—v‚ª‚ ‚éiŒ´ˆö•s–¾j
+        For Each rangeName In wkSheet.Parent.Names  '// ãƒ–ãƒƒã‚¯ã®Namesãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’å‚ç…§ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼ˆåŸå› ä¸æ˜ï¼‰
             If pfCheckRangeName(rangeName, wkSheet) Then
                 If regExp.test(rangeName.Name) Then
-                    Call psSetMatchedRec(wkSheet, rangeName.RefersToRange.Row, rangeName.RefersToRange.Column, rangeName.Name, "ƒZƒ‹–¼Ì")
+                    Call psSetMatchedRec(wkSheet, rangeName.RefersToRange.Row, rangeName.RefersToRange.Column, rangeName.Name, "ã‚»ãƒ«åç§°")
                 End If
             End If
         Next
     End If
   
-    '// ƒnƒCƒp[ƒŠƒ“ƒNæ‚ğŒŸõ //////////
+    '// ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯å…ˆã‚’æ¤œç´¢ //////////
     If ckbSearchLink.Value Then
         For Each hLink In wkSheet.Hyperlinks
             If regExp.test(hLink.Address) Or regExp.test(hLink.SubAddress) Then
-                Call psSetMatchedRec(wkSheet, hLink.Range.Row, hLink.Range.Column, hLink.Address & "[" & hLink.SubAddress & "]", "ƒnƒCƒp[ƒŠƒ“ƒN")
+                Call psSetMatchedRec(wkSheet, hLink.Range.Row, hLink.Range.Column, hLink.Address & "[" & hLink.SubAddress & "]", "ãƒã‚¤ãƒ‘ãƒ¼ãƒªãƒ³ã‚¯")
             End If
         Next
     End If
   
-  '// ƒV[ƒg–¼‚ğŒŸõ //////////
+  '// ã‚·ãƒ¼ãƒˆåã‚’æ¤œç´¢ //////////
     If ckbSearchSheetName.Value Then
         If regExp.test(wkSheet.Name) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.Name, "ƒV[ƒg–¼")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.Name, "ã‚·ãƒ¼ãƒˆå")
         End If
     End If
   
   
-    '// ƒwƒbƒ_‚Æƒtƒbƒ^‚Ì•¶š—ñ‚ğŒŸõ //////////
+    '// ãƒ˜ãƒƒãƒ€ã¨ãƒ•ãƒƒã‚¿ã®æ–‡å­—åˆ—ã‚’æ¤œç´¢ //////////
     If ckbSearchHeader.Value Then
         If regExp.test(wkSheet.PageSetup.LeftHeader) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftHeader, "ƒwƒbƒ_i¶j")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftHeader, MSG_HEADER & " (" & MSG_LEFT & ")")
         End If
         If regExp.test(wkSheet.PageSetup.CenterHeader) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterHeader, "ƒwƒbƒ_i’†‰›j")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterHeader, MSG_HEADER & " (" & MSG_CENTER & ")")
         End If
         If regExp.test(wkSheet.PageSetup.RightHeader) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightHeader, "ƒwƒbƒ_i‰Ej")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightHeader, MSG_HEADER & " (" & MSG_RIGHT & ")")
         End If
         If regExp.test(wkSheet.PageSetup.LeftFooter) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftFooter, "ƒtƒbƒ^i¶j")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.LeftFooter, MSG_FOOTER & " (" & MSG_LEFT & ")")
         End If
         If regExp.test(wkSheet.PageSetup.CenterFooter) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterFooter, "ƒtƒbƒ^i’†‰›j")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.CenterFooter, MSG_FOOTER & " (" & MSG_CENTER & ")")
         End If
         If regExp.test(wkSheet.PageSetup.RightFooter) Then
-            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightFooter, "ƒtƒbƒ^i‰Ej")
+            Call psSetMatchedRec(wkSheet, 1, 1, wkSheet.PageSetup.RightFooter, MSG_FOOTER & " (" & MSG_RIGHT & ")")
         End If
     End If
   
-    '// ƒOƒ‰ƒt‚ğŒŸõ //////////
+    '// ã‚°ãƒ©ãƒ•ã‚’æ¤œç´¢ //////////
     If ckbSearchGraph.Value Then
-        For idxChart = 1 To wkSheet.ChartObjects.Count  '// ƒ`ƒƒ[ƒg‚Ì”z—ñ‚Í‚P‚©‚çŠJn
+        For idxChart = 1 To wkSheet.ChartObjects.Count  '// ãƒãƒ£ãƒ¼ãƒˆã®é…åˆ—ã¯ï¼‘ã‹ã‚‰é–‹å§‹
             Set chartObj = wkSheet.ChartObjects(idxChart).Chart
             If regExp.test(pfGetChartTitle(chartObj)) Then
-                Call psSetMatchedRec(wkSheet, 1, 1, chartObj.ChartTitle.Characters.Text, "ƒ`ƒƒ[ƒgƒ^ƒCƒgƒ‹")
+                Call psSetMatchedRec(wkSheet, -1, -1, chartObj.ChartTitle.Characters.Text, MSG_CHART_TITLE)
             End If
             
             For Each seriesObj In chartObj.SeriesCollection
                 If regExp.test(seriesObj.Name) Then
-                    Call psSetMatchedRec(wkSheet, 1, 1, seriesObj.Name, "ƒ`ƒƒ[ƒgŒn—ñ–¼")
+                    Call psSetMatchedRec(wkSheet, -1, -1, seriesObj.Name, MSG_CHART_SERIES)
                 End If
             Next
         Next
@@ -459,15 +471,15 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒVƒFƒCƒv“àƒeƒLƒXƒgæ“¾
-'// à–¾F       ƒVƒFƒCƒv“à‚ÌƒeƒLƒXƒg‚ğæ“¾‚·‚éBCharactersƒƒ\ƒbƒh‚ğƒTƒ|[ƒg‚µ‚È‚¢ê‡‚Í—áŠOˆ—‚Åƒnƒ“ƒhƒŠƒ“ƒO
-'//              psExecSearch_Shape‚Å“Á’è‚³‚ê‚½ƒVƒFƒCƒv“à‚ÌƒeƒLƒXƒg‚ğ–ß‚·
-'// ˆø”F       shapeObj: ‘ÎÛƒVƒFƒCƒvƒIƒuƒWƒFƒNƒg
-'// –ß‚è’lF     ƒVƒFƒCƒv“à‚ÌƒeƒLƒXƒgBƒVƒFƒCƒv‚ªƒeƒLƒXƒg‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚È‚¢ê‡‚Íˆê—¥‚Åƒuƒ‰ƒ“ƒN
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   ã‚·ã‚§ã‚¤ãƒ—å†…ãƒ†ã‚­ã‚¹ãƒˆå–å¾—
+'// èª¬æ˜ï¼š       ã‚·ã‚§ã‚¤ãƒ—å†…ã®ãƒ†ã‚­ã‚¹ãƒˆã‚’å–å¾—ã™ã‚‹ã€‚Charactersãƒ¡ã‚½ãƒƒãƒ‰ã‚’ã‚µãƒãƒ¼ãƒˆã—ãªã„å ´åˆã¯ä¾‹å¤–å‡¦ç†ã§ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°
+'//              psExecSearch_Shapeã§ç‰¹å®šã•ã‚ŒãŸã‚·ã‚§ã‚¤ãƒ—å†…ã®ãƒ†ã‚­ã‚¹ãƒˆã‚’æˆ»ã™
+'// å¼•æ•°ï¼š       shapeObj: å¯¾è±¡ã‚·ã‚§ã‚¤ãƒ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+'// æˆ»ã‚Šå€¤ï¼š     ã‚·ã‚§ã‚¤ãƒ—å†…ã®ãƒ†ã‚­ã‚¹ãƒˆã€‚ã‚·ã‚§ã‚¤ãƒ—ãŒãƒ†ã‚­ã‚¹ãƒˆã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ãªã„å ´åˆã¯ä¸€å¾‹ã§ãƒ–ãƒ©ãƒ³ã‚¯
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetShapeText(shapeObj As Shape) As String
 On Error GoTo ErrorHandler
-    If shapeObj.Type = msoTextEffect Then '// ƒ[ƒhƒA[ƒg‚Ìê‡
+    If shapeObj.Type = msoTextEffect Then '// ãƒ¯ãƒ¼ãƒ‰ã‚¢ãƒ¼ãƒˆã®å ´åˆ
         pfGetShapeText = shapeObj.TextEffect.Text
     Else
         pfGetShapeText = shapeObj.TextFrame.Characters.Text
@@ -480,13 +492,13 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ŒŸõFƒVƒFƒCƒv
-'// à–¾F       ƒVƒFƒCƒv“à‚Ì•¶š—ñ‚ğŒŸõ‚·‚éBƒOƒ‹[ƒv‰»‚³‚ê‚Ä‚¢‚éê‡‚ÍÄ‹AŒŸõ‚ğs‚¤B
-'// ˆø”F       regExp: ³‹K•\Œ»ƒIƒuƒWƒFƒNƒg
-'//              wkSheet: ‘ÎÛƒV[ƒg
-'//              shapeObj: ‘ÎÛƒVƒFƒCƒvƒIƒuƒWƒFƒNƒg
-'//              isGrouped: ƒOƒ‹[ƒv“àƒIƒuƒWƒFƒNƒg‚©”Û‚©iÄ‹AŒÄ‚Ño‚µ‚³‚ê‚Ä‚¢‚é‚©j
-'// –ß‚è’lF     ‚È‚µ
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   æ¤œç´¢ï¼šã‚·ã‚§ã‚¤ãƒ—
+'// èª¬æ˜ï¼š       ã‚·ã‚§ã‚¤ãƒ—å†…ã®æ–‡å­—åˆ—ã‚’æ¤œç´¢ã™ã‚‹ã€‚ã‚°ãƒ«ãƒ¼ãƒ—åŒ–ã•ã‚Œã¦ã„ã‚‹å ´åˆã¯å†å¸°æ¤œç´¢ã‚’è¡Œã†ã€‚
+'// å¼•æ•°ï¼š       regExp: æ­£è¦è¡¨ç¾ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+'//              wkSheet: å¯¾è±¡ã‚·ãƒ¼ãƒˆ
+'//              shapeObj: å¯¾è±¡ã‚·ã‚§ã‚¤ãƒ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+'//              isGrouped: ã‚°ãƒ«ãƒ¼ãƒ—å†…ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹å¦ã‹ï¼ˆå†å¸°å‘¼ã³å‡ºã—ã•ã‚Œã¦ã„ã‚‹ã‹ï¼‰
+'// æˆ»ã‚Šå€¤ï¼š     ãªã—
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psExecSearch_Shape(regExp As Object, wkSheet As Worksheet, shapeObj As Shape, isGrouped As Boolean)
     Dim bffText   As String
@@ -500,7 +512,7 @@ Private Sub psExecSearch_Shape(regExp As Object, wkSheet As Worksheet, shapeObj 
         bffText = pfGetShapeText(shapeObj)
         If bffText <> BLANK Then
             If regExp.test(bffText) Then
-                Call psSetMatchedRec(wkSheet, IIf(isGrouped, -1, shapeObj.TopLeftCell.Row), IIf(isGrouped, -1, shapeObj.TopLeftCell.Column), bffText, "ƒVƒFƒCƒvF" & shapeObj.Name)
+                Call psSetMatchedRec(wkSheet, IIf(isGrouped, -1, shapeObj.TopLeftCell.Row), IIf(isGrouped, -1, shapeObj.TopLeftCell.Column), bffText, "ã‚·ã‚§ã‚¤ãƒ—ï¼š" & shapeObj.Name)
             End If
         End If
     End If
@@ -508,98 +520,136 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ŒŸõŒ‹‰Êo—Í
-'// à–¾F       ŒŸõŒ‹‰Ê‚ğ•ÊƒuƒbƒN‚Åo—Í‚·‚é
-'// ˆø”F       ‚È‚µ
-'// –ß‚è’lF     ‚È‚µ
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   æ¤œç´¢çµæœå‡ºåŠ›
+'// èª¬æ˜ï¼š       æ¤œç´¢çµæœã‚’åˆ¥ãƒ–ãƒƒã‚¯ã§å‡ºåŠ›ã™ã‚‹
+'// å¼•æ•°ï¼š       ãªã—
+'// æˆ»ã‚Šå€¤ï¼š     ãªã—
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psShowResult()
-    Dim wkSheet   As Worksheet
-    Dim idxRow    As Long
+    Dim wkSheet     As Worksheet
+    Dim idx         As Long         '// é…åˆ—ç”¨ã‚¤ãƒ³ãƒ‡ã‚¯ã‚¹
+    Dim idxRow      As Long         '// è¡Œç•ªå·ä¿æŒã‚¤ãƒ³ãƒ‡ã‚¯ã‚¹
     
-    '// o—Íæ‚Ìİ’è
+    '// å‡ºåŠ›å…ˆã®è¨­å®š
     With Workbooks.Add
         Set wkSheet = .ActiveSheet
     End With
-  
-    '// ƒwƒbƒ_‚Ìİ’è
+    
+    '// ãƒ˜ãƒƒãƒ€ã¨æ›¸å¼ã®è¨­å®š
     Call gsDrawResultHeader(wkSheet, HDR_SEARCH, 1)
-  
     wkSheet.Cells.NumberFormat = "@"
     
-    '// ’l‚Ìİ’è
-    For idxRow = 0 To UBound(pMatched) - 1
-        wkSheet.Cells(idxRow + 2, 1).Value = pMatched(idxRow).FileName
-        wkSheet.Cells(idxRow + 2, 2).Value = pMatched(idxRow).SheetName
-        wkSheet.Cells(idxRow + 2, 3).Value = IIf(pMatched(idxRow).Row > 0, mdlCommon.gfGetColIndexString(pMatched(idxRow).Col) & CStr(pMatched(idxRow).Row), BLANK)
-        wkSheet.Cells(idxRow + 2, 4).Value = pMatched(idxRow).TargetText
-        wkSheet.Cells(idxRow + 2, 5).Value = pMatched(idxRow).NoteText
+    '// å€¤ã®è¨­å®š ï¼ˆã‚¨ãƒ©ãƒ¼ï¼‰
+    idxRow = wkSheet.UsedRange.Rows.Count + 1
+    If pSkippedFile(0).FileName <> BLANK Then
+        For idx = 0 To UBound(pSkippedFile)
+            wkSheet.Cells(idx + idxRow, 1).Value = pSkippedFile(idx).FileName
+            wkSheet.Cells(idx + idxRow, 5).Value = MSG_FILE_ERROR & pSkippedFile(idx).ErrNumber & " / " & pSkippedFile(idx).ErrDesc
+        Next
+    End If
+    
+    '// å€¤ã®è¨­å®šï¼ˆæ¤œç´¢çµæœï¼‰
+    idxRow = wkSheet.UsedRange.Rows.Count + 1
+    For idx = 0 To UBound(pMatched)
+        wkSheet.Cells(idx + idxRow, 1).Value = pMatched(idx).FileName
+        wkSheet.Cells(idx + idxRow, 2).Value = pMatched(idx).SheetName
+        If pMatched(idx).Row > 0 Then
+            wkSheet.Cells(idx + idxRow, 3).Value = wkSheet.Cells(pMatched(idx).Row, pMatched(idx).Col).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+        End If
+        wkSheet.Cells(idx + idxRow, 4).Value = pMatched(idx).TargetText
+        wkSheet.Cells(idx + idxRow, 5).Value = pMatched(idx).NoteText
         
-        If pMatched(idxRow).SavedFile And pMatched(idxRow).Row > 0 Then '// ƒZ[ƒu‚³‚ê‚Ä‚¢‚é‚Æ‚«‚Ì‚İƒŠƒ“ƒNİ’è
-            ActiveSheet.Hyperlinks.Add Anchor:=wkSheet.Cells(idxRow + 2, 3), Address:=wkSheet.Cells(idxRow + 2, 1).Value, SubAddress:="'" & wkSheet.Cells(idxRow + 2, 2).Value & "'!" & wkSheet.Cells(idxRow + 2, 3).Value
+        If pMatched(idx).SavedFile And pMatched(idx).Row > 0 Then '// ã‚»ãƒ¼ãƒ–ã•ã‚Œã¦ã„ã‚‹ã¨ãã®ã¿ãƒªãƒ³ã‚¯è¨­å®š
+            wkSheet.Hyperlinks.Add Anchor:=wkSheet.Cells(idx + idxRow, 3), Address:=wkSheet.Cells(idx + idxRow, 1).Value, SubAddress:="'" & wkSheet.Cells(idx + idxRow, 2).Value & "'!" & wkSheet.Cells(idx + idxRow, 3).Value
         End If
     Next
   
     '// //////////////////////////////////////////////////////
-    '// ‘®‚Ìİ’è
-    '// •‚Ìİ’è
+    '// æ›¸å¼ã®è¨­å®š
+    '// å¹…ã®è¨­å®š
     wkSheet.Columns("A:C").ColumnWidth = 10
     wkSheet.Columns("D:E").ColumnWidth = 30
     
-    '// ˜gü‚Ìİ’è
+    '// æ ç·šã®è¨­å®š
     Call gsPageSetup_Lines(wkSheet, 1)
     
-'    Call wkSheet.Range(wkSheet.Cells(1, 1), wkSheet.Cells(UBound(pMatched) + 1, 5)).Select
-'    Call mdlCommon.gsDrawLine_Data
-'
-'    '// ƒwƒbƒ_‚ÌCü
-'    Call wkSheet.Range("A1:E1").Select
-'    Call mdlCommon.gsDrawLine_Header
-    
-    '//ƒtƒHƒ“ƒg
+    '//ãƒ•ã‚©ãƒ³ãƒˆ
     wkSheet.Cells.Font.Name = APP_FONT
     wkSheet.Cells.Font.Size = APP_FONT_SIZE
     
     Call wkSheet.Cells(1, 1).Select
     
-    '// Œãˆ—
+    '// å¾Œå‡¦ç†
     Call wkSheet.Cells(1, 1).Select
-    ActiveWorkbook.Saved = True    '// •Â‚¶‚é‚Æ‚«‚É•Û‘¶‚ğ‹‚ß‚È‚¢
+    wkSheet.Parent.Saved = True    '// é–‰ã˜ã‚‹ã¨ãã«ä¿å­˜ã‚’æ±‚ã‚ãªã„
     Call gsResumeAppEvents
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ŒŸõƒqƒbƒgƒŒƒR[ƒh“o˜^
-'// à–¾F       ŒŸõ‚Éƒqƒbƒg‚µ‚½“à—e‚ğ”z—ñ‚É“o˜^‚·‚é
-'// ˆø”F       wkSheet: ‘ÎÛƒ[ƒNƒV[ƒg
-'//              Row: ƒqƒbƒg‚µ‚½s
-'//              Col: ƒqƒbƒg‚µ‚½—ñ
-'//              TargetText: ƒqƒbƒg‚µ‚½’l
-'//              NoteText: ”õl
-'// –ß‚è’lF     ‚È‚µ
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   æ¤œç´¢ãƒ’ãƒƒãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰ç™»éŒ²
+'// èª¬æ˜ï¼š       æ¤œç´¢ã«ãƒ’ãƒƒãƒˆã—ãŸå†…å®¹ã‚’é…åˆ—ã«ç™»éŒ²ã™ã‚‹
+'// å¼•æ•°ï¼š       wkSheet: å¯¾è±¡ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ
+'//              Row: ãƒ’ãƒƒãƒˆã—ãŸè¡Œ
+'//              Col: ãƒ’ãƒƒãƒˆã—ãŸåˆ—
+'//              TargetText: ãƒ’ãƒƒãƒˆã—ãŸå€¤
+'//              NoteText: å‚™è€ƒ
+'// æˆ»ã‚Šå€¤ï¼š     ãªã—
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psSetMatchedRec(wkSheet As Worksheet, Row As Long, Col As Integer, TargetText As String, NoteText As String)
-    ReDim Preserve pMatched(pMatchCnt + 1)
+    Dim idx As Long
     
-    pMatched(pMatchCnt).FileName = wkSheet.Parent.Path & "\" & wkSheet.Parent.Name
-    pMatched(pMatchCnt).SheetName = wkSheet.Name
-    pMatched(pMatchCnt).Row = Row
-    pMatched(pMatchCnt).Col = Col
-    pMatched(pMatchCnt).TargetText = TargetText
-    pMatched(pMatchCnt).NoteText = NoteText
-    pMatched(pMatchCnt).SavedFile = IIf(wkSheet.Parent.Path = BLANK, False, True)
+    If pMatched(0).FileName = "" Then
+        idx = 0
+    Else
+        idx = UBound(pMatched) + 1
+        ReDim Preserve pMatched(idx)
+    End If
     
-    pMatchCnt = pMatchCnt + 1
+    With pMatched(idx)
+        .FileName = wkSheet.Parent.Path & "\" & wkSheet.Parent.Name
+        .SheetName = wkSheet.Name
+        .Row = Row
+        .Col = Col
+        .TargetText = TargetText
+        .NoteText = NoteText
+        .SavedFile = IIf(wkSheet.Parent.Path = BLANK, False, True)
+    End With
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒZƒ‹”ÍˆÍƒJƒEƒ“ƒgæ“¾
-'// à–¾F       SpecialCells ‚ÌŒ‹‰ÊƒJƒEƒ“ƒg”‚ğæ“¾‚·‚é
-'// ˆø”F       targetRange: ‘ÎÛ”ÍˆÍ
-'//              cellType: æ“¾ƒ^ƒCƒv
-'// –ß‚è’lF     ”ÍˆÍ“à‚Ì‘ÎÛƒZƒ‹”BƒZƒ‹‚ªƒ[ƒ‚Ìê‡‚Í -1 ‚ğ•Ô‚·
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   ã‚¨ãƒ©ãƒ¼ãƒ¬ã‚³ãƒ¼ãƒ‰ç™»éŒ²
+'// èª¬æ˜ï¼š       ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ã‚¨ãƒ©ãƒ¼ã®å†…å®¹ã‚’é…åˆ—ã«ç™»éŒ²ã™ã‚‹
+'// å¼•æ•°ï¼š       FileName: å¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«å
+'//              ErrNumber: ã‚¨ãƒ©ãƒ¼ç•ªå·
+'//              ErrDesc: ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+'// æˆ»ã‚Šå€¤ï¼š     ãªã—
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psSetErrorRecord(FileName As String, ErrNumber As Long, ErrDesc As String)
+    Dim idx As Long
+    
+    If pSkippedFile(0).FileName = "" Then
+        idx = 0
+    Else
+        idx = UBound(pSkippedFile) + 1
+        ReDim Preserve pSkippedFile(idx)
+    End If
+    
+    With pSkippedFile(idx)
+        .FileName = FileName
+        .ErrNumber = ErrNumber
+        .ErrDesc = ErrDesc
+    End With
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   ã‚»ãƒ«ç¯„å›²ã‚«ã‚¦ãƒ³ãƒˆå–å¾—
+'// èª¬æ˜ï¼š       SpecialCells ã®çµæœã‚«ã‚¦ãƒ³ãƒˆæ•°ã‚’å–å¾—ã™ã‚‹
+'// å¼•æ•°ï¼š       targetRange: å¯¾è±¡ç¯„å›²
+'//              cellType: å–å¾—ã‚¿ã‚¤ãƒ—
+'// æˆ»ã‚Šå€¤ï¼š     ç¯„å›²å†…ã®å¯¾è±¡ã‚»ãƒ«æ•°ã€‚ã‚»ãƒ«ãŒã‚¼ãƒ­ã®å ´åˆã¯ -1 ã‚’è¿”ã™
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetCellCount(targetRange As Range, cellType As Long) As Double
 On Error GoTo ErrorHandler
@@ -612,13 +662,20 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ŒŸõ•¶š—ñ‚Ì‘Ã“–«”»’è
-'// à–¾F       w’è‚³‚ê‚½ŒŸõ•¶š—ñ‚ª³‹K•\Œ»‚Æ‚µ‚Ä‘Ã“–‚©iƒGƒ‰[‚ª”­¶‚µ‚È‚¢‚©j‚ğŠm”F‚·‚é
-'// ˆø”F       regExp: ³‹K•\Œ»ƒIƒuƒWƒFƒNƒg
-'// –ß‚è’lF     ŒŸõ‚Ì¬”Û
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   æ¤œç´¢æ–‡å­—åˆ—ã®å¦¥å½“æ€§åˆ¤å®š
+'// èª¬æ˜ï¼š       æŒ‡å®šã•ã‚ŒãŸæ¤œç´¢æ–‡å­—åˆ—ãŒæ­£è¦è¡¨ç¾ã¨ã—ã¦å¦¥å½“ã‹ï¼ˆã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãªã„ã‹ï¼‰ã‚’ç¢ºèªã™ã‚‹
+'// å¼•æ•°ï¼š       patternStr: æ¤œç´¢æ–‡å­—åˆ—
+'// æˆ»ã‚Šå€¤ï¼š     æ¤œç´¢ã®æˆå¦
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfCheckRegExp(regExp As Object) As Boolean
+Private Function pfCheckRegExp(patternStr As String) As Boolean
 On Error GoTo ErrorHandler
+    Dim regExp        As Object         '// æ­£è¦è¡¨ç¾ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    
+    '// æ­£è¦è¡¨ç¾ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
+    Set regExp = CreateObject("VBScript.RegExp")
+    regExp.Pattern = patternStr
+    
+    '// å®Ÿè¡Œãƒ†ã‚¹ãƒˆã€‚æ¤œç´¢æ–‡å­—åˆ—ãŒæ­£ã—ã„æ­£è¦è¡¨ç¾ã§ãªã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼ï¼ä¾‹å¤–ã§Falseã‚’æˆ»ã™ã€‚
     pfCheckRegExp = regExp.test(BLANK)
     pfCheckRegExp = True
     Exit Function
@@ -629,11 +686,11 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒZƒ‹–¼Ì‚Ì‘Ã“–«”»’è
-'// à–¾F       w’è‚³‚ê‚½ƒZƒ‹–¼Ì‚ªwkSheet‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚é‚©A‚¨‚æ‚Ñ—LŒø‚È–¼Ì‚Å‚ ‚é‚©‚ğ”»’è‚·‚é
-'// ˆø”F       rangeName: ‘ÎÛ‚Æ‚È‚éƒZƒ‹–¼ÌƒIƒuƒWƒFƒNƒg
-'//              wkSheet: ‘ÎÛ‚Æ‚È‚éƒV[ƒg
-'// –ß‚è’lF     ‘Ã“–«‚Ì¬”Û
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   ã‚»ãƒ«åç§°ã®å¦¥å½“æ€§åˆ¤å®š
+'// èª¬æ˜ï¼š       æŒ‡å®šã•ã‚ŒãŸã‚»ãƒ«åç§°ãŒwkSheetã«å«ã¾ã‚Œã¦ã„ã‚‹ã‹ã€ãŠã‚ˆã³æœ‰åŠ¹ãªåç§°ã§ã‚ã‚‹ã‹ã‚’åˆ¤å®šã™ã‚‹
+'// å¼•æ•°ï¼š       rangeName: å¯¾è±¡ã¨ãªã‚‹ã‚»ãƒ«åç§°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+'//              wkSheet: å¯¾è±¡ã¨ãªã‚‹ã‚·ãƒ¼ãƒˆ
+'// æˆ»ã‚Šå€¤ï¼š     å¦¥å½“æ€§ã®æˆå¦
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfCheckRangeName(rangeName As Name, wkSheet As Worksheet) As Boolean
 On Error GoTo ErrorHandler
@@ -646,10 +703,10 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// ƒƒ\ƒbƒhF   ƒ`ƒƒ[ƒgƒ^ƒCƒgƒ‹æ“¾
-'// à–¾F       w’è‚³‚ê‚½ƒ`ƒƒ[ƒgƒ^ƒCƒgƒ‹‚Ìcharacters‚ğ•Ô‚·B
-'// ˆø”F       chartObj: ‘ÎÛ‚Æ‚È‚éƒ`ƒƒ[ƒgƒIƒuƒWƒFƒNƒg
-'// –ß‚è’lF     ƒ`ƒƒ[ƒg‚Ìƒ^ƒCƒgƒ‹•¶š—ñBæ“¾•s‰Â‚Ìê‡‚Í‹ó”’•¶š—ñ
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   ãƒãƒ£ãƒ¼ãƒˆã‚¿ã‚¤ãƒˆãƒ«å–å¾—
+'// èª¬æ˜ï¼š       æŒ‡å®šã•ã‚ŒãŸãƒãƒ£ãƒ¼ãƒˆã‚¿ã‚¤ãƒˆãƒ«ã®charactersã‚’è¿”ã™ã€‚
+'// å¼•æ•°ï¼š       chartObj: å¯¾è±¡ã¨ãªã‚‹ãƒãƒ£ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+'// æˆ»ã‚Šå€¤ï¼š     ãƒãƒ£ãƒ¼ãƒˆã®ã‚¿ã‚¤ãƒˆãƒ«æ–‡å­—åˆ—ã€‚å–å¾—ä¸å¯ã®å ´åˆã¯ç©ºç™½æ–‡å­—åˆ—
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetChartTitle(chartObj As Chart) As String
 On Error GoTo ErrorHandler
@@ -658,6 +715,36 @@ On Error GoTo ErrorHandler
 
 ErrorHandler:
     pfGetChartTitle = BLANK
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// ãƒ¡ã‚½ãƒƒãƒ‰ï¼š   ãƒ–ãƒƒã‚¯ã‚’é–‹ã
+'// èª¬æ˜ï¼š       å¼•æ•°ã®ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼‰ã§æŒ‡å®šã•ã‚ŒãŸãƒ–ãƒƒã‚¯ã‚’é–‹ãã€‚
+'//              ã‚ªãƒ¼ãƒ—ãƒ³æ™‚ã®ä¾‹å¤–å‡¦ç†ã‚’å®Ÿè£…
+'// å¼•æ•°ï¼š       objFile: å¯¾è±¡ã‚¨ã‚¯ã‚»ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿æŒã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+'// æˆ»ã‚Šå€¤ï¼š     æˆåŠŸã—ãŸå ´åˆã«ã¯ãƒ–ãƒƒã‚¯ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æˆ»ã™ã€‚å¤±æ•—ã—ãŸå ´åˆã«ã¯Nothingã‚’æˆ»ã™
+'// ////////////////////////////////////////////////////////////////////////////
+Private Function pfOpenWorkbook(objFile As Object) As Workbook
+On Error GoTo ErrorHandler
+    Dim wkBook       As Workbook
+    
+    '// é‡è¤‡ãƒã‚§ãƒƒã‚¯
+    For Each wkBook In Workbooks
+        If wkBook.Name = objFile.Name Then
+            Set pfOpenWorkbook = Nothing
+            Call psSetErrorRecord(objFile.Path, -1, MSG_DUP_FILE)
+            Exit Function
+        End If
+    Next
+    
+    Set wkBook = Workbooks.Open(objFile.Path, ReadOnly:=True, password:=EXCEL_PASSWORD)
+    Set pfOpenWorkbook = wkBook
+    Exit Function
+
+ErrorHandler:
+    Set pfOpenWorkbook = Nothing
+    Call psSetErrorRecord(objFile.Path, Err.Number, Err.Description)
 End Function
 
 

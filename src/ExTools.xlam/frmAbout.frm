@@ -42,14 +42,14 @@ End Sub
 '// //////////////////////////////////////////////////////////////////
 '// イベント： ラベル_ダウンロード クリック時
 Private Sub lblDownload_Click()
-    ThisWorkbook.FollowHyperlink Address:="https://github.com/koichiro-git/extools/blob/main/bin/ExTools.xlam"
+    Call ThisWorkbook.FollowHyperlink(Address:="https://github.com/koichiro-git/extools/releases")
 End Sub
 
 
 '// //////////////////////////////////////////////////////////////////
 '// イベント： ラベル_マニュアル クリック時
 Private Sub lblUserManual_Click()
-    ThisWorkbook.FollowHyperlink Address:="https://koichiro-git.github.io/extools/"
+    Call ThisWorkbook.FollowHyperlink(Address:="https://koichiro-git.github.io/extools/")
 End Sub
 
 
