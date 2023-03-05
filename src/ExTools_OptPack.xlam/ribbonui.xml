@@ -7,6 +7,7 @@
 			<button id="FormatPhoneNumbers" label="電話番号ハイフン付与" imageMso="Call" onAction="ribbonCallback_PhoneNum" />
 			<button id="Translation" label="翻訳" imageMso="TranslateDocument" onAction="ribbonCallback_OptPack" />
 			<button id="ConvJapaneseNumber" label="日本語表記数値変換" image="jpnumber16" onAction="ribbonCallback_JapaneseNum" />
+			<button id="QRCode" label="QRコード" image="bc_qrcode16" onAction="ribbonCallback_BarCode" />
 		</gallery>
 	</group>
 </tab>
