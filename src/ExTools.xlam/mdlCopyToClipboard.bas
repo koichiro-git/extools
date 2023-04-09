@@ -206,7 +206,7 @@ On Error GoTo ErrorHandler
         Exit Sub
     End If
     '// ÉRÉsÅ[
-    Call Selection.CopyPicture(xlScreen, xlPicture)
+    Call Selection.CopyPicture(xlScreen, xlBitmap)
         
     Exit Sub
 ErrorHandler:

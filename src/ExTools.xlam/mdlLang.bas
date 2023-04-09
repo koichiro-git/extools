@@ -317,6 +317,11 @@ Public Const LBL_LGI_CONN_TO                    As String = "接続先"
 Public Const LBL_LGI_LOGIN                      As String = "ログイン"
 Public Const LBL_LGI_CANCEL                     As String = "キャンセル"
 
+'// frmAdjustArch(ARC)
+Public Const LBL_ARC_START                      As String = "開始位置"
+Public Const LBL_ARC_END                        As String = "終了位置"
+Public Const LBL_ARC_RESET_ROT                  As String = "傾きをリセット"
+
 
 '// ////////////////////
 '// コンボボックス (変数書式: CMB_{form code}_{string} )
@@ -687,6 +692,11 @@ Public Const LBL_LGI_STRING                     As String = "Connection string"
 Public Const LBL_LGI_CONN_TO                    As String = "Connect to"
 Public Const LBL_LGI_LOGIN                      As String = "Login"
 Public Const LBL_LGI_CANCEL                     As String = "Cancel"
+
+'// frmAdjustArch(ARC)
+Public Const LBL_ARC_START                      As String = "Start Pos"
+Public Const LBL_ARC_END                        As String = "End Pos"
+Public Const LBL_ARC_RESET_ROT                  As String = "Reset Rotation"
 
 
 '// ////////////////////
