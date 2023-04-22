@@ -53,52 +53,57 @@ End Sub
 '///////////////////////////////////////////////////////////////////////////////
 '// デストラクタ
 Private Sub Class_Terminate()
-  If Not AdoConnection Is Nothing Then
-    AdoConnection.Close
-  End If
+On Error GoTo ErrorHandler
+    If Not AdoConnection Is Nothing Then
+        AdoConnection.Close
+    End If
+    
+    Set AdoConnection = Nothing
+    Call InitError
+    Exit Sub
   
-  Set AdoConnection = Nothing
-  Call InitError
+ErrorHandler:
+    Set AdoConnection = Nothing
 End Sub
 
 
 '///////////////////////////////////////////////////////////////////////////////
 '// プロパティ: エラーコード (ReadOnly)
 Public Property Get ErrorCode() As Long
-  ErrorCode = pErrorCode
+    ErrorCode = pErrorCode
 End Property
 
 
 '///////////////////////////////////////////////////////////////////////////////
 '// プロパティ: エラーコード（DBネイティブ） (ReadOnly)
 Public Property Get NativeError() As Long
-  NativeError = pNativeError
+    NativeError = pNativeError
 End Property
 
 
 '///////////////////////////////////////////////////////////////////////////////
 '// プロパティ: エラーメッセージ (ReadOnly)
 Public Property Get ErrorText() As String
-  ErrorText = pErrorText
+    ErrorText = pErrorText
 End Property
 
 
 '///////////////////////////////////////////////////////////////////////////////
 '// プロパティ: DB種類 (ReadOnly)
 Public Property Get DbType() As udDbConnType
-  DbType = pDbType
+    DbType = pDbType
 End Property
 
 '///////////////////////////////////////////////////////////////////////////////
 '// プロパティ: データソース名 (ReadOnly)
 Public Property Get DataSourceName() As String
-  DataSourceName = pDataSourceName
+    DataSourceName = pDataSourceName
 End Property
 
 '///////////////////////////////////////////////////////////////////////////////
 '// プロパティ: DML更新行数 (ReadOnly)
 Public Property Get DmlRows() As Long
-  DmlRows = pDmlRows
+    DmlRows = pDmlRows
 End Property
 
 
@@ -110,8 +115,8 @@ End Property
 '// 修正履歴：   なし
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub InitError()
-  pErrorCode = 0
-  pErrorText = Space(0)
+    pErrorCode = 0
+    pErrorText = Space(0)
 End Sub
 
 
@@ -123,16 +128,16 @@ End Sub
 '// 修正履歴：   なし
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub SetError()
-  If AdoConnection.Errors.Count > 0 Then
-    pNativeError = AdoConnection.Errors(0).NativeError
-    pErrorCode = AdoConnection.Errors(0).Number
-    pErrorText = AdoConnection.Errors(0).Description
-    Call AdoConnection.Errors.Clear
-  Else
-    pNativeError = 0
-    pErrorCode = Err.Number
-    pErrorText = Err.Description
-  End If
+    If AdoConnection.Errors.Count > 0 Then
+        pNativeError = AdoConnection.Errors(0).NativeError
+        pErrorCode = AdoConnection.Errors(0).Number
+        pErrorText = AdoConnection.Errors(0).Description
+        Call AdoConnection.Errors.Clear
+    Else
+        pNativeError = 0
+        pErrorCode = Err.Number
+        pErrorText = Err.Description
+    End If
 End Sub
 
 
