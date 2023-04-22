@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "2.4.0.72"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "2.4.0.73"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -689,7 +689,9 @@ Public Sub gsSuppressAppEvents()
     Application.ScreenUpdating = False                  '// 画面描画停止
     Application.Cursor = xlWait                         '// ウエイトカーソル
     Application.EnableEvents = False                    '// イベント抑止
-    Application.Calculation = xlCalculationManual       '// 手動計算
+    If Workbooks.Count > 0 Then
+        Application.Calculation = xlCalculationManual       '// 手動計算
+    End If
 End Sub
 
 
@@ -699,10 +701,13 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub gsResumeAppEvents()
     Application.StatusBar = False                       '// ステータスバーを消す
-    Application.Calculation = xlCalculationAutomatic    '// 自動計算
     Application.EnableEvents = True
     Application.Cursor = xlDefault
     Application.ScreenUpdating = True
+    
+    If Workbooks.Count > 0 Then
+        Application.Calculation = xlCalculationAutomatic    '// 自動計算
+    End If
 End Sub
 
 

@@ -77,7 +77,7 @@ ErrorHandler:
     If Err.Number = 13 Or Err.Number = 6 Then  '// “ü—Í‚µ‚½”’l‚ª–³Œø‚Èê‡
         Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
     Else
-        Call gsShowErrorMsgDlg("mdlCommon.psConvValue", Err)
+        Call gsShowErrorMsgDlg("frmAdjustArch.txtStart_KeyDown", Err)
     End If
     
     angleStart = lastVal
