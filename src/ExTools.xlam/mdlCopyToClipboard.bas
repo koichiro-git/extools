@@ -200,6 +200,11 @@ End Sub
 Public Sub psCopyToCB_Image()
 On Error GoTo ErrorHandler
         
+    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
+    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
+        Exit Sub
+    End If
+    
     '// 選択範囲が単一であることの確認
     If Selection.Areas.Count > 1 Then
         Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)

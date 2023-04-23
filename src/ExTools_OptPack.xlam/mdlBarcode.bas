@@ -31,6 +31,7 @@ End Sub
 '// 説明：       選択されたセルの値を元にバーコードを描画する
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psDrawBarCode()
+On Error GoTo ErrorHandler
     Dim tCell     As Range    '// 変換対象セル
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
@@ -53,7 +54,12 @@ Private Sub psDrawBarCode()
     
 ErrorHandler:
     Call gsResumeAppEvents
-    Call gsShowErrorMsgDlg_VBA("mdlBarcode.psDrawBarCode", Err)
+    Call gsResumeAppEvents
+    If Err.Number = 1004 Then  '// 範囲選択が正しくない場合
+        Call MsgBox(MSG_INVALID_RANGE, vbOKOnly, APP_TITLE)
+    Else
+        Call gsShowErrorMsgDlg_VBA("mdlBarcode.psDrawBarCode", Err)
+    End If
 End Sub
 
     
