@@ -196,7 +196,6 @@ On Error GoTo ErrorHandler
             
             '// コメント設定（新規シートのためコメント有無確認は不要）
             Call ActiveCell.AddComment("-- " & Format(Now, "yyyy/mm/dd hh:nn:ss") & vbCrLf & txtScript.Text)
-'            Call Selection.NoteText("-- " & Format(Now, "yyyy/mm/dd hh:nn:ss") & vbCrLf & txtScript.Text)
             
             '// 警告表示
             If rst.Fields.Count > Columns.Count Then
@@ -229,8 +228,6 @@ On Error GoTo ErrorHandler
 ErrorHandler:
     Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("frmGetRecord.psExecSearch", Err, gADO)
-'    Application.StatusBar = False
-'    pAutoSave = False
 End Function
 
 
@@ -395,22 +392,22 @@ End Sub
 '// メソッド：    サンプルSQL生成
 '// 説明：        カレントシートの1行目を列とみなし、SELECT文を生成して戻す
 '// 引数：        wksheet: ワークシート
-'// 戻り値：      SELECT文
+'// 戻り値：      SELECT文字列
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetSampleSQL(wkSheet As Worksheet) As String
-    Dim idxCol  As Integer
+    Dim idxCol      As Integer
     Dim strSelect   As String
     Dim rslt        As String
     
-    For idxCol = 1 To 256
-        If wkSheet.Cells(1, idxCol).Text = "" Then
+    For idxCol = 1 To 256       '// 256列決め打ち
+        If wkSheet.Cells(1, idxCol).Text = BLANK Then
             Exit For
         End If
         
         If idxCol > 1 Then
             strSelect = strSelect & "," & vbLf & Space(7)
         End If
-        strSelect = strSelect & "a." & DBQ & Replace(wkSheet.Cells(1, idxCol).Text, vbLf, "_") & DBQ
+        strSelect = strSelect & "a." & Replace(wkSheet.Cells(1, idxCol).Text, vbLf, "_")
     Next
     
     rslt = "SELECT " & strSelect & vbLf & _
