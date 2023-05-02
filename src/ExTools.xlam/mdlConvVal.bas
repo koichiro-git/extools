@@ -49,9 +49,6 @@ On Error GoTo ErrorHandler
         Exit Sub
     End If
     
-'    Application.ScreenUpdating = False
-'    Set statGauge = New cStatusGauge
-'    statGauge.MaxVal = Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues).Count
     Call gsSuppressAppEvents
     
     If Selection.Count > 1 Then
@@ -63,15 +60,11 @@ On Error GoTo ErrorHandler
                 Application.StatusBar = False
                 Exit For
             End If
-            
-'            Call statGauge.addValue(1)
         Next
     Else
         Call psConvValue_sub(ActiveCell, funcFlag)
     End If
     
-'    Set statGauge = Nothing
-'    Application.ScreenUpdating = True
     Call gsResumeAppEvents
     Exit Sub
 ErrorHandler:

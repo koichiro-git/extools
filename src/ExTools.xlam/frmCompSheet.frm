@@ -64,8 +64,8 @@ Private Sub UserForm_Activate()
         Exit Sub
     End If
     
-    Call psSetSheetCombo(cmbSheet_1.Name)
-    Call psSetSheetCombo(cmbSheet_2.Name)
+  Call psSetSheetCombo(cmbSheet_1.Name)
+  Call psSetSheetCombo(cmbSheet_2.Name)
 End Sub
 
 
@@ -770,3 +770,4 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
+

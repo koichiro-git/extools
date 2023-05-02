@@ -14,7 +14,7 @@ Option Base 0
 '// アプリケーション定数
 
 '// バージョン
-Public Const OPTION_PACK_VERSION      As String = "7"                                               '// このモジュール固有のバージョン（管理用通し番号）
+Public Const OPTION_PACK_VERSION      As String = "9"                                               '// このモジュール固有のバージョン（管理用通し番号）
 
 '// システム定数
 Public Const PROJECT_NAME             As String = "ExToolsOptionalPack"                             '// 本アドイン名称

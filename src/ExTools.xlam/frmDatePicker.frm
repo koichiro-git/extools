@@ -15,7 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
-'// タイトル       : 日付ピックカレンダー
+'// タイトル       : 日付ピックカレンダーフォーム
 '// モジュール     : frmDatePicker
 '// 説明           : MonthViewを使用したDatePicker
 '// ////////////////////////////////////////////////////////////////////////////
@@ -27,14 +27,16 @@ Option Base 0
 '// ////////////////////////////////////////////////////////////////////////////
 '// アプリケーション定数
 
-Private Const THUNDER_FRAME     As String = "ThunderDFrame" '// Excel VBAユーザーフォームのクラス名（Excel2000以降=ThunerDFrame / それ以前=ThunderXFrame）
+'// Excel VBAユーザーフォームのクラス名（Excel2000以降=ThunerDFrame / それ以前=ThunderXFrame）
+Private Const THUNDER_FRAME         As String = "ThunderDFrame"
 
 '// 論理インチ当たりの画面のピクセル数（ポイント→ピクセル換算係数）
 '// GetDeviceCaps が常に96を返すため､プログラムでの動的取得をやめ、定数とする（SetProcessDPIAwareは実装しない）
 '// https://learn.microsoft.com/ja-jp/windows-hardware/manufacture/desktop/dpi-related-apis-and-registry-settings?view=windows-11
-Private Const LOG_PIXELS        As Long = 96
+Private Const LOG_PIXELS            As Long = 96
 
-Private Const CALENDAR_SEP_WIDTH    As Double = 6  '// カレンダー2つ（2か月）分の間隔4.5pt + 予備
+'// カレンダー間の間隔
+Private Const CALENDAR_SEP_WIDTH    As Double = 6   '// 2つ（2か月）分の間隔4.5pt + 予備
 
 
 '// //////////////////////////////////////////////////////////////////
@@ -53,17 +55,17 @@ On Error GoTo ErrorHandler
     Dim lResult             As LongPtr
     Dim calendarWidth       As Long
     
-    ' コモンコントロール初期化
+    '// コモンコントロール初期化
     icce.dwICC = ICC_DATE_CLASSES
     icce.dwSize = Len(icce)
     lResult = InitCommonControlsEx(icce)
     If lResult = 0 Then Call Err.Raise(Number:=513, Description:="日付ピッカー画面を生成できません")
     
-    ' ユーザーフォームのHWNDの取得
+    '// ユーザーフォームのHWNDの取得
     hWnd = FindWindow(THUNDER_FRAME, Me.Caption)
     If hWnd = 0 Then Call Err.Raise(Number:=513, Description:="日付ピッカー画面を生成できません")
 
-    ' MonthView配置用ハンドルの取得
+    '// MonthView配置用ハンドルの取得
     hWnd_Sub = FindWindowEx(hWnd, 0, vbNullString, vbNullString)
     
     '// MonthViewウィンドウ生成(サイズゼロで生成　https://learn.microsoft.com/ja-jp/windows/win32/controls/mcm-getminreqrect)

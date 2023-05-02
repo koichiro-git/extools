@@ -32,7 +32,8 @@
 			<button id="RemoveLink" label="リンクの削除" imageMso="HyperlinkRemove" onAction="ribbonCallback_Hyperlink" />
 		</gallery>
 		<button id="Copy2Clipboard" label="固定長コピー" keytip="L" size="normal" imageMso="Copy" onAction="ribbonCallback_Copy2CB" />
-		<button id="Copy2CBMarkdown" label="Markdown表コピー" keytip="L" size="normal" imageMso="Copy" onAction="ribbonCallback_Copy2CB" />
+		<button id="Copy2CBMarkdown" label="Markdown表コピー" keytip="L" size="normal" image="markdown16" onAction="ribbonCallback_Copy2CB" />
+		<button id="Copy2CBImage" label="画像としてコピー" keytip="L" size="normal" imageMso="CopyPicture" onAction="ribbonCallback_Copy2CB" />
 		<gallery id="Grouping" label="グループ処理" size="normal" imageMso="OutlineSymbolsShowHide">
 			<button id="groupRow" label="グループ化(行)" imageMso="PivotMoveToFieldArea" onAction="ribbonCallback_Group" />
 			<button id="groupCol" label="グループ化(列)" imageMso="PivotMoveToColumnArea" onAction="ribbonCallback_Group" />
@@ -64,6 +65,7 @@
 			<button id="AdjShapeBlockArrow" label="ブロック矢印の先端を揃える" image="homebase16" onAction="ribbonCallback_AdjustShape" />
 			<button id="AdjShapeRoundRect" label="角丸四角形の丸みを揃える" image="roundRect16" onAction="ribbonCallback_AdjustShape" />
 			<button id="AdjShapeElbowConn" label="鍵コネクタの曲がり位置を揃える" imageMso="PivotDiagramAlignCenter" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeAngle" label="円の角度を設定する" image="arch16" onAction="ribbonCallback" />
 		</gallery>
 	</group>
 
