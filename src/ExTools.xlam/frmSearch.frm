@@ -455,12 +455,13 @@ Private Sub psExecSearch(wkSheet As Worksheet, patternStr As String, caseSensiti
         For idxChart = 1 To wkSheet.ChartObjects.Count  '// チャートの配列は１から開始
             Set chartObj = wkSheet.ChartObjects(idxChart).Chart
             If regExp.test(pfGetChartTitle(chartObj)) Then
-                Call psSetMatchedRec(wkSheet, -1, -1, chartObj.ChartTitle.Characters.Text, MSG_CHART_TITLE)
+'                Call psSetMatchedRec(wkSheet, -1, -1, chartObj.ChartTitle.Characters.Text, MSG_CHART_TITLE)
+                Call psSetMatchedRec(wkSheet, chartObj.Parent.TopLeftCell.Row, chartObj.Parent.TopLeftCell.Column, chartObj.ChartTitle.Characters.Text, MSG_CHART_TITLE)
             End If
             
             For Each seriesObj In chartObj.SeriesCollection
                 If regExp.test(seriesObj.Name) Then
-                    Call psSetMatchedRec(wkSheet, -1, -1, seriesObj.Name, MSG_CHART_SERIES)
+                    Call psSetMatchedRec(wkSheet, chartObj.Parent.TopLeftCell.Row, chartObj.Parent.TopLeftCell.Column, seriesObj.Name, MSG_CHART_SERIES)
                 End If
             Next
         Next
