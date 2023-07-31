@@ -181,7 +181,6 @@ Private Sub psDistinctVals()
     End If
     
     Call gsSuppressAppEvents
-'    Application.ScreenUpdating = False
     
     tRange = gfGetTargetRange(ActiveSheet, Selection)
     
@@ -236,9 +235,7 @@ Private Sub psDistinctVals()
     
     Set dict = Nothing
     
-'    Application.ScreenUpdating = True
     Call gsResumeAppEvents
-
 End Sub
 
 
@@ -253,11 +250,16 @@ Private Sub psGroupVals()
     Dim aryIdx        As Integer
     Dim aryLastVal(8) As String
     
-    '// セルが選択されていることをチェック
-    If TypeName(Selection) <> TYPE_RANGE Then
-        Call MsgBox(MSG_NOT_RANGE_SELECT, vbOKOnly, APP_TITLE)
+    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
+    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
+    
+'    '// セルが選択されていることをチェック
+'    If TypeName(Selection) <> TYPE_RANGE Then
+'        Call MsgBox(MSG_NOT_RANGE_SELECT, vbOKOnly, APP_TITLE)
+'        Exit Sub
+'    End If
     
     '// チェック
     If Selection.Areas.Count > 1 Then
@@ -269,7 +271,6 @@ Private Sub psGroupVals()
     End If
     
     Call gsSuppressAppEvents
-'    Application.ScreenUpdating = False
     
     tRange = gfGetTargetRange(ActiveSheet, Selection)
     
@@ -288,7 +289,6 @@ Private Sub psGroupVals()
         Next
     Next
     
-'    Application.ScreenUpdating = True
     Call gsResumeAppEvents
 End Sub
 
