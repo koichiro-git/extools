@@ -52,8 +52,8 @@ On Error GoTo ErrorHandler
     Dim idxArry     As Integer
     Dim textLen     As Integer
     
-    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
-    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
+    '// 事前チェック（選択タイプ＝セル）
+    If Not gfPreCheck(selType:=TYPE_RANGE) Then
         Exit Sub
     End If
     
@@ -139,8 +139,8 @@ On Error GoTo ErrorHandler
     Dim idxArry     As Integer
     Dim textLen     As Integer
     
-    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
-    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
+    '// 事前チェック（選択タイプ＝セル）
+    If Not gfPreCheck(selType:=TYPE_RANGE) Then
         Exit Sub
     End If
   
@@ -200,8 +200,8 @@ End Sub
 Public Sub psCopyToCB_Image()
 On Error GoTo ErrorHandler
         
-    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
-    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
+    '// 事前チェック（選択タイプ＝セル）
+    If Not gfPreCheck(selType:=TYPE_RANGE) Then
         Exit Sub
     End If
     

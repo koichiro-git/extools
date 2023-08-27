@@ -50,6 +50,7 @@ Private Sub psFormatPhoneNumbers()
 On Error GoTo ErrorHandler
     Dim tCell       As Range    '// 変換対象セル
     Dim bff         As String   '// 変換後文字列格納バッファ
+    Dim cnt         As Integer  '// エラーカウント
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
@@ -58,21 +59,29 @@ On Error GoTo ErrorHandler
     
     Call gsSuppressAppEvents
     
+    cnt = 0
     If Selection.Count > 1 Then
         For Each tCell In Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues)  '//SELECTIONが空の場合はエラーハンドラでキャッチ
             bff = pfApplyPhoneNumberFormat(tCell.Text)
-            If bff <> BLANK Then    '// 変換ロジックからブランクが戻された場合は無視
+            If bff <> BLANK Then                '// 変換ロジックからブランクが戻された場合は無視
                 tCell.Value = bff
+            ElseIf ActiveCell.Text <> BLANK Then    '// 変換に失敗し、セル値が空白でない場合にはエラー扱いとしてカウント
+                cnt = cnt + 1
             End If
         Next
     Else
         bff = pfApplyPhoneNumberFormat(ActiveCell.Text)
-        If bff <> BLANK Then        '// 変換ロジックからブランクが戻された場合は無視
+        If bff <> BLANK Then                    '// 変換ロジックからブランクが戻された場合は無視
             ActiveCell.Value = pfApplyPhoneNumberFormat(bff)
         End If
     End If
     
     Call gsResumeAppEvents
+    
+    If cnt > 0 Then
+        Call MsgBox(MSG_ERR & "(" & cnt & ")", vbOKOnly, APP_TITLE)
+    End If
+    
     Exit Sub
 ErrorHandler:
     Call gsResumeAppEvents
@@ -104,6 +113,9 @@ Private Function pfApplyPhoneNumberFormat(originalStr As String) As String
     ElseIf InStr(1, MOBILE_IP_CODE_LIST, Left(targetVal, 3)) > 0 Then
         '// 携帯・IP Phone
         rslt = Left(targetVal, 3) & "-" & Mid(targetVal, 4, 4) & "-" & Mid(targetVal, 8)
+        If Len(rslt) <> 13 Then
+            rslt = BLANK
+        End If
     Else
         '// 固定電話（市外局番の長いものから順にチェック）
         For digs = 5 To 2 Step -1
@@ -112,6 +124,9 @@ Private Function pfApplyPhoneNumberFormat(originalStr As String) As String
                 Exit For
             End If
         Next
+        If Len(rslt) <> 12 Then
+            rslt = BLANK
+        End If
     End If
     
     pfApplyPhoneNumberFormat = rslt

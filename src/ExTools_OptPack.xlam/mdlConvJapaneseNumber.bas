@@ -37,6 +37,7 @@ Private Sub pfConvJapaneseToNumber()
 On Error GoTo ErrorHandler
     Dim tCell       As Range    '// 変換対象セル
     Dim bff         As String   '// 変換後文字列格納バッファ
+    Dim cnt         As Integer  '// エラーカウント
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
@@ -45,6 +46,7 @@ On Error GoTo ErrorHandler
     
     Call gsSuppressAppEvents
     
+    cnt = 0
     If Selection.Count > 1 Then
         For Each tCell In Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues)  '//SELECTIONが空の場合はエラーハンドラでキャッチ
             bff = pfConvJapaneseToNumber_sub(tCell.Text)
@@ -56,10 +58,17 @@ On Error GoTo ErrorHandler
         bff = pfConvJapaneseToNumber_sub(ActiveCell.Text)
         If bff <> BLANK Then        '// 変換ロジックからブランクが戻された場合は無視
             ActiveCell.Value = bff
+        ElseIf ActiveCell.Text <> BLANK Then    '// 変換に失敗し、セル値が空白でない場合にはエラー扱いとしてカウント
+            cnt = cnt + 1
         End If
     End If
     
     Call gsResumeAppEvents
+    
+    If cnt > 0 Then
+        Call MsgBox(MSG_ERR & "(" & cnt & ")", vbOKOnly, APP_TITLE)
+    End If
+    
     Exit Sub
 ErrorHandler:
     Call gsResumeAppEvents
@@ -79,7 +88,6 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfConvJapaneseToNumber_sub(targetStr As String) As String
 On Error GoTo ErrorHandler
-'    Dim targetStr   As String
     Dim i           As Integer  '// 文字を抽出する際のインデクス
     Dim c           As String   '// 抽出された一文字を格納するバッファ
     Dim dig         As Double   '// 現在の位
@@ -132,7 +140,13 @@ On Error GoTo ErrorHandler
                 Case "兆"
                     dig = 1000000000000#
                     lastKanji = "兆"
-                '// これ以外の文字は無視
+                
+                Case "-", "－", "△", "▲", ","
+                    '// マイナス記号,カンマは無視
+                Case Else
+                    '// それ以外の文字があった場合はエラーとしてブランクを戻す
+                    pfConvJapaneseToNumber_sub = BLANK
+                    Exit Function
             End Select
         End If
         
