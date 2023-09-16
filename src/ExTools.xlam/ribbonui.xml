@@ -50,7 +50,7 @@
 				<menu id="Group7Menu1">
 					<button id="Today" label="本日日付(Today)" imageMso="DataTypeLongDate" onAction="ribbonCallback" />
 					<button id="Now" label="現在時刻(Now)" imageMso="DataTypeDateTime" onAction="ribbonCallback" />
-					</menu>
+				</menu>
 			</splitButton>
 		</box>
 	</group>
@@ -61,12 +61,15 @@
 		<button id="BorderColHead" label="列ヘッダの罫線" size="normal" imageMso="TableStyleColumnHeaders" onAction="ribbonCallback_DrawLines" />
 		<button id="BorderData" label="データ領域の罫線" size="normal" imageMso="BorderOutside" onAction="ribbonCallback_DrawLines" />
 		<button id="FitObjects" label="オブジェクトをセルに合わせる" size="normal" imageMso="DrawingCanvasFit" onAction="ribbonCallback" />
-		<gallery id="AdjSape" label="オブジェクトの補正" size="normal" imageMso="ShapesInsertGallery">
+		<menu id="AdjSape" label="オブジェクトの補正" size="normal" imageMso="ShapesInsertGallery">
 			<button id="AdjShapeBlockArrow" label="ブロック矢印の先端を揃える" image="homebase16" onAction="ribbonCallback_AdjustShape" />
 			<button id="AdjShapeRoundRect" label="角丸四角形の丸みを揃える" image="roundRect16" onAction="ribbonCallback_AdjustShape" />
 			<button id="AdjShapeElbowConn" label="鍵コネクタの曲がり位置を揃える" imageMso="PivotDiagramAlignCenter" onAction="ribbonCallback_AdjustShape" />
 			<button id="AdjShapeAngle" label="円の角度を設定する" image="arch16" onAction="ribbonCallback" />
-		</gallery>
+			<button id="AdjShapeLine" label="線の角度を揃える" imageMso="LineTool" onAction="ribbonCallback_AdjustShape" />
+			<menuSeparator id="AdjShapeSeparator1" />
+			<button id="AdjShapeUngroup" label="グループを全て解除" imageMso="ObjectsUngroup" onAction="ribbonCallback_AdjustShape" />
+		</menu>
 	</group>
 
 	<!--- **********[Data]********** -->

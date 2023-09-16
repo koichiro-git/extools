@@ -26,6 +26,10 @@ Public Sub ribbonCallback_AdjustShape(control As IRibbonControl)
             Call psAdjustRoundRect
         Case "AdjShapeBlockArrow"                                               '// ブロック矢印の傾き補正
             Call psAdjustBlockArrowHead
+        Case "AdjShapeLine"                                                     '// 直線の傾き補正（0,45,90度）
+            Call psAdjustLine
+        Case "AdjShapeUngroup"                                                  '// 再帰でグループ解除
+            Call psAdjustUngroup
     End Select
 End Sub
 
@@ -116,7 +120,7 @@ End Sub
 '// メソッド：   ブロック矢印の先端角度補正
 '// 説明：       ブロック矢印の先端角を、最も鈍角なものに合わせる
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub psAdjustBlockArrowHead()
+Private Sub psAdjustBlockArrowHead()
     Dim target      As Double   '// 全ブロック矢印のAdjustment(1)をこのターゲットに合わせる。「短辺×Adjust値の最小値)」
     Dim bff         As Double
     Dim idx         As Integer
@@ -158,7 +162,7 @@ End Sub
 '// メソッド：   角の丸い四角形 丸み補正
 '// 説明：       角の丸い四角形の丸みを、最もR（径）の小さいものに合わせる
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub psAdjustRoundRect()
+Private Sub psAdjustRoundRect()
     Dim target      As Double   '// 全ブロック矢印のAdjustment(1)をこのターゲットに合わせる。「短辺×Adjust値の最小値)」
     Dim bff         As Double
     Dim idx         As Integer
@@ -167,8 +171,8 @@ Public Sub psAdjustRoundRect()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
         Exit Sub
     End If
-
-    '// ターゲット値(短辺×Adjust値の最小値)を取得　//////////
+    
+    '// ターゲット値(短辺×Adjust値の最小値)を取得 //////////
     target = 0
     For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
         With ActiveWindow.Selection.ShapeRange(idx)
@@ -191,6 +195,93 @@ Public Sub psAdjustRoundRect()
             End If
         End With
     Next
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   直線 角度補正
+'// 説明：       直線の角度を、0,45,90に補正する。起点をもとに位置を補正する
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psAdjustLine()
+    Dim lineLen     As Double       '// オリジナルの長さ
+    Dim lineAgl     As Double       '// オリジナルの角度
+    Dim targetAgl   As Double       '// ターゲットとする角度
+    Dim idx         As Integer
+    Dim bff         As Double
+    
+    '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
+    If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
+        Exit Sub
+    End If
+    
+    '// 角度設定
+    For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
+        With ActiveWindow.Selection.ShapeRange(idx)
+            If .Type = msoLine Then
+                If .Width * .Height <> 0 Then
+                    '// 長さを取得
+                    lineLen = Sqr(.Width ^ 2 + .Height ^ 2)
+                    '// 角度を取得
+                    lineAgl = WorksheetFunction.Degrees(Atn((.Height) / (.Width)))
+                    Select Case lineAgl
+                        Case Is >= 70   '// 90度に補正
+                            bff = .Width
+                            .Width = 0
+                            If .HorizontalFlip Then
+                                .Left = .Left + bff
+                            End If
+                        Case Is <= 30
+                            bff = .Height
+                            .Height = 0
+                            If .VerticalFlip Then
+                                .Top = .Top + bff
+                            End If
+                        Case Else   '// 45度に補正
+                            .Height = Sqr(lineLen ^ 2 / 2)
+                            .Width = .Height
+                    End Select
+                End If
+            End If
+        End With
+    Next
+'Debug.Print "len: " & lineLen
+'Debug.Print targetAgl & " / " & lineAgl
+
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   再帰でグループ解除
+'// 説明：       ネストしたグループをすべて解除する。グループ解除部は _subに実装
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psAdjustUngroup()
+    Dim idx         As Integer
+    Dim sh          As Shape
+    
+    '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
+    If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
+        Exit Sub
+    End If
+    
+    For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
+        Call psAdjustUngroup_sub(ActiveWindow.Selection.ShapeRange(idx))
+    Next
+
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   再帰でグループ解除
+'// 説明：       グループ解除実装部
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psAdjustUngroup_sub(targetShape As Shape)
+    Dim sh As Shape
+    
+    If targetShape.Type = msoGroup Then
+        For Each sh In targetShape.Ungroup
+            Call psAdjustUngroup_sub(sh)
+        Next
+    End If
 End Sub
 
 
