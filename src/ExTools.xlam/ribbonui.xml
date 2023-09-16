@@ -67,6 +67,7 @@
 			<button id="AdjShapeElbowConn" label="鍵コネクタの曲がり位置を揃える" imageMso="PivotDiagramAlignCenter" onAction="ribbonCallback_AdjustShape" />
 			<button id="AdjShapeAngle" label="円の角度を設定する" image="arch16" onAction="ribbonCallback" />
 			<button id="AdjShapeLine" label="線の角度を揃える" imageMso="LineTool" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeOrderTile" label="タイル状に揃える" imageMso="GroupNewStencil" onAction="ribbonCallback_AdjustShape" />
 			<menuSeparator id="AdjShapeSeparator1" />
 			<button id="AdjShapeUngroup" label="グループを全て解除" imageMso="ObjectsUngroup" onAction="ribbonCallback_AdjustShape" />
 		</menu>

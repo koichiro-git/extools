@@ -30,6 +30,8 @@ Public Sub ribbonCallback_AdjustShape(control As IRibbonControl)
             Call psAdjustLine
         Case "AdjShapeUngroup"                                                  '// 再帰でグループ解除
             Call psAdjustUngroup
+        Case "AdjShapeOrderTile"                                                '// グリッドに整列
+            Call psDistributeShapeGrid
     End Select
 End Sub
 
@@ -282,6 +284,247 @@ Private Sub psAdjustUngroup_sub(targetShape As Shape)
             Call psAdjustUngroup_sub(sh)
         Next
     End If
+End Sub
+
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   グリッド整列
+'// 説明：       メイン処理
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psDistributeShapeGrid()
+On Error GoTo ErrorHandler
+    Dim tls             As Shape    '// Top-Left-Shape. 左上の基準とするシェイプ
+    Dim allShapes()     As Shape    '// すべてのシェイプを格納
+    Dim rowHeader()     As Shape    '// 行ヘッダ（縦軸）のシェイプを格納
+    Dim colHeader()     As Shape    '// 列ヘッダ（横軸）のシェイプを格納
+    
+    '// 全シェイプを配列に格納
+    allShapes = pfGetAllShapes(Selection.ShapeRange)
+    '// TopLeftを取得
+    Set tls = pfGetTopLeftObject(Selection.ShapeRange)
+    
+    '// 行ヘッダにあたるシェイプの配列を設定
+    rowHeader = pfGetRowHeader(tls, allShapes)
+    colHeader = pfGetColHeader(tls, allShapes)
+    
+    Call psAdjustAllShapes(allShapes, rowHeader, colHeader)
+    
+    '// 後始末
+    Call tls.Select
+    Exit Sub
+    
+ErrorHandler:
+    Call gsResumeAppEvents
+    Call gsShowErrorMsgDlg("psDistributeShapeGrid", Err)
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   グリッド整列
+'// 説明：       選択されたシェイプを全て配列に格納
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function pfGetAllShapes(rng As ShapeRange) As Shape()
+    Dim shp         As Shape
+    Dim rslt()      As Shape
+    Dim i           As Integer
+    
+    ReDim rslt(0)
+    For Each shp In rng
+        If rslt(0) Is Nothing Then
+            Set rslt(0) = shp
+        Else
+            ReDim Preserve rslt(UBound(rslt) + 1)
+            Set rslt(UBound(rslt)) = shp
+        End If
+    Next
+    
+    pfGetAllShapes = rslt
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   グリッド整列
+'// 説明：       基準となる、TopLeft位置のシェイプを取得
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function pfGetTopLeftObject(rng As ShapeRange) As Shape
+    Dim shp         As Shape
+    Dim rslt        As Shape
+    
+    Set rslt = rng(1)
+    
+    '// Topが最も小さいシェイプを取得
+    For Each shp In rng
+        If shp.Top < rslt.Top Then
+            Set rslt = shp
+        End If
+    Next
+    
+    '// 最小Topのシェイプの下辺よりもTopが小さく、かつ最小のLeftをもつシェイプを取得
+    For Each shp In rng
+        If shp.Top < (rslt.Top + rslt.Height) And shp.Left < rslt.Left Then
+            Set rslt = shp
+        End If
+    Next
+    
+    Set pfGetTopLeftObject = rslt
+    
+'//　赤にする
+rslt.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   グリッド整列
+'// 説明：       行ヘッダ（縦軸）取得
+'// ////////////////////////////////////////////////////////////////////////////
+Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
+On Error GoTo ErrorHandler
+'    Dim shp         As Shape
+    Dim rslt()      As Shape
+    Dim i           As Integer
+    Dim bff         As Shape
+    Dim idxS1       As Long
+    Dim idxS2       As Long
+
+    '// 縦軸に該当するオブジェクトを配列に格納
+    ReDim rslt(0)
+    For i = 0 To UBound(ary)
+        If ary(i).Left < (tls.Left + tls.Width) Then
+            If Not rslt(0) Is Nothing Then
+                ReDim Preserve rslt(UBound(rslt) + 1)
+            End If
+            Set rslt(UBound(rslt)) = ary(i)
+        End If
+    Next
+    
+    '// ソート
+    idxS1 = 0
+    ' 全テーブルの前からのループ
+    Do While idxS1 < UBound(rslt)
+        idxS2 = UBound(rslt)
+        ' 終端から現在位置手前までのループ
+        Do While idxS2 > idxS1
+            ' 差し替え判定
+            If rslt(idxS2).Top < rslt(idxS1).Top Then
+                ' 差し替え
+                Set bff = rslt(idxS2)
+                Set rslt(idxS2) = rslt(idxS1)
+                Set rslt(idxS1) = bff
+            End If
+            ' 前へ
+            idxS2 = idxS2 - 1
+        Loop
+        ' 次へ
+        idxS1 = idxS1 + 1
+    Loop
+    
+    '// 位置補正(選択解除)
+    Range("A1").Select
+    
+    For i = 0 To UBound(rslt)
+        rslt(i).TextFrame2.TextRange.Characters.Text = rslt(i).TextFrame2.TextRange.Characters.Text & " 縦軸 head" & i
+'        rslt(i).Left = tls.Left
+        Call rslt(i).Select(Replace:=False)
+    Next
+    
+    If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
+        Call Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+    End If
+    
+    pfGetRowHeader = rslt
+    Exit Function
+    
+ErrorHandler:
+    Call gsShowErrorMsgDlg("pfGetRowHeader", Err)
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   グリッド整列
+'// 説明：       列ヘッダ（横軸）取得
+'// ////////////////////////////////////////////////////////////////////////////
+Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
+On Error GoTo ErrorHandler
+'    Dim shp         As Shape
+    Dim rslt()      As Shape
+    Dim i           As Integer
+    Dim bff         As Shape
+    Dim idxS1      As Long
+    Dim idxS2      As Long
+    
+    '// 横軸に該当するオブジェクトを配列に格納
+    ReDim rslt(0)
+    For i = 0 To UBound(ary)
+        If ary(i).Top < (tls.Top + tls.Height) Then
+            If Not rslt(0) Is Nothing Then
+                ReDim Preserve rslt(UBound(rslt) + 1)
+            End If
+            Set rslt(UBound(rslt)) = ary(i)
+        End If
+    Next
+    
+    '// ソート
+    idxS1 = 0
+    Do While idxS1 < UBound(rslt)                       '// 前からのループ
+        idxS2 = UBound(rslt)
+        Do While idxS2 > idxS1                          '// 終端から現在位置手前までのループ
+            If rslt(idxS2).Left < rslt(idxS1).Left Then '// ソート入れ替え判定
+                Set bff = rslt(idxS2)
+                Set rslt(idxS2) = rslt(idxS1)
+                Set rslt(idxS1) = bff
+            End If
+            idxS2 = idxS2 - 1
+        Loop
+        idxS1 = idxS1 + 1
+    Loop
+    
+    '// 位置補正(選択解除)
+    Range("A1").Select
+
+    For i = 0 To UBound(rslt)
+        rslt(i).TextFrame2.TextRange.Characters.Text = rslt(i).TextFrame2.TextRange.Characters.Text & " 横軸 head" & i
+'        rslt(i).Top = tls.Top
+        Call rslt(i).Select(Replace:=False)
+    Next
+    
+    If UBound(rslt) > 1 Then   '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
+        Call Selection.ShapeRange.Distribute(msoDistributeHorizontally, False)
+    End If
+    pfGetColHeader = rslt
+    Exit Function
+    
+ErrorHandler:
+    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// 全シェイプの配置
+Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHeader() As Shape)
+    Dim idx                 As Integer
+    Dim idxHead           As Integer
+    
+    '// 全シェイプでのループ
+    For idx = 0 To UBound(allShapes)
+        '// 行ヘッダ（縦軸）でのループ
+        For idxHead = 0 To UBound(rowHeader)
+            If allShapes(idx).Top < rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
+                allShapes(idx).Top = rowHeader(idxHead).Top
+                allShapes(idx).Height = rowHeader(idxHead).Height
+                Exit For
+            End If
+        Next
+        
+        '// 列ヘッダ（横軸）でのループ
+        For idxHead = 0 To UBound(colHeader)
+            If allShapes(idx).Left < colHeader(idxHead).Left + colHeader(idxHead).Width Then
+                allShapes(idx).Left = colHeader(idxHead).Left
+                allShapes(idx).Width = colHeader(idxHead).Width
+                Exit For
+            End If
+        Next
+    Next
 End Sub
 
 
