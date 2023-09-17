@@ -29,6 +29,8 @@ Public Sub ribbonCallback_Copy2CB(control As IRibbonControl)
             Call psCopyToCB_Markdown
         Case "Copy2CBImage"                 '// 画像としてコピー
             Call psCopyToCB_Image
+        Case "Copy2CBShapeText"             '// シェイプのテキストをコピー
+            Call psCopyShapeText
     End Select
 End Sub
 
@@ -247,6 +249,46 @@ Private Function pfIsPercentage(bffText As String) As Boolean
         pfIsPercentage = False
     End If
 End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   シェイプ内のテキストをコピー
+'// 説明：       ネストしたグループ内もすべてコピーする。実体は_subに実装
+'// ////////////////////////////////////////////////////////////////////////////
+Private Sub psCopyShapeText()
+    Dim idx         As Integer
+    Dim sh          As Shape
+    Dim bff         As String
+    
+    '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
+    If Not gfPreCheck(selType:=TYPE_SHAPE) Then
+        Exit Sub
+    End If
+    
+    For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
+        bff = bff + pfCopyShapeText_sub(ActiveWindow.Selection.ShapeRange(idx))
+    Next
+    
+    Call psSetClip(bff)
+End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   シェイプ内のテキストをコピー
+'// 説明：       シェイプのテキストコピー実装部
+'// ////////////////////////////////////////////////////////////////////////////
+Private Function pfCopyShapeText_sub(targetShape As Shape) As String
+    Dim sh      As Shape
+    Dim rslt    As String
+    
+    If targetShape.Type = msoGroup Then
+        For Each sh In targetShape.GroupItems
+            rslt = rslt + pfCopyShapeText_sub(sh)
+        Next
+    End If
+    pfCopyShapeText_sub = rslt + Str(targetShape.Left) + "," + Str(targetShape.Top) + "," + targetShape.TextFrame2.TextRange.Text + Chr(10)
+End Function
+
 
 
 '// ////////////////////////////////////////////////////////////////////////////
