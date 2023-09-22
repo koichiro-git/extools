@@ -472,27 +472,6 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   シェイプ内テキスト取得
-'// 説明：       シェイプ内のテキストを取得する。Charactersメソッドをサポートしない場合は例外処理でハンドリング
-'//              psExecSearch_Shapeで特定されたシェイプ内のテキストを戻す
-'// 引数：       shapeObj: 対象シェイプオブジェクト
-'// 戻り値：     シェイプ内のテキスト。シェイプがテキストをサポートしていない場合は一律でブランク
-'// ////////////////////////////////////////////////////////////////////////////
-Private Function pfGetShapeText(shapeObj As Shape) As String
-On Error GoTo ErrorHandler
-    If shapeObj.Type = msoTextEffect Then '// ワードアートの場合
-        pfGetShapeText = shapeObj.TextEffect.Text
-    Else
-        pfGetShapeText = shapeObj.TextFrame.Characters.Text
-    End If
-Exit Function
-
-ErrorHandler:
-    pfGetShapeText = BLANK
-End Function
-
-
-'// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   検索：シェイプ
 '// 説明：       シェイプ内の文字列を検索する。グループ化されている場合は再帰検索を行う。
 '// 引数：       regExp: 正規表現オブジェクト
@@ -510,7 +489,7 @@ Private Sub psExecSearch_Shape(regExp As Object, wkSheet As Worksheet, shapeObj 
             Call psExecSearch_Shape(regExp, wkSheet, subShape, True)
         Next
     Else
-        bffText = pfGetShapeText(shapeObj)
+        bffText = gfGetShapeText(shapeObj)
         If bffText <> BLANK Then
             If regExp.test(bffText) Then
                 Call psSetMatchedRec(wkSheet, IIf(isGrouped, -1, shapeObj.TopLeftCell.Row), IIf(isGrouped, -1, shapeObj.TopLeftCell.Column), bffText, "シェイプ：" & shapeObj.Name)

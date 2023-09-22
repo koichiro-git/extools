@@ -33,7 +33,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "3.0.0.76"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "3.0.0.77"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -737,6 +737,28 @@ ErrorHandler:
     Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("mdlCommon.psPutDateTime", Err)
 End Sub
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   シェイプ内テキスト取得
+'// 説明：       シェイプ内のテキストを取得する。Charactersメソッドをサポートしない場合は例外処理でハンドリング
+'//              psExecSearch_Shapeで特定されたシェイプ内のテキストを戻す
+'//              V3 からパブリック関数としてfrmSearch → mdlCommon へ移動
+'// 引数：       shapeObj: 対象シェイプオブジェクト
+'// 戻り値：     シェイプ内のテキスト。シェイプがテキストをサポートしていない場合は一律でブランク
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function gfGetShapeText(shapeObj As Shape) As String
+On Error GoTo ErrorHandler
+    If shapeObj.Type = msoTextEffect Then '// ワードアートの場合
+        gfGetShapeText = shapeObj.TextEffect.Text
+    Else
+        gfGetShapeText = shapeObj.TextFrame.Characters.Text
+    End If
+Exit Function
+
+ErrorHandler:
+    gfGetShapeText = BLANK
+End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////

@@ -202,14 +202,12 @@ End Sub
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   直線 角度補正
-'// 説明：       直線の角度を、0,45,90に補正する。起点をもとに位置を補正する
+'// 説明：       直線の角度を、0,45,90度に補正する。元の位置の中心から回転させる
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psAdjustLine()
-    Dim lineLen     As Double       '// オリジナルの長さ
-    Dim lineAgl     As Double       '// オリジナルの角度
-    Dim targetAgl   As Double       '// ターゲットとする角度
+'    Dim lineLen     As Double       '// オリジナルの長さ
     Dim idx         As Integer
-    Dim bff         As Double
+'    Dim bff         As Double
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
@@ -221,34 +219,29 @@ Private Sub psAdjustLine()
         With ActiveWindow.Selection.ShapeRange(idx)
             If .Type = msoLine Then
                 If .Width * .Height <> 0 Then
-                    '// 長さを取得
-                    lineLen = Sqr(.Width ^ 2 + .Height ^ 2)
-                    '// 角度を取得
-                    lineAgl = WorksheetFunction.Degrees(Atn((.Height) / (.Width)))
-                    Select Case lineAgl
-                        Case Is >= 70   '// 90度に補正
-                            bff = .Width
-                            .Width = 0
-                            If .HorizontalFlip Then
-                                .Left = .Left + bff
-                            End If
-                        Case Is <= 30
-                            bff = .Height
+                    Select Case WorksheetFunction.Degrees(Atn((.Height) / (.Width)))
+                        Case Is <= 30   '// 0度に補正
+                            .Top = IIf(.VerticalFlip, .Top - .Height / 2, .Top + .Height / 2)
                             .Height = 0
-                            If .VerticalFlip Then
-                                .Top = .Top + bff
-                            End If
+                        Case Is >= 70   '// 90度に補正
+                            .Left = IIf(.VerticalFlip, .Left - .Width / 2, .Left + .Width / 2)
+                            .Width = 0
                         Case Else   '// 45度に補正
-                            .Height = Sqr(lineLen ^ 2 / 2)
-                            .Width = .Height
+                            If .Height > .Width Then
+                                .Left = .Left - (.Height - .Width) / 2
+                                .Width = .Height
+                            Else
+                                .Top = .Top - (.Width - .Height) / 2
+                                .Height = .Width
+                            End If
+'                            lineLen = Sqr(.Width ^ 2 + .Height ^ 2) '// 長さを取得
+'                            .Height = Sqr(lineLen ^ 2 / 2)
+'                            .Width = .Height
                     End Select
                 End If
             End If
         End With
     Next
-'Debug.Print "len: " & lineLen
-'Debug.Print targetAgl & " / " & lineAgl
-
 End Sub
 
 
@@ -257,8 +250,9 @@ End Sub
 '// 説明：       ネストしたグループをすべて解除する。グループ解除部は _subに実装
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psAdjustUngroup()
+On Error GoTo ErrorHandler
     Dim idx         As Integer
-    Dim sh          As Shape
+'    Dim sh          As Shape
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
@@ -268,7 +262,11 @@ Private Sub psAdjustUngroup()
     For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
         Call psAdjustUngroup_sub(ActiveWindow.Selection.ShapeRange(idx))
     Next
+    Exit Sub
 
+ErrorHandler:
+    Call gsResumeAppEvents
+    Call gsShowErrorMsgDlg("psAdjustUngroup", Err)
 End Sub
 
 
@@ -299,6 +297,11 @@ On Error GoTo ErrorHandler
     Dim rowHeader()     As Shape    '// 行ヘッダ（縦軸）のシェイプを格納
     Dim colHeader()     As Shape    '// 列ヘッダ（横軸）のシェイプを格納
     
+    '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
+    If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
+        Exit Sub
+    End If
+    
     '// 全シェイプを配列に格納
     allShapes = pfGetAllShapes(Selection.ShapeRange)
     '// TopLeftを取得
@@ -309,9 +312,6 @@ On Error GoTo ErrorHandler
     colHeader = pfGetColHeader(tls, allShapes)
     
     Call psAdjustAllShapes(allShapes, rowHeader, colHeader)
-    
-    '// 後始末
-    Call tls.Select
     Exit Sub
     
 ErrorHandler:
@@ -419,8 +419,8 @@ On Error GoTo ErrorHandler
         idxS1 = idxS1 + 1
     Loop
     
-    '// 位置補正(選択解除)
-    Range("A1").Select
+    '// 位置補正
+    tls.TopLeftCell.Select  '// 選択解除
     
     For i = 0 To UBound(rslt)
         rslt(i).TextFrame2.TextRange.Characters.Text = rslt(i).TextFrame2.TextRange.Characters.Text & " 縦軸 head" & i
@@ -480,7 +480,7 @@ On Error GoTo ErrorHandler
     Loop
     
     '// 位置補正(選択解除)
-    Range("A1").Select
+    tls.TopLeftCell.Select  '// 選択解除
 
     For i = 0 To UBound(rslt)
         rslt(i).TextFrame2.TextRange.Characters.Text = rslt(i).TextFrame2.TextRange.Characters.Text & " 横軸 head" & i
@@ -503,13 +503,16 @@ End Function
 '// 全シェイプの配置
 Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHeader() As Shape)
     Dim idx                 As Integer
-    Dim idxHead           As Integer
+    Dim idxHead             As Integer
+    Dim bff                 As Double   '// 整列対象シェイプの中央位置を格納
     
     '// 全シェイプでのループ
     For idx = 0 To UBound(allShapes)
         '// 行ヘッダ（縦軸）でのループ
         For idxHead = 0 To UBound(rowHeader)
-            If allShapes(idx).Top < rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
+            bff = allShapes(idx).Top + allShapes(idx).Height / 2    '// 対象オブジェクトの中央ポジション（縦）
+            If bff >= allShapes(idx).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
+'            If allShapes(idx).Top < rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
                 allShapes(idx).Top = rowHeader(idxHead).Top
                 allShapes(idx).Height = rowHeader(idxHead).Height
                 Exit For
@@ -518,12 +521,17 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         
         '// 列ヘッダ（横軸）でのループ
         For idxHead = 0 To UBound(colHeader)
-            If allShapes(idx).Left < colHeader(idxHead).Left + colHeader(idxHead).Width Then
+            bff = allShapes(idx).Left + allShapes(idx).Width / 2    '// 対象オブジェクトの中央ポジション（縦）
+            If bff >= allShapes(idx).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
+'            If allShapes(idx).Left < colHeader(idxHead).Left + colHeader(idxHead).Width Then
                 allShapes(idx).Left = colHeader(idxHead).Left
                 allShapes(idx).Width = colHeader(idxHead).Width
                 Exit For
             End If
         Next
+        
+        '// 選択解除をもとに戻す
+        Call allShapes(idx).Select(Replace:=False)
     Next
 End Sub
 

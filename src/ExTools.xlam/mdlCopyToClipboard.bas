@@ -119,7 +119,7 @@ On Error GoTo ErrorHandler
   
     Exit Sub
 ErrorHandler:
-    Call gsShowErrorMsgDlg("mdlCommon.psCopyToClipboard", Err)
+    Call gsShowErrorMsgDlg("psCopyToClipboard", Err)
 End Sub
 
 
@@ -189,7 +189,7 @@ On Error GoTo ErrorHandler
     
     Exit Sub
 ErrorHandler:
-    Call gsShowErrorMsgDlg("mdlCommon.psCopyToClipboard_MarkDown", Err)
+    Call gsShowErrorMsgDlg("psCopyToCB_Markdown", Err)
 End Sub
 
 
@@ -217,7 +217,7 @@ On Error GoTo ErrorHandler
         
     Exit Sub
 ErrorHandler:
-    Call gsShowErrorMsgDlg("mdlCommon.psCopyToCB_Image", Err)
+    Call gsShowErrorMsgDlg("psCopyToCB_Image", Err)
 End Sub
 
 
@@ -256,6 +256,7 @@ End Function
 '// 説明：       ネストしたグループ内もすべてコピーする。実体は_subに実装
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psCopyShapeText()
+On Error GoTo ErrorHandler
     Dim idx         As Integer
     Dim sh          As Shape
     Dim bff         As String
@@ -266,10 +267,12 @@ Private Sub psCopyShapeText()
     End If
     
     For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
-        bff = bff + pfCopyShapeText_sub(ActiveWindow.Selection.ShapeRange(idx))
+        bff = bff & pfCopyShapeText_sub(ActiveWindow.Selection.ShapeRange(idx))
     Next
     
     Call psSetClip(bff)
+ErrorHandler:
+    Call gsShowErrorMsgDlg("psCopyShapeText", Err)
 End Sub
 
 
@@ -280,15 +283,21 @@ End Sub
 Private Function pfCopyShapeText_sub(targetShape As Shape) As String
     Dim sh      As Shape
     Dim rslt    As String
+    Dim bff     As String
     
+    '// グループは再帰処理
     If targetShape.Type = msoGroup Then
         For Each sh In targetShape.GroupItems
             rslt = rslt + pfCopyShapeText_sub(sh)
         Next
     End If
-    pfCopyShapeText_sub = rslt + Str(targetShape.Left) + "," + Str(targetShape.Top) + "," + targetShape.TextFrame2.TextRange.Text + Chr(10)
+    
+    bff = WorksheetFunction.Clean(gfGetShapeText(targetShape))
+    If bff <> BLANK Then
+'        pfCopyShapeText_sub = rslt & Str(Int(targetShape.Left)) & ", " + Str(Int(targetShape.Top)) & ", " & WorksheetFunction.Clean(gfGetShapeText(targetShape)) & vbCrLf
+        pfCopyShapeText_sub = rslt & Str(Int(targetShape.Left)) & ", " + Str(Int(targetShape.Top)) & ", " & bff & vbCrLf
+    End If
 End Function
-
 
 
 '// ////////////////////////////////////////////////////////////////////////////
