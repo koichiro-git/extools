@@ -1,0 +1,33 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" xmlns:nsExToolsShared="dummy">
+<ribbon startFromScratch="false">
+<tabs>
+<tab idQ="nsExToolsShared:ExToolsTab" label="拡張" insertAfterMso="TabView" keytip="B">
+
+	<!--- **********[CellOperation]********** -->
+	<group idQ="nsExToolsShared:Group3" label="値の操作" insertBeforeQ="nsExToolsShared:Group6">
+		<button id="Copy2CBShapeText" label="シェイプのテキストをコピー" keytip="L" size="normal" imageMso="TextDialog" onAction="ribbonCallback_Copy2CB" />
+	</group>
+
+	<!--- **********[Boarders/Charts]********** -->
+	<group idQ="nsExToolsShared:Group4" label="罫線/オブジェクト" insertBeforeQ="nsExToolsShared:Group6">
+		<menu id="AdjSape" label="オブジェクトの補正" size="normal" imageMso="ShapesInsertGallery">
+			<button id="AdjShapeBlockArrow" label="ブロック矢印の先端を揃える" imageMso="homebase16" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeRoundRect" label="角丸四角形の丸みを揃える" imageMso="roundRect16" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeElbowConn" label="鍵コネクタの曲がり位置を揃える" imageMso="PivotDiagramAlignCenter" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeAngle" label="円の角度を設定する" imageMso="arch16" onAction="ribbonCallback" />
+			<button id="AdjShapeLine" label="線の角度を揃える" imageMso="LineTool" onAction="ribbonCallback_AdjustShape" />
+			<button id="AdjShapeOrderTile" label="タイル状に揃える" imageMso="tileLayout16" onAction="ribbonCallback_AdjustShape" />
+			<menuSeparator id="AdjShapeSeparator1" />
+			<button id="AdjShapeUngroup" label="グループを全て解除" imageMso="ObjectsUngroup" onAction="ribbonCallback_AdjustShape" />
+		</menu>
+	</group>
+
+	<!--- **********[Others]********** -->
+	<group idQ="nsExToolsShared:Group6" label="その他" insertAfterQ="nsExToolsShared:Group5">
+		<button id="Version" label="バージョン情報"  size="normal" imageMso="RefreshStatus" onAction="ribbonCallback" />
+	</group>
+
+</tab>
+</tabs>
+</ribbon>
+</customUI>
