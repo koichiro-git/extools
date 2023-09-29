@@ -11,6 +11,10 @@ Attribute VB_Name = "mdlAdjustShape"
 Option Explicit
 Option Base 0
 
+'// ////////////////////////////////////////////////////////////////////////////
+'// コンパイルスイッチ（"EXCEL" / "POWERPOINT"）
+#Const OFFICE_APP = "POWERPOINT"
+
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   リボンボタンコールバック管理(フォームなし)
@@ -49,7 +53,7 @@ On Error GoTo ErrorHandler
     Dim cntElbow    As Integer
     Dim bff         As Double
     
-    '// 事前準備　//////////
+    '// 事前準備 //////////
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
         Exit Sub
@@ -98,7 +102,6 @@ On Error GoTo ErrorHandler
             End If
         End With
     Next
-'    target = gfCeilingApplication.WorksheetFunction.Ceiling(target, 0.75)
     target = gfCeiling(target, 0.75)
     
     '// 最小値に合わせてコネクタを設定
@@ -155,7 +158,6 @@ Private Sub psAdjustBlockArrowHead()
         With ActiveWindow.Selection.ShapeRange(idx)
             If .AutoShapeType = msoShapePentagon Or _
                 .AutoShapeType = msoShapeChevron Then
-'                .Adjustments.Item(1) = target / WorksheetFunction.Min(.Height, .Width)
                 .Adjustments.Item(1) = target / gfMin2(.Height, .Width)
             End If
         End With
@@ -208,9 +210,7 @@ End Sub
 '// 説明：       直線の角度を、0,45,90度に補正する。元の位置の中心から回転させる
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psAdjustLine()
-'    Dim lineLen     As Double       '// オリジナルの長さ
     Dim idx         As Integer
-'    Dim bff         As Double
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
@@ -238,9 +238,6 @@ Private Sub psAdjustLine()
                                 .Top = .Top - (.Width - .Height) / 2
                                 .Height = .Width
                             End If
-'                            lineLen = Sqr(.Width ^ 2 + .Height ^ 2) '// 長さを取得
-'                            .Height = Sqr(lineLen ^ 2 / 2)
-'                            .Width = .Height
                     End Select
                 End If
             End If
@@ -269,7 +266,9 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
-'    Call gsResumeAppEvents
+#If OFFICE_APP = "EXCEL" Then
+    Call gsResumeAppEvents
+#End If
     Call gsShowErrorMsgDlg("psAdjustUngroup", Err)
 End Sub
 
@@ -295,7 +294,7 @@ End Sub
 '// 説明：       メイン処理
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psDistributeShapeGrid()
-On Error GoTo ErrorHandler
+'On Error GoTo ErrorHandler
     Dim tls             As Shape    '// Top-Left-Shape. 左上の基準とするシェイプ
     Dim allShapes()     As Shape    '// すべてのシェイプを格納
     Dim rowHeader()     As Shape    '// 行ヘッダ（縦軸）のシェイプを格納
@@ -306,12 +305,13 @@ On Error GoTo ErrorHandler
         Exit Sub
     End If
     
-    '// 全シェイプを配列に格納
-'    allShapes = pfGetAllShapes(Selection.ShapeRange)
-    allShapes = pfGetAllShapes(ActiveWindow.Selection.ShapeRange)
-    '// TopLeftを取得
-'    Set tls = pfGetTopLeftObject(Selection.ShapeRange)
-    Set tls = pfGetTopLeftObject(ActiveWindow.Selection.ShapeRange)
+#If OFFICE_APP = "EXCEL" Then
+    allShapes = pfGetAllShapes(Selection.ShapeRange)                '// 全シェイプを配列に格納
+    Set tls = pfGetTopLeftObject(Selection.ShapeRange)              '// TopLeftを取得
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+    allShapes = pfGetAllShapes(ActiveWindow.Selection.ShapeRange)   '// 全シェイプを配列に格納
+    Set tls = pfGetTopLeftObject(ActiveWindow.Selection.ShapeRange) '// TopLeftを取得
+#End If
     
     '// 行ヘッダにあたるシェイプの配列を設定
     rowHeader = pfGetRowHeader(tls, allShapes)
@@ -321,8 +321,10 @@ On Error GoTo ErrorHandler
     Exit Sub
     
 ErrorHandler:
-'    Call gsResumeAppEvents
-    Call gsShowErrorMsgDlg("psDistributeShapeGrid", Err)
+#If OFFICE_APP = "EXCEL" Then
+    Call gsResumeAppEvents
+#End If
+'    Call gsShowErrorMsgDlg("psDistributeShapeGrid", Err)
 End Sub
 
 
@@ -385,7 +387,7 @@ End Function
 '// 説明：       行ヘッダ（縦軸）取得
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
-On Error GoTo ErrorHandler
+'On Error GoTo ErrorHandler
 '    Dim shp         As Shape
     Dim rslt()      As Shape
     Dim i           As Integer
@@ -425,26 +427,32 @@ On Error GoTo ErrorHandler
         idxS1 = idxS1 + 1
     Loop
     
-    '// 位置補正
-'    tls.TopLeftCell.Select  '// 選択解除
+    '// 選択解除
+#If OFFICE_APP = "EXCEL" Then
+    tls.TopLeftCell.Select
+#ElseIf OFFICE_APP = "POWERPOINT" Then
     Call ActiveWindow.Selection.Unselect
+#End If
     
+    '// 位置補正
     For i = 0 To UBound(rslt)
-        rslt(i).TextFrame2.TextRange.Characters.Text = rslt(i).TextFrame2.TextRange.Characters.Text & " 縦軸 head" & i
 '        rslt(i).Left = tls.Left
         Call rslt(i).Select(Replace:=False)
     Next
     
     If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
-'        Call Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+#If OFFICE_APP = "EXCEL" Then
+        Call Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+#ElseIf OFFICE_APP = "POWERPOINT" Then
         Call ActiveWindow.Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+#End If
     End If
     
     pfGetRowHeader = rslt
     Exit Function
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("pfGetRowHeader", Err)
+'    Call gsShowErrorMsgDlg("pfGetRowHeader", Err)
 End Function
 
 
@@ -453,7 +461,7 @@ End Function
 '// 説明：       列ヘッダ（横軸）取得
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
-On Error GoTo ErrorHandler
+'On Error GoTo ErrorHandler
 '    Dim shp         As Shape
     Dim rslt()      As Shape
     Dim i           As Integer
@@ -487,25 +495,31 @@ On Error GoTo ErrorHandler
         idxS1 = idxS1 + 1
     Loop
     
-    '// 位置補正(選択解除)
-'    tls.TopLeftCell.Select  '// 選択解除
+    '// 選択解除
+#If OFFICE_APP = "EXCEL" Then
+    tls.TopLeftCell.Select
+#ElseIf OFFICE_APP = "POWERPOINT" Then
     Call ActiveWindow.Selection.Unselect
+#End If
 
     For i = 0 To UBound(rslt)
-        rslt(i).TextFrame2.TextRange.Characters.Text = rslt(i).TextFrame2.TextRange.Characters.Text & " 横軸 head" & i
 '        rslt(i).Top = tls.Top
         Call rslt(i).Select(Replace:=False)
     Next
     
-    If UBound(rslt) > 1 Then   '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
-'        Call Selection.ShapeRange.Distribute(msoDistributeHorizontally, False)
-        Call ActiveWindow.Selection.ShapeRange.Distribute(msoDistributeHorizontally, False)
+    If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
+#If OFFICE_APP = "EXCEL" Then
+        Call Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+        Call ActiveWindow.Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+#End If
     End If
+    
     pfGetColHeader = rslt
     Exit Function
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
+'    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
 End Function
 
 
@@ -522,7 +536,6 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         For idxHead = 0 To UBound(rowHeader)
             bff = allShapes(idx).Top + allShapes(idx).Height / 2    '// 対象オブジェクトの中央ポジション（縦）
             If bff >= allShapes(idx).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
-'            If allShapes(idx).Top < rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
                 allShapes(idx).Top = rowHeader(idxHead).Top
                 allShapes(idx).Height = rowHeader(idxHead).Height
                 Exit For
@@ -533,7 +546,6 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         For idxHead = 0 To UBound(colHeader)
             bff = allShapes(idx).Left + allShapes(idx).Width / 2    '// 対象オブジェクトの中央ポジション（縦）
             If bff >= allShapes(idx).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
-'            If allShapes(idx).Left < colHeader(idxHead).Left + colHeader(idxHead).Width Then
                 allShapes(idx).Left = colHeader(idxHead).Left
                 allShapes(idx).Width = colHeader(idxHead).Width
                 Exit For
@@ -544,27 +556,6 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         Call allShapes(idx).Select(Replace:=False)
     Next
 End Sub
-
-
-Public Function gfCeiling(targetVal As Double, baseVal As Double) As Double
-    Dim rslt    As Double
-    
-    rslt = Int(targetVal / baseVal) * baseVal
-    If rslt = targetVal Then
-        gfCeiling = rslt
-    Else
-        gfCeiling = Int(targetVal / baseVal + 1) * baseVal
-    End If
-End Function
-
-
-Public Function gfMin2(val1 As Double, val2 As Double) As Double
-    If val1 < val2 Then
-        gfMin2 = val1
-    Else
-        gfMin2 = val2
-    End If
-End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////

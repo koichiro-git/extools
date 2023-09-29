@@ -11,6 +11,10 @@ Option Explicit
 Option Base 0
 
 '// ////////////////////////////////////////////////////////////////////////////
+'// コンパイルスイッチ（"EXCEL" / "POWERPOINT"）
+#Const OFFICE_APP = "EXCEL"
+
+'// ////////////////////////////////////////////////////////////////////////////
 '// カスタマイズ可能パラメータ（定数）
 
 Public Const APP_FONT                 As String = "Meiryo UI"                                       '// #001 表示フォント名称
@@ -33,7 +37,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "3.0.0.77"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "3.0.0.78"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -68,7 +72,9 @@ Public Type udTargetRange
     Columns As Integer
 End Type
 
+#If OFFICE_APP = "EXCEL" Then
 Public gADO                             As cADO         '// 接続先DB/Excelオブジェクト
+#End If
 Public gLang                            As Long         '// 言語
 
 
@@ -106,12 +112,75 @@ End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   エラーメッセージ表示
+'// メソッド：   シェイプ内テキスト取得
+'// 説明：       シェイプ内のテキストを取得する。Charactersメソッドをサポートしない場合は例外処理でハンドリング
+'//              psExecSearch_Shapeで特定されたシェイプ内のテキストを戻す
+'//              V3 からパブリック関数としてfrmSearch → mdlCommon へ移動
+'// 引数：       shapeObj: 対象シェイプオブジェクト
+'// 戻り値：     シェイプ内のテキスト。シェイプがテキストをサポートしていない場合は一律でブランク
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function gfGetShapeText(shapeObj As Shape) As String
+On Error GoTo ErrorHandler
+    If shapeObj.Type = msoTextEffect Then '// ワードアートの場合
+        gfGetShapeText = shapeObj.TextEffect.Text
+    Else
+#If OFFICE_APP = "EXCEL" Then
+        gfGetShapeText = shapeObj.TextFrame.Characters.Text
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+        gfGetShapeText = shapeObj.TextFrame.TextRange.Text
+#End If
+    End If
+Exit Function
+
+ErrorHandler:
+    gfGetShapeText = BLANK
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   Ceiling関数
+'// 説明：       WorksheetFunction.Ceilingの代替
+'//              ※PowerPointでワークシート関数が使えないため
+'// 引数：       targetVal: 対象の値
+'//              baseVal:   切り上げ単位
+'// 戻り値：     切り上げ後の数値
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function gfCeiling(targetVal As Double, baseVal As Double) As Double
+    Dim rslt    As Double
+    
+    rslt = Int(targetVal / baseVal) * baseVal
+    If rslt = targetVal Then
+        gfCeiling = rslt
+    Else
+        gfCeiling = Int(targetVal / baseVal + 1) * baseVal
+    End If
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   Min関数
+'// 説明：       WorksheetFunction.Minの代替。ただし、２つの値のみ対応。
+'//              ※PowerPointでワークシート関数が使えないため
+'// 引数：       val1, val2: 比較対象の値
+'// 戻り値：     より小さい値
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function gfMin2(val1 As Double, val2 As Double) As Double
+    If val1 < val2 Then
+        gfMin2 = val1
+    Else
+        gfMin2 = val2
+    End If
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   エラーメッセージ表示(Excel用)
 '// 説明：       例外処理部で処理できない例外のエラーの内容を、ダイアログ表示する。
 '// 引数：       errSource: エラーの発生元のオブジェクトまたはアプリケーションの名前を示す文字列式
 '//              e: ＶＢエラーオブジェクト
 '//              objAdo： ADOオブジェクト（省略可）
 '// ////////////////////////////////////////////////////////////////////////////
+#If OFFICE_APP = "EXCEL" Then
 Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, Optional ado As cADO = Nothing)
     If ado Is Nothing Then
         '// ADOオブジェクトがからの場合はVBエラーとして扱う
@@ -148,7 +217,177 @@ Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, Optional
     End If
 End Sub
 
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   エラーメッセージ表示(PowerPoint用)
+'// 説明：       例外処理部で処理できない例外のエラーの内容を、ダイアログ表示する。
+'// 引数：       errSource: エラーの発生元のオブジェクトまたはアプリケーションの名前を示す文字列式
+'//              e: ＶＢエラーオブジェクト
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject)
+    '// すべてVBエラーとして扱う
+    Call MsgBox(MSG_ERR & vbLf & vbLf _
+               & "Error Number: " & e.Number & vbLf _
+               & "Error Source: " & errSource & vbLf _
+               & "Error Description: " & e.Description _
+               , , APP_TITLE)
+    Call e.Clear
+End Sub
+#End If
 
+
+#If OFFICE_APP = "EXCEL" Then
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   処理実行前チェック（Excel用）
+'// 説明：       各処理の実行前チェックを行う
+'// 引数：
+'// 戻り値：     True:成功  False:失敗
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function gfPreCheck(Optional protectCont As Boolean = False, _
+                            Optional protectBook As Boolean = False, _
+                            Optional selType As String = BLANK, _
+                            Optional selAreas As Integer = 0, _
+                            Optional selCols As Integer = 0) As Boolean
+  
+    gfPreCheck = True
+    
+    If ActiveSheet Is Nothing Then                              '// シート（ブック）が開かれているか
+        Call MsgBox(MSG_NO_BOOK, vbOKOnly, APP_TITLE)
+        gfPreCheck = False
+        Exit Function
+    End If
+    
+    If protectCont And ActiveSheet.ProtectContents Then         '// アクティブシートが保護されているか
+        Call MsgBox(MSG_SHEET_PROTECTED, vbOKOnly, APP_TITLE)
+        gfPreCheck = False
+        Exit Function
+    End If
+    
+    If protectBook And ActiveWorkbook.ProtectStructure Then     '// ブックが保護されているか
+        Call MsgBox(MSG_BOOK_PROTECTED, vbOKOnly, APP_TITLE)
+        gfPreCheck = False
+        Exit Function
+    End If
+    
+    '// 選択範囲のタイプをチェック
+    Select Case selType
+        Case TYPE_RANGE
+            If TypeName(Selection) <> TYPE_RANGE Then
+                Call MsgBox(MSG_NOT_RANGE_SELECT, vbOKOnly, APP_TITLE)
+                gfPreCheck = False
+                Exit Function
+            End If
+        Case TYPE_SHAPE
+            If Not VarType(ActiveWindow.Selection) = vbObject Then
+                Call MsgBox(MSG_SHAPE_NOT_SELECTED, vbOKOnly, APP_TITLE)
+                gfPreCheck = False
+                Exit Function
+            End If
+        Case BLANK
+            '// null
+    End Select
+    
+    '// 選択範囲カウント
+    If selAreas > 1 Then
+        If Selection.Areas.Count > selAreas Then
+            Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)
+            gfPreCheck = False
+            Exit Function
+        End If
+    End If
+    
+    '// 選択範囲セルカウント
+    If selCols > 1 Then
+        If Selection.Columns.Count > selCols Then
+            Call MsgBox(MSG_TOO_MANY_COLS_8, vbOKOnly, APP_TITLE)
+            gfPreCheck = False
+            Exit Function
+        End If
+    End If
+End Function
+
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   処理実行前チェック（PowerPoint用）
+'// 説明：       各処理の実行前チェックを行う
+'// 引数：
+'// 戻り値：     True:成功  False:失敗
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function gfPreCheck(Optional protectCont As Boolean = False, _
+                            Optional protectBook As Boolean = False, _
+                            Optional selType As String = BLANK, _
+                            Optional selAreas As Integer = 0, _
+                            Optional selCols As Integer = 0) As Boolean
+  
+    gfPreCheck = True
+End Function
+#End If
+
+
+#If OFFICE_APP = "EXCEL" Then
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   リボンボタンコールバック管理（Excel用）
+'// 説明：       リボンからのコールバックをつかさどる
+'//              押されたコントロールのIDを基に処理を呼び出す。
+'// 引数：       control 対象コントロール
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub ribbonCallback(control As IRibbonControl)
+    Select Case control.ID
+        '// シート /////
+        Case "SheetComp"                    '// シート比較
+            Call frmCompSheet.Show
+        Case "SheetList"                    '// シート一覧
+            Call frmShowSheetList.Show
+        Case "SheetSetting"                 '// シートの設定
+            Call frmSheetManage.Show
+        Case "SheetSortAsc"                 '// シートの並べ替え
+            Call psSortWorksheet("ASC")
+        Case "SheetSortDesc"                '// シートの並べ替え
+            Call psSortWorksheet("DESC")
+        
+        '// データ /////
+        Case "Select"                       '// Select文実行
+            Call frmGetRecord.Show
+        
+        '// 値の操作 /////
+        Case "DatePicker"                   '// 日付
+            Call frmDatePicker.Show
+        Case "Today", "Now"                 '// 日付 - 本日日付/現在時刻
+            Call psPutDateTime(control.ID)
+            
+        '// 罫線、オブジェクト /////
+        Case "FitObjects"                   '// オブジェクトをセルに合わせる
+            Call frmOrderShape.Show
+        Case "AdjShapeAngle"                '// 円の角度を設定
+            Call frmAdjustArch.Show
+        '// 検索、ファイル /////
+        Case "AdvancedSearch"               '// 拡張検索
+            Call frmSearch.Show
+        Case "FileList"                     '// ファイル一覧
+            Call frmFileList.Show
+        
+        '// その他 /////
+        Case "InitTool"                     '// ツール初期化
+            Call psInitExTools
+        Case "Version"                      '// バージョン情報
+            Call frmAbout.Show
+    End Select
+End Sub
+
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   リボンボタンコールバック管理（Excel用）
+'// 説明：       リボンからのコールバックをつかさどる
+'//              押されたコントロールのIDを基に処理を呼び出す。
+'// 引数：       control 対象コントロール
+'// ////////////////////////////////////////////////////////////////////////////
+Public Sub ribbonCallback(control As IRibbonControl)
+
+End Sub
+#End If
+
+
+#If OFFICE_APP = "EXCEL" Then
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   シート並び替え
 '// 説明：       シート名で並び替える
@@ -387,76 +626,6 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   処理実行前チェック（汎用）
-'// 説明：       各処理の実行前チェックを行う
-'// 引数：
-'// 戻り値：     True:成功  False:失敗
-'// ////////////////////////////////////////////////////////////////////////////
-Public Function gfPreCheck(Optional protectCont As Boolean = False, _
-                            Optional protectBook As Boolean = False, _
-                            Optional selType As String = BLANK, _
-                            Optional selAreas As Integer = 0, _
-                            Optional selCols As Integer = 0) As Boolean
-  
-    gfPreCheck = True
-    
-    If ActiveSheet Is Nothing Then                              '// シート（ブック）が開かれているか
-        Call MsgBox(MSG_NO_BOOK, vbOKOnly, APP_TITLE)
-        gfPreCheck = False
-        Exit Function
-    End If
-    
-    If protectCont And ActiveSheet.ProtectContents Then         '// アクティブシートが保護されているか
-        Call MsgBox(MSG_SHEET_PROTECTED, vbOKOnly, APP_TITLE)
-        gfPreCheck = False
-        Exit Function
-    End If
-    
-    If protectBook And ActiveWorkbook.ProtectStructure Then     '// ブックが保護されているか
-        Call MsgBox(MSG_BOOK_PROTECTED, vbOKOnly, APP_TITLE)
-        gfPreCheck = False
-        Exit Function
-    End If
-    
-    '// 選択範囲のタイプをチェック
-    Select Case selType
-        Case TYPE_RANGE
-            If TypeName(Selection) <> TYPE_RANGE Then
-                Call MsgBox(MSG_NOT_RANGE_SELECT, vbOKOnly, APP_TITLE)
-                gfPreCheck = False
-                Exit Function
-            End If
-        Case TYPE_SHAPE
-            If Not VarType(ActiveWindow.Selection) = vbObject Then
-                Call MsgBox(MSG_SHAPE_NOT_SELECTED, vbOKOnly, APP_TITLE)
-                gfPreCheck = False
-                Exit Function
-            End If
-        Case BLANK
-            '// null
-    End Select
-    
-    '// 選択範囲カウント
-    If selAreas > 1 Then
-        If Selection.Areas.Count > selAreas Then
-            Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)
-            gfPreCheck = False
-            Exit Function
-        End If
-    End If
-    
-    '// 選択範囲セルカウント
-    If selCols > 1 Then
-        If Selection.Columns.Count > selCols Then
-            Call MsgBox(MSG_TOO_MANY_COLS_8, vbOKOnly, APP_TITLE)
-            gfPreCheck = False
-            Exit Function
-        End If
-    End If
-End Function
-
-
-'// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   結果シート ヘッダ描画
 '// 説明：       引数のヘッダ文字列をシートに出力する
 '// 引数：       wkSheet 対象シート
@@ -528,57 +697,6 @@ On Error GoTo ErrorHandler
 
 ErrorHandler:
     Call MsgBox(MSG_NO_SHEET, vbOKOnly, APP_TITLE)
-End Sub
-
-
-'// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   リボンボタンコールバック管理
-'// 説明：       リボンからのコールバックをつかさどる
-'//              押されたコントロールのIDを基に処理を呼び出す。
-'// 引数：       control 対象コントロール
-'// ////////////////////////////////////////////////////////////////////////////
-Public Sub ribbonCallback(control As IRibbonControl)
-    Select Case control.ID
-        '// シート /////
-        Case "SheetComp"                    '// シート比較
-            Call frmCompSheet.Show
-        Case "SheetList"                    '// シート一覧
-            Call frmShowSheetList.Show
-        Case "SheetSetting"                 '// シートの設定
-            Call frmSheetManage.Show
-        Case "SheetSortAsc"                 '// シートの並べ替え
-            Call psSortWorksheet("ASC")
-        Case "SheetSortDesc"                '// シートの並べ替え
-            Call psSortWorksheet("DESC")
-        
-        '// データ /////
-        Case "Select"                       '// Select文実行
-            Call frmGetRecord.Show
-        
-        '// 値の操作 /////
-        Case "DatePicker"                   '// 日付
-            Call frmDatePicker.Show
-        Case "Today", "Now"                 '// 日付 - 本日日付/現在時刻
-            Call psPutDateTime(control.ID)
-            
-        '// 罫線、オブジェクト /////
-        Case "FitObjects"                   '// オブジェクトをセルに合わせる
-            Call frmOrderShape.Show
-        Case "AdjShapeAngle"                '// 円の角度を設定
-            Call frmAdjustArch.Show
-        '// 検索、ファイル /////
-        Case "AdvancedSearch"               '// 拡張検索
-            Call frmSearch.Show
-        Case "FileList"                     '// ファイル一覧
-            Call frmFileList.Show
-        
-        '// その他 /////
-        Case "InitTool"                     '// ツール初期化
-            Call psInitExTools
-        Case "Version"                      '// バージョン情報
-            Call frmAbout.Show
-    End Select
-
 End Sub
 
 
@@ -737,28 +855,7 @@ ErrorHandler:
     Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("mdlCommon.psPutDateTime", Err)
 End Sub
-
-
-'// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   シェイプ内テキスト取得
-'// 説明：       シェイプ内のテキストを取得する。Charactersメソッドをサポートしない場合は例外処理でハンドリング
-'//              psExecSearch_Shapeで特定されたシェイプ内のテキストを戻す
-'//              V3 からパブリック関数としてfrmSearch → mdlCommon へ移動
-'// 引数：       shapeObj: 対象シェイプオブジェクト
-'// 戻り値：     シェイプ内のテキスト。シェイプがテキストをサポートしていない場合は一律でブランク
-'// ////////////////////////////////////////////////////////////////////////////
-Public Function gfGetShapeText(shapeObj As Shape) As String
-On Error GoTo ErrorHandler
-    If shapeObj.Type = msoTextEffect Then '// ワードアートの場合
-        gfGetShapeText = shapeObj.TextEffect.Text
-    Else
-        gfGetShapeText = shapeObj.TextFrame.Characters.Text
-    End If
-Exit Function
-
-ErrorHandler:
-    gfGetShapeText = BLANK
-End Function
+#End If
 
 
 '// ////////////////////////////////////////////////////////////////////////////
