@@ -142,7 +142,6 @@ Private Sub psAdjustBlockArrowHead()
         With ActiveWindow.Selection.ShapeRange(idx)
             If .AutoShapeType = msoShapePentagon Or _
                 .AutoShapeType = msoShapeChevron Then
-'                bff = WorksheetFunction.Min(.Height, .Width) * .Adjustments.Item(1)
                 bff = gfMin2(.Height, .Width) * .Adjustments.Item(1)
                 If target = 0 Then
                     target = bff
@@ -222,7 +221,6 @@ Private Sub psAdjustLine()
         With ActiveWindow.Selection.ShapeRange(idx)
             If .Type = msoLine Then
                 If .Width * .Height <> 0 Then
-'                    Select Case WorksheetFunction.Degrees(Atn((.Height) / (.Width)))
                     Select Case Atn(.Height / .Width) * 180 / (Atn(1) * 4)
                         Case Is <= 30   '// 0度に補正
                             .Top = IIf(.VerticalFlip, .Top - .Height / 2, .Top + .Height / 2)
@@ -378,7 +376,7 @@ Public Function pfGetTopLeftObject(rng As ShapeRange) As Shape
     Set pfGetTopLeftObject = rslt
     
 '//　赤にする
-rslt.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
+'rslt.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
 End Function
 
 
@@ -436,7 +434,6 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
     
     '// 位置補正
     For i = 0 To UBound(rslt)
-'        rslt(i).Left = tls.Left
         Call rslt(i).Select(Replace:=False)
     Next
     
@@ -503,15 +500,14 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
 #End If
 
     For i = 0 To UBound(rslt)
-'        rslt(i).Top = tls.Top
         Call rslt(i).Select(Replace:=False)
     Next
     
     If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
 #If OFFICE_APP = "EXCEL" Then
-        Call Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+        Call Selection.ShapeRange.Distribute(msoDistributeHorizontally, False)
 #ElseIf OFFICE_APP = "POWERPOINT" Then
-        Call ActiveWindow.Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+        Call ActiveWindow.Selection.ShapeRange.Distribute(msoDistributeHorizontally, False)
 #End If
     End If
     
