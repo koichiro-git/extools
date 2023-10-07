@@ -72,7 +72,7 @@ ErrorHandler:
     If Err.Number = 1004 Then  '// ”ÍˆÍ‘I‘ğ‚ª³‚µ‚­‚È‚¢ê‡
         Call MsgBox(MSG_INVALID_RANGE, vbOKOnly, APP_TITLE)
     Else
-        Call gsShowErrorMsgDlg("mdlCommon.psConvValue", Err)
+        Call gsShowErrorMsgDlg("psConvValue", Err)
     End If
 End Sub
 

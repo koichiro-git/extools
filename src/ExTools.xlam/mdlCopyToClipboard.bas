@@ -103,7 +103,7 @@ On Error GoTo ErrorHandler
         Next
         rslt = Left(rslt, Len(rslt) - 1) & vbCrLf
     Next
-
+    
     '// 先頭と末尾に罫線を追加
     For idxCol = 0 To tRange.Columns - 1
         bffHead = bffHead & String(colLen(idxCol), "-") & IIf(idxCol = tRange.Columns - 1, vbCrLf, " ")
@@ -112,12 +112,8 @@ On Error GoTo ErrorHandler
     
     '// クリップボードへコピー ※Win10からDataObjectが動作しなくなるため、回避策SetClipに置き換え
     Call psSetClip(rslt)
-'  Set objData = New DataObject
-'  Call objData.SetText(rslt)
-'  Call objData.PutInClipboard
-'  Set objData = Nothing
-  
     Exit Sub
+    
 ErrorHandler:
     Call gsShowErrorMsgDlg("psCopyToClipboard", Err)
 End Sub
@@ -261,12 +257,12 @@ On Error GoTo ErrorHandler
     Dim sh          As Shape
     Dim bff         As String
     
-    '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
+    '// 事前チェック（選択タイプ＝シェイプ）
     If Not gfPreCheck(selType:=TYPE_SHAPE) Then
         Exit Sub
     End If
     
-    For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
+    For idx = 1 To Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
         bff = bff & pfCopyShapeText_sub(ActiveWindow.Selection.ShapeRange(idx))
     Next
     
@@ -294,7 +290,6 @@ Private Function pfCopyShapeText_sub(targetShape As Shape) As String
     
     bff = WorksheetFunction.Clean(gfGetShapeText(targetShape))
     If bff <> BLANK Then
-'        pfCopyShapeText_sub = rslt & Str(Int(targetShape.Left)) & ", " + Str(Int(targetShape.Top)) & ", " & WorksheetFunction.Clean(gfGetShapeText(targetShape)) & vbCrLf
         pfCopyShapeText_sub = rslt & Str(Int(targetShape.Left)) & ", " + Str(Int(targetShape.Top)) & ", " & bff & vbCrLf
     End If
 End Function

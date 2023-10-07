@@ -515,7 +515,7 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
     Exit Function
     
 ErrorHandler:
-'    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
+    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
 End Function
 
 

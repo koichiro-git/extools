@@ -23,24 +23,20 @@ Option Base 0
 '// 接続DB
 Public Enum udDbConnType
   dct_none = -1
-'  dct_oracle = 0
   dct_odbc = 1
-'  dct_db2 = 1
-'  dct_sqlsrv = 2
-'  dct_mysql = 3
   dct_excel = 2
 End Enum
 
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// プライベート変数
-Private AdoConnection                   As Object       '// コネクションを参照
-Private pNativeError                    As Long         '// プロパティ値保持：エラーコード（DBネイティブ）
-Private pErrorCode                      As Long         '// プロパティ値保持：エラーコード
-Private pErrorText                      As String       '// プロパティ値保持：エラーメッセージ
-Private pDbType                         As udDbConnType '// プロパティ値保持：データベース種類
-Private pDataSourceName                 As String       '// プロパティ値保持：データソース名
-Private pDmlRows                        As Long         '// プロパティ値保持：DML更新行数
+Private AdoConnection                   As ADODB.Connection '// コネクションを参照
+Private pNativeError                    As Long             '// プロパティ値保持：エラーコード（DBネイティブ）
+Private pErrorCode                      As Long             '// プロパティ値保持：エラーコード
+Private pErrorText                      As String           '// プロパティ値保持：エラーメッセージ
+Private pDbType                         As udDbConnType     '// プロパティ値保持：データベース種類
+Private pDataSourceName                 As String           '// プロパティ値保持：データソース名
+Private pDmlRows                        As Long             '// プロパティ値保持：DML更新行数
 
 '///////////////////////////////////////////////////////////////////////////////
 '// コンストラクタ
@@ -55,7 +51,7 @@ End Sub
 Private Sub Class_Terminate()
 On Error GoTo ErrorHandler
     If Not AdoConnection Is Nothing Then
-        AdoConnection.Close
+        Call AdoConnection.Close
     End If
     
     Set AdoConnection = Nothing
@@ -112,7 +108,6 @@ End Property
 '// 説明：       エラー保持変数を初期化する
 '// 引数：       なし
 '// 戻り値：     なし
-'// 修正履歴：   なし
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub InitError()
     pErrorCode = 0
@@ -125,7 +120,6 @@ End Sub
 '// 説明：       エラー保持変数にエラーを設定する
 '// 引数：       なし
 '// 戻り値：     なし
-'// 修正履歴：   なし
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub SetError()
     If AdoConnection.Errors.Count > 0 Then
@@ -149,20 +143,17 @@ End Sub
 '//              password:   パスワード
 '//              connType:   接続先DB種類
 '// 戻り値：     処理の成否  True:成功 False:失敗
-'// 修正履歴：   V2より、DML実行のためReadOnlyを0（更新可能）に変更
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function Initialize(HostString As String, userID As String, password As String, connType As udDbConnType) As Boolean
 On Error GoTo ErrorHandler
     Dim strCNString As String
     
     Call InitError
-    Set AdoConnection = CreateObject("ADODB.Connection")
+    Set AdoConnection = New ADODB.Connection
     
     AdoConnection.CursorLocation = adUseClient    '// DML実行時に更新行数を得るための設定
     
     Select Case connType
-'    Case dct_oracle
-'      Call AdoConnection.Open("Provider=MSDAORA;Data Source=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
         Case dct_odbc
             Call AdoConnection.Open("Provider=MSDASQL;DSN=" & HostString & ";User ID=" & userID & ";Password=" & password & ";ReadOnly=0")
         Case dct_excel
@@ -184,16 +175,16 @@ End Function
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   SQL実行(SELECT、DML)
-'// 説明：       SQL文を実行する
+'// 説明：       SQL文を実行する。
+'//              ※Excelに接続している場合はDELETE文が無視されるが、これはADOの仕様
 '// 引数：       sql: SQL文
 '// 戻り値：     レコードセット
-'// 修正履歴：   なし
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function GetRecordset(sql As String) As Object
 On Error GoTo ErrorHandler
-    Dim cmd As Object
+    Dim cmd As ADODB.Command
   
-    Set cmd = CreateObject("ADODB.Command")
+    Set cmd = New ADODB.Command
     Set cmd.ActiveConnection = AdoConnection
     cmd.CommandType = adCmdText
     cmd.CommandText = sql

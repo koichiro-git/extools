@@ -35,10 +35,11 @@ End Sub
 '// 戻り値：     なし
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psSetHyperLink()
-    Dim tRange    As udTargetRange
-    Dim childRange As Range
-    Dim idxRow    As Long
-    Dim idxCol    As Integer
+    Dim tCell     As Range    '// 対象セル
+'    Dim tRange    As udTargetRange
+'    Dim childRange As Range
+'    Dim idxRow    As Long
+'    Dim idxCol    As Integer
     Dim fontName  As String
     Dim fontSize  As String
     Dim fontBold  As Boolean
@@ -51,34 +52,43 @@ Private Sub psSetHyperLink()
     End If
     
     Call gsSuppressAppEvents
-'    Application.ScreenUpdating = False
     
-    For Each childRange In Selection.Areas
-        tRange = gfGetTargetRange(ActiveSheet, childRange)
-        For idxRow = tRange.minRow To tRange.maxRow
-            For idxCol = tRange.minCol To tRange.maxCol
-                If Trim(Cells(idxRow, idxCol).Text) <> BLANK Then
-                    fontName = Cells(idxRow, idxCol).Font.Name
-                    fontSize = Cells(idxRow, idxCol).Font.Size
-                    fontBold = Cells(idxRow, idxCol).Font.Bold
-                    fontItlic = Cells(idxRow, idxCol).Font.Italic
-                    fontColor = Cells(idxRow, idxCol).Font.Color
-                    Call Cells(idxRow, idxCol).Hyperlinks.Add(Anchor:=Cells(idxRow, idxCol), Address:=Cells(idxRow, idxCol).Text)
-                    Cells(idxRow, idxCol).Font.Name = fontName
-                    Cells(idxRow, idxCol).Font.Size = fontSize
-                    Cells(idxRow, idxCol).Font.Bold = fontBold
-                    Cells(idxRow, idxCol).Font.Italic = fontItlic
-                    Cells(idxRow, idxCol).Font.Color = fontColor
-                End If
-            Next
-        Next
-    
-        '// キー割込
-        If GetAsyncKeyState(27) <> 0 Then
-            Exit For
+    For Each tCell In Selection.SpecialCells(xlCellTypeConstants, xlNumbers + xlTextValues)
+        If Trim(tCell.Text) <> BLANK Then
+            fontName = tCell.Font.Name
+            fontSize = tCell.Font.Size
+            fontBold = tCell.Font.Bold
+            fontItlic = tCell.Font.Italic
+            fontColor = tCell.Font.Color
+            Call tCell.Hyperlinks.Add(Anchor:=tCell, Address:=tCell.Text)
+            tCell.Font.Name = fontName
+            tCell.Font.Size = fontSize
+            tCell.Font.Bold = fontBold
+            tCell.Font.Italic = fontItlic
+            tCell.Font.Color = fontColor
         End If
     Next
-'    Application.ScreenUpdating = True
+    
+'    For Each childRange In Selection.Areas
+'        tRange = gfGetTargetRange(ActiveSheet, childRange)
+'        For idxRow = tRange.minRow To tRange.maxRow
+'            For idxCol = tRange.minCol To tRange.maxCol
+'                If Trim(Cells(idxRow, idxCol).Text) <> BLANK Then
+'                    fontName = Cells(idxRow, idxCol).Font.Name
+'                    fontSize = Cells(idxRow, idxCol).Font.Size
+'                    fontBold = Cells(idxRow, idxCol).Font.Bold
+'                    fontItlic = Cells(idxRow, idxCol).Font.Italic
+'                    fontColor = Cells(idxRow, idxCol).Font.Color
+'                    Call Cells(idxRow, idxCol).Hyperlinks.Add(Anchor:=Cells(idxRow, idxCol), Address:=Cells(idxRow, idxCol).Text)
+'                    Cells(idxRow, idxCol).Font.Name = fontName
+'                    Cells(idxRow, idxCol).Font.Size = fontSize
+'                    Cells(idxRow, idxCol).Font.Bold = fontBold
+'                    Cells(idxRow, idxCol).Font.Italic = fontItlic
+'                    Cells(idxRow, idxCol).Font.Color = fontColor
+'                End If
+'            Next
+'        Next
+'    Next
     Call gsResumeAppEvents
 End Sub
 
@@ -91,13 +101,13 @@ End Sub
 '// Excel 2010時点で「HyperLinkのクリア」が標準実装されているが、ツールとしてUIを残すこととした。
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psRemoveHyperLink()
-    Dim tRange    As udTargetRange
-    Dim idxRow    As Long
-    Dim idxCol    As Integer
-    Dim fontName  As String
-    Dim fontSize  As String
-    Dim borderLines(8, 3) As Long
-    Dim childRange As Range
+'    Dim tRange    As udTargetRange
+'    Dim idxRow    As Long
+'    Dim idxCol    As Integer
+'    Dim fontName  As String
+'    Dim fontSize  As String
+'    Dim borderLines(8, 3) As Long
+'    Dim childRange As Range
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then

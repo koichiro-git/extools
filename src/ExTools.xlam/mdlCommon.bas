@@ -37,7 +37,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "3.0.0.79"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "3.0.0.80"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -288,7 +288,7 @@ Public Function gfPreCheck(Optional protectCont As Boolean = False, _
     End Select
     
     '// 選択範囲カウント
-    If selAreas > 1 Then
+    If selAreas >= 1 Then
         If Selection.Areas.Count > selAreas Then
             Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)
             gfPreCheck = False
@@ -376,13 +376,17 @@ End Sub
 
 #ElseIf OFFICE_APP = "POWERPOINT" Then
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   リボンボタンコールバック管理（Excel用）
+'// メソッド：   リボンボタンコールバック管理（PowerPoint用）
 '// 説明：       リボンからのコールバックをつかさどる
 '//              押されたコントロールのIDを基に処理を呼び出す。
 '// 引数：       control 対象コントロール
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub ribbonCallback(control As IRibbonControl)
-
+    Select Case control.ID
+        '// 罫線、オブジェクト /////
+        Case "AdjShapeAngle"                '// 円の角度を設定
+            Call frmAdjustArch.Show
+    End Select
 End Sub
 #End If
 
@@ -456,7 +460,6 @@ On Error Resume Next
         .LeftHeader = HED_LEFT
         .CenterHeader = HED_CENTER
         .RightHeader = HED_RIGHT
-        '// .RightHeader = "&""" & APP_FONT & ",標準""&8作成者:" & Application.UserName & IIf(Application.OrganizationName = BLANK, BLANK, "@" & Application.OrganizationName)
         '// フッタ
         .LeftFooter = FOT_LEFT
         .CenterFooter = FOT_CENTER
@@ -601,20 +604,20 @@ Public Function gfShowSelectFolder(ByVal lngHwnd As Long, ByRef strReturnPath) A
     Dim lngReturnCode As LongPtr
     Dim strPath       As String
     Dim biInfo        As BROWSEINFO
-    
+
     lngRet = False
-    
+
     '//文字列領域の確保
     strPath = String(MAX_PATH + 1, Chr(0))
-    
+
     ' 構造体の初期化
     biInfo.hwndOwner = lngHwnd
     biInfo.lpszTitle = APP_TITLE
     biInfo.ulFlags = BIF_RETURNONLYFSDIRS
-    
+
     '// フォルダ選択ダイアログの表示
     lngReturnCode = apiSHBrowseForFolder(biInfo)
-    
+
     If lngReturnCode <> 0 Then
         Call apiSHGetPathFromIDList(lngReturnCode, strPath)
         strReturnPath = Left(strPath, InStr(strPath, vbNullChar) - 1)
@@ -691,6 +694,7 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub sheetMenuOnAction(control As IRibbonControl)
 On Error GoTo ErrorHandler
+'★リボンボタンで押されたとき
     '// 押されたシートメニューのIDの接頭辞(MENU_PREFIX)を除き、通番をインデックスとして引数に渡す
     Call ActiveWorkbook.Sheets(CInt(Mid(control.ID, Len(MENU_PREFIX) + 1))).Activate
     Exit Sub
@@ -791,6 +795,7 @@ End Function
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub psActivateSheet()
 On Error GoTo ErrorHandler
+'★クイックバーから来た時。こっちに寄せる？
     Call ActiveWorkbook.Sheets(Application.CommandBars.ActionControl.Parameter).Activate
     Exit Sub
 

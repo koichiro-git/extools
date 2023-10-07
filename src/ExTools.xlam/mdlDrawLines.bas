@@ -48,7 +48,7 @@ Public Sub gsDrawLine_Header()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-'    Application.ScreenUpdating = False
+    
     Call gsSuppressAppEvents
     
     For Each childRange In Selection.Areas
@@ -105,9 +105,8 @@ Public Sub gsDrawLine_Header()
             .LineStyle = xlContinuous
             .Weight = xlThin
         End With
-        'childRange.Interior.ColorIndex = COLOR_HEADER
     Next
-'    Application.ScreenUpdating = True
+    
     Call gsResumeAppEvents
 End Sub
 
@@ -133,7 +132,7 @@ Public Sub gsDrawLine_Header_Vert()
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
-'    Application.ScreenUpdating = False
+    
     Call gsSuppressAppEvents
     
     For Each childRange In Selection.Areas
@@ -190,12 +189,9 @@ Public Sub gsDrawLine_Header_Vert()
             .LineStyle = xlContinuous
             .Weight = xlThin
         End With
-    
-    'childRange.Interior.ColorIndex = COLOR_HEADER
     Next
     
     Call gsResumeAppEvents
-'    Application.ScreenUpdating = True
 End Sub
 
 
@@ -213,11 +209,6 @@ Public Sub gsDrawLine_Data()
     End If
     
     Call gsSuppressAppEvents
-'    Application.ScreenUpdating = False
-    
-    '// V2.0より、文字位置は現状のままとする（Selection.VerticalAlignmentは変更しない）よう変更。
-    '// 文字位置を上部に設定
-'    Selection.VerticalAlignment = xlTop
     
     '// 罫線描画
     Selection.Borders.LineStyle = xlContinuous
@@ -240,7 +231,6 @@ Public Sub gsDrawLine_Data()
     Selection.Borders(xlDiagonalDown).LineStyle = xlNone
     Selection.Borders(xlDiagonalUp).LineStyle = xlNone
 
-'    Application.ScreenUpdating = True
     Call gsResumeAppEvents
 End Sub
 

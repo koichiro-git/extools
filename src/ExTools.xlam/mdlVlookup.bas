@@ -37,6 +37,7 @@ End Sub
 '// 説明：       選択領域を表す文字列を内部変数に格納する
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psVLookupCopy()
+    '// 事前チェック
     If gfPreCheck(selType:=TYPE_RANGE, selAreas:=1) = False Then
         Exit Sub
     End If
@@ -61,6 +62,11 @@ On Error GoTo ErrorHandler
     Dim searchColIdx    As Long     '// VLookup関数の「検索」にあたるセルの列
     Dim targetColIdx    As Long     '// Vlookpu関数を出力するセルの列
     Dim bffRange        As String   '// 選択範囲のアドレス文字列を保持
+    
+    '// 事前チェック
+    If gfPreCheck(protectCont:=True, selType:=TYPE_RANGE, selAreas:=1) = False Then
+        Exit Sub
+    End If
     
     '// マスタ列が選択されていない場合はエラー
     If pVLookupMaster = BLANK Then
@@ -99,7 +105,7 @@ On Error GoTo ErrorHandler
     Exit Sub
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("mdlCommon.psVLookupPaste", Err)
+    Call gsShowErrorMsgDlg("psVLookupPaste", Err)
 End Sub
 
 

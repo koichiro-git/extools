@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : 円弧の調整フォーム
-'// モジュール     : frm
+'// モジュール     : frmAdjustArch
 '// 説明           : 円弧オブジェクトの開始位置、終了位置を角度で指定する
 '//                : 対象とするシェイプは Pie, BlockArc, CircularArrow, msoShapeArc
 '// ////////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,10 @@ Attribute VB_Exposed = False
 '// ////////////////////////////////////////////////////////////////////////////
 Option Explicit
 Option Base 0
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// コンパイルスイッチ（"EXCEL" / "POWERPOINT"）
+#Const OFFICE_APP = "EXCEL"
 
 Private Const ANGLE_ADJUST      As Integer = -90    '// 角度計算の開始位置補正値
 
@@ -46,7 +50,9 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
+#If OFFICE_APP = "EXCEL" Then
     Call gsResumeAppEvents
+#End If
     If Err.Number = 13 Or Err.Number = 6 Then  '// 入力した数値が無効な場合
         Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
     Else
@@ -73,7 +79,10 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
+#If OFFICE_APP = "EXCEL" Then
     Call gsResumeAppEvents
+#End If
+    
     If Err.Number = 13 Or Err.Number = 6 Then  '// 入力した数値が無効な場合
         Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
     Else
@@ -111,7 +120,11 @@ On Error GoTo ErrorHandler
         Exit Sub
     End If
     
+#If OFFICE_APP = "EXCEL" Then
     For Each shp In Selection.ShapeRange
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+    For Each shp In ActiveWindow.Selection.ShapeRange
+#End If
         Select Case shp.AutoShapeType
             Case msoShapePie, msoShapeBlockArc, msoShapeArc
                 angleStart = Int(shp.Adjustments.Item(1)) - ANGLE_ADJUST
@@ -129,7 +142,9 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
+#If OFFICE_APP = "EXCEL" Then
     Call gsResumeAppEvents
+#End If
     Call gsShowErrorMsgDlg("frmAdjustArch.UserForm_Activate", Err)
 End Sub
 
@@ -146,7 +161,11 @@ End Sub
 Private Sub cmdResetRotation_Click()
     Dim shp As Shape
     
+#If OFFICE_APP = "EXCEL" Then
     For Each shp In Selection.ShapeRange
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+    For Each shp In ActiveWindow.Selection.ShapeRange
+#End If
         Select Case shp.AutoShapeType
             Case msoShapePie, msoShapeBlockArc, msoShapeCircularArrow, msoShapeArc
                 shp.Rotation = 0
@@ -206,7 +225,11 @@ End Sub
 Private Sub adjustArch()
     Dim shp     As Shape
     
+#If OFFICE_APP = "EXCEL" Then
     For Each shp In Selection.ShapeRange
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+    For Each shp In ActiveWindow.Selection.ShapeRange
+#End If
         Select Case shp.AutoShapeType
             Case msoShapePie, msoShapeBlockArc, msoShapeArc
                 shp.Adjustments.Item(1) = angleStart + ANGLE_ADJUST
@@ -222,3 +245,4 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
+

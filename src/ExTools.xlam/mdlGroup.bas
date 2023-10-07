@@ -1,10 +1,9 @@
 Attribute VB_Name = "mdlGroup"
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
-'// タイトル       : オブジェクトの補正機能
-'// モジュール     : mdlAdjustShape
-'// 説明           : 鍵コネクタやブロック矢印などのオブジェクトの微調整機能
-'//                  ※旧mdlFeatures（V2.1.1まで）
+'// タイトル       : グループ処理
+'// モジュール     : mdlGroup
+'// 説明           : 列・行のグループ処理、選択範囲の値の処理
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
@@ -51,45 +50,40 @@ Private Sub psSetGroup_Row()
         Exit Sub
     End If
     
-'    Application.ScreenUpdating = False
     Call gsSuppressAppEvents
     
-  
     '// アウトラインの集計位置を変更
-    With ActiveSheet.Outline
-        .SummaryRow = xlAbove
-    End With
-  
-        '// グループ設定
-        For Each childRange In Selection.Areas
-            tRange = gfGetTargetRange(ActiveSheet, childRange)
-            
-            idxStart = 0
-            idxEnd = 0
-            idxCol = tRange.minCol
-            
-            For idxRow = tRange.minRow To tRange.maxRow
-                If idxStart = 0 Then
-                    idxStart = idxRow + 1
-                    idxEnd = idxRow + 1
-                ElseIf Trim(Cells(idxRow, idxCol).Text) = BLANK Then
-                    idxEnd = idxRow
-                ElseIf Trim(Cells(idxRow - 1, idxCol).Text) = BLANK Then
-                    Range(Cells(idxStart, 1), Cells(idxEnd, 1)).Rows.Group
-                    idxStart = idxRow + 1
-                    idxEnd = idxRow + 1
-                Else
-                    idxStart = idxRow + 1
-                    idxEnd = idxRow + 1
-                End If
-            Next
-            If idxStart < idxEnd Then
+    ActiveSheet.Outline.SummaryRow = xlAbove
+    
+    '// グループ設定
+    For Each childRange In Selection.Areas
+        tRange = gfGetTargetRange(ActiveSheet, childRange)
+        
+        idxStart = 0
+        idxEnd = 0
+        idxCol = tRange.minCol
+        
+        For idxRow = tRange.minRow To tRange.maxRow
+            If idxStart = 0 Then
+                idxStart = idxRow + 1
+                idxEnd = idxRow + 1
+            ElseIf Trim(Cells(idxRow, idxCol).Text) = BLANK Then
+                idxEnd = idxRow
+            ElseIf Trim(Cells(idxRow - 1, idxCol).Text) = BLANK Then
                 Range(Cells(idxStart, 1), Cells(idxEnd, 1)).Rows.Group
+                idxStart = idxRow + 1
+                idxEnd = idxRow + 1
+            Else
+                idxStart = idxRow + 1
+                idxEnd = idxRow + 1
             End If
+        Next
+        If idxStart < idxEnd Then
+            Range(Cells(idxStart, 1), Cells(idxEnd, 1)).Rows.Group
+        End If
       Next
       
       Call gsResumeAppEvents
-'      Application.ScreenUpdating = True
 End Sub
 
 
@@ -113,12 +107,9 @@ Private Sub psSetGroup_Col()
     End If
     
     Call gsSuppressAppEvents
-'    Application.ScreenUpdating = False
     
     '// アウトラインの集計位置を変更
-    With ActiveSheet.Outline
-        .SummaryColumn = xlLeft
-    End With
+    ActiveSheet.Outline.SummaryColumn = xlLeft
     
     '// グループ設定
     For Each childRange In Selection.Areas
@@ -148,14 +139,14 @@ Private Sub psSetGroup_Col()
         End If
     Next
     
-'    Application.ScreenUpdating = True
     Call gsResumeAppEvents
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   値の重複を排除して一覧（カウント）
-'// 説明：       重複値を排除する。
+'// 説明：       行単位で重複値を排除する。
+'//              複数列が選択された場合は、セルの値を不可読文字chr(127)で連結し、重複判定する
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psDistinctVals()
     Dim idxRow      As Long
@@ -168,15 +159,8 @@ Private Sub psDistinctVals()
     Dim keyArray()  As String
     Dim resultSheet As Worksheet
     
-    '// セルが選択されていることをチェック
-    If TypeName(Selection) <> TYPE_RANGE Then
-        Call MsgBox(MSG_NOT_RANGE_SELECT, vbOKOnly, APP_TITLE)
-        Exit Sub
-    End If
-    
-    '// チェック
-    If Selection.Areas.Count > 1 Then
-        Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)
+    '// 事前チェック（選択タイプ＝セル）
+    If Not gfPreCheck(selAreas:=1, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
     
@@ -230,11 +214,7 @@ Private Sub psDistinctVals()
     '// 罫線描画
     Call gsPageSetup_Lines(resultSheet, 1)
     
-    '// 閉じるときに保存を求めない
-    ActiveWorkbook.Saved = True
-    
     Set dict = Nothing
-    
     Call gsResumeAppEvents
 End Sub
 
@@ -250,22 +230,13 @@ Private Sub psGroupVals()
     Dim aryIdx        As Integer
     Dim aryLastVal(8) As String
     
-    '// 事前チェック（アクティブシート保護、選択タイプ＝セル）
-    If Not gfPreCheck(protectCont:=True, selType:=TYPE_RANGE) Then
+    '// 事前チェック（選択エリア＝１、アクティブシート保護、選択タイプ＝セル）
+    If Not gfPreCheck(selAreas:=1, protectCont:=True, selType:=TYPE_RANGE) Then
         Exit Sub
     End If
     
-'    '// セルが選択されていることをチェック
-'    If TypeName(Selection) <> TYPE_RANGE Then
-'        Call MsgBox(MSG_NOT_RANGE_SELECT, vbOKOnly, APP_TITLE)
-'        Exit Sub
-'    End If
-    
     '// チェック
-    If Selection.Areas.Count > 1 Then
-        Call MsgBox(MSG_TOO_MANY_RANGE, vbOKOnly, APP_TITLE)
-        Exit Sub
-    ElseIf Selection.Columns.Count > 8 Then
+    If Selection.Columns.Count > 8 Then
         Call MsgBox(MSG_TOO_MANY_COLS_8, vbOKOnly, APP_TITLE)
         Exit Sub
     End If
