@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmOrderShape 
    Caption         =   "シェイプの配置"
-   ClientHeight    =   3330
+   ClientHeight    =   3420
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   4305
@@ -102,6 +102,28 @@ Private Sub psSetShapePos(targetShape As Shape, ptMargin As Integer)
     basePos(2) = targetShape.BottomRightCell.Top + targetShape.BottomRightCell.Height - ptMargin '// 下端
     basePos(3) = targetShape.BottomRightCell.Left + targetShape.BottomRightCell.Width - ptMargin '// 右端
     
+    '// マージンが取れない場合の補正：なにもしない //////////
+    '// １行に収まっている場合
+    If targetShape.TopLeftCell.Top = targetShape.BottomRightCell.Top Then
+        If ptMargin * 2 >= targetShape.TopLeftCell.Height Then
+            Exit Sub
+        End If
+    End If
+    '// １行に収まっている場合
+    If targetShape.TopLeftCell.Left = targetShape.BottomRightCell.Left Then
+        If ptMargin * 2 >= targetShape.TopLeftCell.Width Then
+            Exit Sub
+        End If
+    End If
+    '// 複数の列と行にまたがっている場合
+    If ptMargin >= targetShape.TopLeftCell.Height Or _
+        ptMargin >= targetShape.TopLeftCell.Width Or _
+        ptMargin >= targetShape.BottomRightCell.Height Or _
+        ptMargin >= targetShape.BottomRightCell.Width Then
+        Exit Sub
+    End If
+    
+    '// 位置補正 //////////
     If targetShape.Type <> msoLine Then   '// 直線シェイプ以外を対象とする
         '// 上下端設定
         If Not ckbDetail.Value Or (cmbHeight.Value = 0) Or (cmbHeight.Value = 1) Then

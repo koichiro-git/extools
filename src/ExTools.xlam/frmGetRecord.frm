@@ -17,7 +17,7 @@ Attribute VB_Exposed = False
 '// プロジェクト   : 拡張ツール
 '// タイトル       : SQL実行
 '// モジュール     : frmGetRecord
-'// 説明           : SELECT スクリプトの結果をエクセルに出力する。
+'// 説明           : SELECT スクリプトの結果をエクセルに出力する。またはDMLを実行する
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
@@ -113,8 +113,7 @@ Private Sub cmdSample_Click()
         Exit Sub
     End If
     
-    txtScript.Text = pfGetSampleSQL(ActiveSheet) & vbLf & _
-                    "-- " & vbLf & _
+    txtScript.Text = pfGetSampleSQL() & vbLf & _
                     txtScript.Text
 End Sub
 
@@ -391,29 +390,58 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：    サンプルSQL生成
 '// 説明：        カレントシートの1行目を列とみなし、SELECT文を生成して戻す
-'// 引数：        wksheet: ワークシート
+'// 引数：        なし
 '// 戻り値：      SELECT文字列
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfGetSampleSQL(wkSheet As Worksheet) As String
+Private Function pfGetSampleSQL() As String
     Dim idxCol      As Integer
+    Dim bff         As String
+    Dim idxSheet    As Integer
     Dim strSelect   As String
     Dim rslt        As String
+    Dim wkSheet     As Worksheet
+    Dim sh          As Worksheet
     
-    For idxCol = 1 To 256       '// 256列決め打ち
-        If wkSheet.Cells(1, idxCol).Text = BLANK Then
-            Exit For
-        End If
-        
-        If idxCol > 1 Then
-            strSelect = strSelect & "," & vbLf & Space(7)
-        End If
-        strSelect = strSelect & "a." & Replace(wkSheet.Cells(1, idxCol).Text, vbLf, "_")
+    '// 列リスト //////////
+    idxSheet = 1
+    bff = BLANK
+    For Each sh In ActiveWindow.SelectedSheets
+        For idxCol = 1 To 256       '// 256列決め打ち
+            If sh.Cells(1, idxCol).Text = BLANK Then
+                Exit For
+            End If
+            
+            If bff <> BLANK Then
+                bff = bff & "," & vbCrLf & Space(7)
+            End If
+            
+            bff = bff & Chr(96 + idxSheet) & ".[" & Replace(sh.Cells(1, idxCol).Text, vbLf, "_") & "]"
+            
+            If idxSheet > 1 Then  '// 2つ目の表以降は別名設定
+                bff = bff & " as [" & Chr(96 + idxSheet) & "_" & Replace(sh.Cells(1, idxCol).Text, vbLf, "_") & "]"
+            End If
+        Next
+        idxSheet = idxSheet + 1
     Next
     
-    rslt = "SELECT " & strSelect & vbLf & _
-           "  FROM " & "[" & wkSheet.Name & "$] a"
-
-    pfGetSampleSQL = rslt
+    bff = bff & vbCrLf
+    pfGetSampleSQL = "SELECT " & bff
+    
+    '// 表と結合 //////////
+    '// JET DBMSの、複数のINNER JOINを使用する際に括弧でくくる仕様に対応
+    bff = "[" & ActiveWindow.SelectedSheets(1).Name & "$] a" & vbCrLf
+    
+    If ActiveWindow.SelectedSheets.Count > 1 Then
+        For idxSheet = 2 To ActiveWindow.SelectedSheets.Count
+            bff = "(" & bff & " INNER JOIN [" & ActiveWindow.SelectedSheets(idxSheet).Name & "$] " & Chr(96 + idxSheet) & vbCrLf _
+                & "    ON a.[***] = " & Chr(96 + idxSheet) & ".[***])" & vbCrLf _
+'                & "    ON a.[" & ActiveWindow.SelectedSheets(1).Cells(1, 1).Text & "] = " _
+'                & Chr(96 + idxSheet) & ".[" & ActiveWindow.SelectedSheets(idxSheet).Cells(1, 1).Text & "])" & vbCrLf
+        Next
+    End If
+    bff = "  FROM " & bff
+    
+    pfGetSampleSQL = pfGetSampleSQL & bff
 End Function
 
 

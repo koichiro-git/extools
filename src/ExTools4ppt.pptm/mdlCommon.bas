@@ -382,7 +382,11 @@ End Sub
 '// 引数：       control 対象コントロール
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub ribbonCallback(control As IRibbonControl)
-
+    Select Case control.ID
+        '// 罫線、オブジェクト /////
+        Case "AdjShapeAngle"                '// 円の角度を設定
+            Call frmAdjustArch.Show
+    End Select
 End Sub
 #End If
 

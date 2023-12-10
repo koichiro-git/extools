@@ -37,7 +37,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "3.0.0.80"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "3.0.0.81"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -359,7 +359,7 @@ Public Sub ribbonCallback(control As IRibbonControl)
         Case "FitObjects"                   '// オブジェクトをセルに合わせる
             Call frmOrderShape.Show
         Case "AdjShapeAngle"                '// 円の角度を設定
-            Call frmAdjustArch.Show
+            Call frmAdjustArc.Show
         '// 検索、ファイル /////
         Case "AdvancedSearch"               '// 拡張検索
             Call frmSearch.Show
@@ -383,9 +383,10 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub ribbonCallback(control As IRibbonControl)
     Select Case control.ID
-        '// 罫線、オブジェクト /////
         Case "AdjShapeAngle"                '// 円の角度を設定
-            Call frmAdjustArch.Show
+            Call frmAdjustArc.Show
+        Case "Version"                      '// バージョン情報
+            Call frmAbout.Show
     End Select
 End Sub
 #End If

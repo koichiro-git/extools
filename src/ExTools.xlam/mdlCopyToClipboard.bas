@@ -267,6 +267,8 @@ On Error GoTo ErrorHandler
     Next
     
     Call psSetClip(bff)
+    Exit Sub
+    
 ErrorHandler:
     Call gsShowErrorMsgDlg("psCopyShapeText", Err)
 End Sub

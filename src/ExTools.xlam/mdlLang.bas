@@ -14,8 +14,8 @@ Option Explicit
 #Const OFFICE_APP = "EXCEL"
 
 '// 言語コード Application.LanguageSettings.LanguageID(msoLanguageIDInstall) で得られる値
-#Const cLANG = 1041   '// 日本語
-'#Const cLANG = 1033  '// English
+'#Const cLANG = 1041   '// 日本語
+#Const cLANG = 1033  '// English
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -245,10 +245,17 @@ Public Const LBL_LGI_CONN_TO                    As String = "接続先"
 Public Const LBL_LGI_LOGIN                      As String = "ログイン"
 Public Const LBL_LGI_CANCEL                     As String = "キャンセル"
 
-'// frmAdjustArch(ARC)
+'// frmAdjustArc(ARC)
 Public Const LBL_ARC_START                      As String = "開始位置"
 Public Const LBL_ARC_END                        As String = "終了位置"
 Public Const LBL_ARC_RESET_ROT                  As String = "傾きをリセット"
+
+'// frmDatePicker(DAT)
+Public Const LBL_DAT_FORM                       As String = "日付"
+
+'// frmAbout(ABT)
+Public Const LBL_ABT_REPO                       As String = "最新版は以下のURLから ExTools.zip を取得してください。"
+Public Const LBL_ABT_MANUAL                     As String = "操作マニュアルは以下のURLで参照してください。"
 
 
 '// ////////////////////
@@ -435,7 +442,7 @@ Public Const LBL_COM_UNCHECK                    As String = "Uncheck all"
 Public Const LBL_COM_HYPERLINK                  As String = "Set hyperlinks"
 
 '// frmCompSheet (CMP)
-Public Const LBL_CMP_FORM                       As String = "Difference Check"
+Public Const LBL_CMP_FORM                       As String = "Diff"
 Public Const LBL_CMP_MODE_SHEET                 As String = "Sheet"
 Public Const LBL_CMP_MODE_BOOK                  As String = "Book"
 Public Const LBL_CMP_SHEET1                     As String = "Original"
@@ -445,7 +452,7 @@ Public Const LBL_CMP_BOOK2                      As String = "Target"
 Public Const LBL_CMP_OPTIONS                    As String = "Options"
 Public Const LBL_CMP_RESULT                     As String = "Output to"
 Public Const LBL_CMP_MARKER                     As String = "Marker"
-Public Const LBL_CMP_METHOD                     As String = "Compare by"
+Public Const LBL_CMP_METHOD                     As String = "Compare with"
 Public Const LBL_CMP_SHOW_COMMENT               As String = "Show comment"
 
 '// frmShowSheetList (SSL)
@@ -532,10 +539,18 @@ Public Const LBL_LGI_CONN_TO                    As String = "Connect to"
 Public Const LBL_LGI_LOGIN                      As String = "Login"
 Public Const LBL_LGI_CANCEL                     As String = "Cancel"
 
-'// frmAdjustArch(ARC)
+'// frmAdjustArc(ARC)
+Public Const LBL_ARC_FORM                       As String = "Arc Angle"
 Public Const LBL_ARC_START                      As String = "Start Pos"
 Public Const LBL_ARC_END                        As String = "End Pos"
 Public Const LBL_ARC_RESET_ROT                  As String = "Reset Rotation"
+
+'// frmDatePicker(DAT)
+Public Const LBL_DAT_FORM                       As String = "Date"
+
+'// frmAbout(ABT)
+Public Const LBL_ABT_REPO                       As String = "Get latest edition:"
+Public Const LBL_ABT_MANUAL                     As String = "Operation manual:"
 
 
 '// ////////////////////
@@ -548,7 +563,7 @@ Public Const CMB_COM_CR_CODE                    As String = "0,CR(#13) + LF(#10)
 '// frmCompSheet (CMP)
 Public Const CMB_CMP_MARKER                     As String = "0,None;1,Font color;2,Background color;3,Border color"
 Public Const CMB_CMP_METHOD                     As String = "0,Text;1,Value;2,Text or value"
-Public Const CMB_CMP_OUTPUT                     As String = "0,New book;1,The end of the current book"
+Public Const CMB_CMP_OUTPUT                     As String = "0,New book;1,End of current book"
 
 '// frmShowSheetList (SSL)
 Public Const CMB_SSL_OUTPUT                     As String = "0,New Book;1,Top of Current Book;2,End of Current Book"

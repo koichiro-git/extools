@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmFileList 
    Caption         =   "ファイル一覧出力"
-   ClientHeight    =   4320
+   ClientHeight    =   4455
    ClientLeft      =   45
    ClientTop       =   435
-   ClientWidth     =   6240
+   ClientWidth     =   6150
    OleObjectBlob   =   "frmFileList.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -98,7 +98,9 @@ Private Sub cmdExecute_Click()
         Call MsgBox(MSG_NO_DIR, vbOKOnly, APP_TITLE)
         Call txtRootDir.SetFocus
     Else
+        Call gsSuppressAppEvents
         Call psShowFileList
+        Call gsResumeAppEvents
         Call Me.Hide
     End If
 End Sub
@@ -120,8 +122,6 @@ On Error GoTo ErrorHandler
     Dim sizeFormat  As String
     Dim idx         As Integer
   
-    Call gsSuppressAppEvents    '// 前処理
-
     '// 設定値の記憶
     pRootDir = txtRootDir.Text                      '// ルートの設定
     pExtentions = Split(txtExtentions.Text, ";")    '// 拡張子 (trim処理要)
@@ -183,22 +183,23 @@ On Error GoTo ErrorHandler
     wkSheet.Columns("A").ColumnWidth = 15
     wkSheet.Columns("B").ColumnWidth = 20
     wkSheet.Columns("C:D").ColumnWidth = 9
-  
+    
     '// 枠線の設定
     Call gsPageSetup_Lines(wkSheet, 1)
-  
+    
     '//フォント
     wkSheet.Cells.Font.Name = APP_FONT
     wkSheet.Cells.Font.Size = APP_FONT_SIZE
-  
+    
+    '// ファイル属性説明記載
+    wkSheet.Cells(1, 7).AddComment ("rhsa: Read only, Hidden, System file, Archive")
+    
     '// 後処理
     Call wkSheet.Cells(1, 1).Select
     ActiveWorkbook.Saved = True
-    Call gsResumeAppEvents
     Exit Sub
 
 ErrorHandler:
-    Call gsResumeAppEvents
     Call gsShowErrorMsgDlg("frmFileList.pfShowFileList", Err)
 End Sub
 
@@ -295,7 +296,7 @@ On Error GoTo ErrorHandler
                 Call wkSheet.Cells(idxRow, 1).Hyperlinks.Add(Anchor:=Cells(idxRow, 1), Address:=.Path)
             End If
             
-            '// 小ディレクトリの再帰呼び出し
+            '// 子ディレクトリの再帰呼び出し
             If depth < pMaxDepth Then
                 Call psGetFileList(wkSheet, fs, .Path, idxRow, depth + 1, mode_Dir, mode_File, addLink, sizeUnit)
             Else

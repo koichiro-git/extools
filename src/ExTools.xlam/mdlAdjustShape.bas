@@ -531,7 +531,8 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         '// 行ヘッダ（縦軸）でのループ
         For idxHead = 0 To UBound(rowHeader)
             bff = allShapes(idx).Top + allShapes(idx).Height / 2    '// 対象オブジェクトの中央ポジション（縦）
-            If bff >= allShapes(idx).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
+'            If bff >= allShapes(idx).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
+            If bff >= rowHeader(idxHead).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
                 allShapes(idx).Top = rowHeader(idxHead).Top
                 allShapes(idx).Height = rowHeader(idxHead).Height
                 Exit For
@@ -541,7 +542,8 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         '// 列ヘッダ（横軸）でのループ
         For idxHead = 0 To UBound(colHeader)
             bff = allShapes(idx).Left + allShapes(idx).Width / 2    '// 対象オブジェクトの中央ポジション（縦）
-            If bff >= allShapes(idx).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
+'            If bff >= allShapes(idx).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
+            If bff >= colHeader(idxHead).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
                 allShapes(idx).Left = colHeader(idxHead).Left
                 allShapes(idx).Width = colHeader(idxHead).Width
                 Exit For

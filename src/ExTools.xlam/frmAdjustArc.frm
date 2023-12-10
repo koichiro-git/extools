@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmAdjustArch 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmAdjustArc 
    Caption         =   "円弧の調整"
-   ClientHeight    =   2280
+   ClientHeight    =   2565
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   3135
-   OleObjectBlob   =   "frmAdjustArch.frx":0000
+   ClientWidth     =   3030
+   OleObjectBlob   =   "frmAdjustArc.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
-Attribute VB_Name = "frmAdjustArch"
+Attribute VB_Name = "frmAdjustArc"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 '// ////////////////////////////////////////////////////////////////////////////
 '// プロジェクト   : 拡張ツール
 '// タイトル       : 円弧の調整フォーム
-'// モジュール     : frmAdjustArch
+'// モジュール     : frmAdjustArc
 '// 説明           : 円弧オブジェクトの開始位置、終了位置を角度で指定する
 '//                : 対象とするシェイプは Pie, BlockArc, CircularArrow, msoShapeArc
 '// ////////////////////////////////////////////////////////////////////////////
@@ -36,73 +36,14 @@ Private angleEnd                As Integer          '// 終了角度
 
 
 '// //////////////////////////////////////////////////////////////////
-'// イベント： 終了角度テキストボックス KeyDown時
-Private Sub txtEnd_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
-On Error GoTo ErrorHandler
-    Dim lastVal     As Integer
-    
-    lastVal = angleEnd
-    '// Enter, Tab, テンキーEnerの場合、描画処理を行う
-    If KeyCode = vbKeyReturn Or KeyCode = vbKeySeparator Or KeyCode = vbKeyTab Then
-        angleEnd = Int(txtEnd.Value)
-        Call adjustArch
-    End If
-    Exit Sub
-
-ErrorHandler:
-#If OFFICE_APP = "EXCEL" Then
-    Call gsResumeAppEvents
-#End If
-    If Err.Number = 13 Or Err.Number = 6 Then  '// 入力した数値が無効な場合
-        Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
-    Else
-        Call gsShowErrorMsgDlg("frmAdjustArch.txtEnd_KeyDown", Err)
-    End If
-    
-    angleEnd = lastVal
-    txtEnd.Value = lastVal
-End Sub
-
-
-'// //////////////////////////////////////////////////////////////////
-'// イベント： 開始角度テキストボックス KeyDown時
-Private Sub txtStart_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
-On Error GoTo ErrorHandler
-    Dim lastVal     As Integer
-    
-    lastVal = angleStart
-    '// Enter, Tab, テンキーEnerの場合、描画処理を行う
-    If KeyCode = vbKeyReturn Or KeyCode = vbKeySeparator Or KeyCode = vbKeyTab Then
-        angleStart = Int(txtStart.Value)
-        Call adjustArch
-    End If
-    Exit Sub
-
-ErrorHandler:
-#If OFFICE_APP = "EXCEL" Then
-    Call gsResumeAppEvents
-#End If
-    
-    If Err.Number = 13 Or Err.Number = 6 Then  '// 入力した数値が無効な場合
-        Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
-    Else
-        Call gsShowErrorMsgDlg("frmAdjustArch.txtStart_KeyDown", Err)
-    End If
-    
-    angleStart = lastVal
-    txtStart.Value = lastVal
-End Sub
-
-
-'// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
     '// キャプション設定
+    Me.Caption = LBL_ARC_FORM
     lblStart.Caption = LBL_ARC_START
     lblEnd.Caption = LBL_ARC_END
     cmdResetRotation.Caption = LBL_ARC_RESET_ROT
     cmdClose.Caption = LBL_COM_CLOSE
-    
 End Sub
 
 
@@ -145,7 +86,7 @@ ErrorHandler:
 #If OFFICE_APP = "EXCEL" Then
     Call gsResumeAppEvents
 #End If
-    Call gsShowErrorMsgDlg("frmAdjustArch.UserForm_Activate", Err)
+    Call gsShowErrorMsgDlg("frmAdjustArc.UserForm_Activate", Err)
 End Sub
 
 
@@ -181,7 +122,7 @@ Private Sub spnStart_SpinUp()
     angleStart = Int(angleStart / 15) * 15 + 15
     txtStart.Value = angleStart
     
-    Call adjustArch
+    Call adjustArc
 End Sub
 '// SpinDown
 Private Sub spnStart_SpinDown()
@@ -192,7 +133,7 @@ Private Sub spnStart_SpinDown()
     End If
     
     txtStart.Value = angleStart
-    Call adjustArch
+    Call adjustArc
 End Sub
 
 
@@ -203,7 +144,7 @@ Private Sub spnEnd_SpinUp()
     angleEnd = Int(angleEnd / 15) * 15 + 15
     txtEnd.Value = angleEnd
     
-    Call adjustArch
+    Call adjustArc
 End Sub
 '// SpinDown
 Private Sub spnEnd_SpinDown()
@@ -214,7 +155,45 @@ Private Sub spnEnd_SpinDown()
     End If
     
     txtEnd.Value = angleEnd
-    Call adjustArch
+    Call adjustArc
+End Sub
+
+
+'// //////////////////////////////////////////////////////////////////
+'// イベント： 開始角度テキストボックス AfterUpdate時
+Private Sub txtStart_AfterUpdate()
+On Error GoTo ErrorHandler
+    If IsNumeric(txtStart.Value) Then
+        txtStart.Value = Int(txtStart.Value)
+        angleStart = Int(txtStart.Value)
+        Call adjustArc
+    Else
+        Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
+        txtStart.Value = Selection.ShapeRange(1).Adjustments.Item(1) - ANGLE_ADJUST
+    End If
+    Exit Sub
+    
+ErrorHandler:
+    Call gsShowErrorMsgDlg("frmAdjustArc.txtStart_AfterUpdate", Err)
+End Sub
+
+
+'// //////////////////////////////////////////////////////////////////
+'// イベント： 終了角度テキストボックス AfterUpdate時
+Private Sub txtEnd_AfterUpdate()
+On Error GoTo ErrorHandler
+    If IsNumeric(txtEnd.Value) Then
+        txtEnd.Value = Int(txtEnd.Value)
+        angleEnd = Int(txtEnd.Value)
+        Call adjustArc
+    Else
+        Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
+        txtEnd.Value = Selection.ShapeRange(1).Adjustments.Item(2) - ANGLE_ADJUST
+    End If
+    Exit Sub
+    
+ErrorHandler:
+    Call gsShowErrorMsgDlg("frmAdjustArc.txtEnd_AfterUpdate", Err)
 End Sub
 
 
@@ -222,7 +201,7 @@ End Sub
 '// メソッド：   円弧角度調整
 '// 説明：       選択されている円弧オブジェクトの開始角度・終了角度を設定する
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub adjustArch()
+Private Sub adjustArc()
     Dim shp     As Shape
     
 #If OFFICE_APP = "EXCEL" Then
@@ -245,4 +224,3 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
-

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmSearch 
    Caption         =   "ägí£åüçı"
-   ClientHeight    =   6375
+   ClientHeight    =   6405
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   6210
@@ -481,9 +481,9 @@ End Sub
 '// ñﬂÇËílÅF     Ç»Çµ
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psExecSearch_Shape(regExp As Object, wkSheet As Worksheet, shapeObj As Shape, isGrouped As Boolean)
-    Dim bffText   As String
-    Dim subShape  As Shape
-    
+    Dim bffText     As String
+    Dim subShape    As Shape
+
     If shapeObj.Type = msoGroup Then
         For Each subShape In shapeObj.GroupItems
             Call psExecSearch_Shape(regExp, wkSheet, subShape, True)

@@ -42,6 +42,9 @@ Private Const CALENDAR_SEP_WIDTH    As Double = 6   '// 2つ（2か月）分の間隔4.5p
 '// //////////////////////////////////////////////////////////////////
 '// イベント： フォーム 初期化時
 Private Sub UserForm_Initialize()
+    '// キャプション設定
+    Me.Caption = LBL_DAT_FORM
+    
     Call psSetupDatePicker
 End Sub
 
