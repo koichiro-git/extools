@@ -392,11 +392,12 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
     Dim bff         As Shape
     Dim idxS1       As Long
     Dim idxS2       As Long
+    Dim heightTotal As Long     '// ヘッダのシェイプの高さの合計
 
     '// 縦軸に該当するオブジェクトを配列に格納
     ReDim rslt(0)
     For i = 0 To UBound(ary)
-        If ary(i).Left < (tls.Left + tls.Width) Then
+        If ary(i).Left < (tls.Left + (tls.Width * 0.9)) Then
             If Not rslt(0) Is Nothing Then
                 ReDim Preserve rslt(UBound(rslt) + 1)
             End If
@@ -432,10 +433,20 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
     Call ActiveWindow.Selection.Unselect
 #End If
     
-    '// 位置補正
     For i = 0 To UBound(rslt)
         Call rslt(i).Select(Replace:=False)
+        heightTotal = heightTotal + rslt(i).Height
+        rslt(i).Line.ForeColor.RGB = vbRed
     Next
+    
+    '// オブジェクトが重なっている場合（高さの合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
+    If UBound(rslt) > 0 Then
+        If heightTotal >= (rslt(UBound(rslt)).Top + rslt(UBound(rslt)).Height) - tls.Top Then
+'            rslt(UBound(rslt)).Line.ForeColor.RGB = vbRed
+            rslt(UBound(rslt)).Top = tls.Top + heightTotal - rslt(UBound(rslt)).Height
+        End If
+    End If
+    
     
     If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
 #If OFFICE_APP = "EXCEL" Then
@@ -463,13 +474,15 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
     Dim rslt()      As Shape
     Dim i           As Integer
     Dim bff         As Shape
-    Dim idxS1      As Long
-    Dim idxS2      As Long
+    Dim idxS1       As Long
+    Dim idxS2       As Long
+    Dim widthTotal  As Long     '// ヘッダのシェイプの幅の合計
     
     '// 横軸に該当するオブジェクトを配列に格納
+    widthTotal = 0
     ReDim rslt(0)
     For i = 0 To UBound(ary)
-        If ary(i).Top < (tls.Top + tls.Height) Then
+        If ary(i).Top < (tls.Top + (tls.Height * 0.9)) Then
             If Not rslt(0) Is Nothing Then
                 ReDim Preserve rslt(UBound(rslt) + 1)
             End If
@@ -501,7 +514,17 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
 
     For i = 0 To UBound(rslt)
         Call rslt(i).Select(Replace:=False)
+        widthTotal = widthTotal + rslt(i).Width
+        rslt(i).Line.ForeColor.RGB = vbBlue
     Next
+    
+    '// オブジェクトが重なっている場合（幅の合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
+    If UBound(rslt) > 0 Then
+        If widthTotal >= (rslt(UBound(rslt)).Left + rslt(UBound(rslt)).Width) - tls.Left Then
+'            rslt(UBound(rslt)).Line.ForeColor.RGB = vbBlue
+            rslt(UBound(rslt)).Left = tls.Left + widthTotal - rslt(UBound(rslt)).Width
+        End If
+    End If
     
     If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
 #If OFFICE_APP = "EXCEL" Then
@@ -559,3 +582,5 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
+
+

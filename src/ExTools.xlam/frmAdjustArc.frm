@@ -169,7 +169,11 @@ On Error GoTo ErrorHandler
         Call adjustArc
     Else
         Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
+#If OFFICE_APP = "EXCEL" Then
         txtStart.Value = Selection.ShapeRange(1).Adjustments.Item(1) - ANGLE_ADJUST
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+        txtStart.Value = ActiveWindow.Selection.ShapeRange(1).Adjustments.Item(1) - ANGLE_ADJUST
+#End If
     End If
     Exit Sub
     
@@ -188,7 +192,11 @@ On Error GoTo ErrorHandler
         Call adjustArc
     Else
         Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
+#If OFFICE_APP = "EXCEL" Then
         txtEnd.Value = Selection.ShapeRange(1).Adjustments.Item(2) - ANGLE_ADJUST
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+        txtEnd.Value = ActiveWindow.Selection.ShapeRange(1).Adjustments.Item(2) - ANGLE_ADJUST
+#End If
     End If
     Exit Sub
     
