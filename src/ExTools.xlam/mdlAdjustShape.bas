@@ -35,7 +35,15 @@ Public Sub ribbonCallback_AdjustShape(control As IRibbonControl)
         Case "AdjShapeUngroup"                                                  '// 再帰でグループ解除
             Call psAdjustUngroup
         Case "AdjShapeOrderTile"                                                '// グリッドに整列
-            Call psDistributeShapeGrid
+            Call psDistributeShapeGrid(0)
+        Case "AdjShapeOrderTile_1"                                                '// グリッドに整列 1pt
+            Call psDistributeShapeGrid(1)
+        Case "AdjShapeOrderTile_2"                                                '// グリッドに整列 2pt
+            Call psDistributeShapeGrid(2)
+        Case "AdjShapeOrderTile_3"                                                '// グリッドに整列 3pt
+            Call psDistributeShapeGrid(3)
+        Case "AdjShapeOrderTile_4"                                                '// グリッドに整列 4pt
+            Call psDistributeShapeGrid(4)
     End Select
 End Sub
 
@@ -291,7 +299,7 @@ End Sub
 '// メソッド：   グリッド整列
 '// 説明：       メイン処理
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub psDistributeShapeGrid()
+Private Sub psDistributeShapeGrid(spacing As Integer)
 'On Error GoTo ErrorHandler
     Dim tls             As Shape    '// Top-Left-Shape. 左上の基準とするシェイプ
     Dim allShapes()     As Shape    '// すべてのシェイプを格納
@@ -312,8 +320,8 @@ Private Sub psDistributeShapeGrid()
 #End If
     
     '// 行ヘッダにあたるシェイプの配列を設定
-    rowHeader = pfGetRowHeader(tls, allShapes)
-    colHeader = pfGetColHeader(tls, allShapes)
+    rowHeader = pfGetRowHeader(tls, allShapes, spacing)
+    colHeader = pfGetColHeader(tls, allShapes, spacing)
     
     Call psAdjustAllShapes(allShapes, rowHeader, colHeader)
     Exit Sub
@@ -384,7 +392,7 @@ End Function
 '// メソッド：   グリッド整列
 '// 説明：       行ヘッダ（縦軸）取得
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
+Private Function pfGetRowHeader(tls As Shape, ary() As Shape, spacing As Integer) As Shape()
 'On Error GoTo ErrorHandler
 '    Dim shp         As Shape
     Dim rslt()      As Shape
@@ -436,14 +444,15 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
     For i = 0 To UBound(rslt)
         Call rslt(i).Select(Replace:=False)
         heightTotal = heightTotal + rslt(i).Height
-        rslt(i).Line.ForeColor.RGB = vbRed
+'        rslt(i).Line.ForeColor.RGB = vbRed
     Next
     
     '// オブジェクトが重なっている場合（高さの合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
     If UBound(rslt) > 0 Then
-        If heightTotal >= (rslt(UBound(rslt)).Top + rslt(UBound(rslt)).Height) - tls.Top Then
+        If heightTotal >= (rslt(UBound(rslt)).Top + rslt(UBound(rslt)).Height) - tls.Top _
+              Or spacing > 0 Then
 '            rslt(UBound(rslt)).Line.ForeColor.RGB = vbRed
-            rslt(UBound(rslt)).Top = tls.Top + heightTotal - rslt(UBound(rslt)).Height
+            rslt(UBound(rslt)).Top = tls.Top + heightTotal - rslt(UBound(rslt)).Height + UBound(rslt) * spacing
         End If
     End If
     
@@ -468,7 +477,7 @@ End Function
 '// メソッド：   グリッド整列
 '// 説明：       列ヘッダ（横軸）取得
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
+Private Function pfGetColHeader(tls As Shape, ary() As Shape, spacing As Integer) As Shape()
 'On Error GoTo ErrorHandler
 '    Dim shp         As Shape
     Dim rslt()      As Shape
@@ -515,14 +524,15 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
     For i = 0 To UBound(rslt)
         Call rslt(i).Select(Replace:=False)
         widthTotal = widthTotal + rslt(i).Width
-        rslt(i).Line.ForeColor.RGB = vbBlue
+'        rslt(i).Line.ForeColor.RGB = vbBlue
     Next
     
     '// オブジェクトが重なっている場合（幅の合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
     If UBound(rslt) > 0 Then
-        If widthTotal >= (rslt(UBound(rslt)).Left + rslt(UBound(rslt)).Width) - tls.Left Then
+        If widthTotal >= (rslt(UBound(rslt)).Left + rslt(UBound(rslt)).Width) - tls.Left _
+              Or spacing > 0 Then
 '            rslt(UBound(rslt)).Line.ForeColor.RGB = vbBlue
-            rslt(UBound(rslt)).Left = tls.Left + widthTotal - rslt(UBound(rslt)).Width
+            rslt(UBound(rslt)).Left = tls.Left + widthTotal - rslt(UBound(rslt)).Width + UBound(rslt) * spacing
         End If
     End If
     

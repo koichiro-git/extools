@@ -37,7 +37,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "3.0.0.82"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "3.0.0.83"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -170,6 +170,19 @@ Public Function gfMin2(val1 As Double, val2 As Double) As Double
     Else
         gfMin2 = val2
     End If
+End Function
+
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   Clean関数
+'// 説明：       WorksheetFunction.Cleanの代替。
+'//              オリジナルのCleanはascii文字の0～31を削除するがここでは10,13のみ対応。
+'//              ※PowerPointでワークシート関数が使えないため
+'// 引数：       val: 対象文字列
+'// 戻り値：     改行文字をトリムした文字列
+'// ////////////////////////////////////////////////////////////////////////////
+Public Function gfClean(val As String) As String
+    gfClean = Replace(Replace(val, Chr(13), BLANK), Chr(10), BLANK)
 End Function
 
 
@@ -318,8 +331,19 @@ Public Function gfPreCheck(Optional protectCont As Boolean = False, _
                             Optional selType As String = BLANK, _
                             Optional selAreas As Integer = 0, _
                             Optional selCols As Integer = 0) As Boolean
-  
     gfPreCheck = True
+    
+    '// 選択範囲のタイプをチェック
+    Select Case selType
+        Case TYPE_SHAPE
+            If ActiveWindow.Selection.Type = ppSelectionNone Then
+                Call MsgBox(MSG_SHAPE_NOT_SELECTED, vbOKOnly, APP_TITLE)
+                gfPreCheck = False
+                Exit Function
+            End If
+        Case BLANK
+            '// null
+    End Select
 End Function
 #End If
 

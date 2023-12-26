@@ -12,7 +12,7 @@ Option Base 0
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// コンパイルスイッチ（"EXCEL" / "POWERPOINT"）
-#Const OFFICE_APP = "EXCEL"
+#Const OFFICE_APP = "POWERPOINT"
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// アプリケーション定数
@@ -61,8 +61,8 @@ On Error GoTo ErrorHandler
     Dim idxArry     As Integer
     Dim textLen     As Integer
     
-    '// 事前チェック（選択タイプ＝セル）
-    If Not gfPreCheck(selType:=TYPE_RANGE) Then
+    '// 事前チェック（選択タイプ＝シェイプ）
+    If Not gfPreCheck(selType:=TYPE_SHAPE) Then
         Exit Sub
     End If
     
@@ -260,7 +260,7 @@ End Function
 '// 説明：       ネストしたグループ内もすべてコピーする。実体は_subに実装
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psCopyShapeText()
-On Error GoTo ErrorHandler
+'On Error GoTo ErrorHandler
     Dim idx         As Integer
     Dim sh          As Shape
     Dim bff         As String
@@ -313,4 +313,3 @@ End Function
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
-

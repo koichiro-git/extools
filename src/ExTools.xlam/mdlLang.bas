@@ -14,8 +14,8 @@ Option Explicit
 #Const OFFICE_APP = "EXCEL"
 
 '// Œ¾ŒêƒR[ƒh Application.LanguageSettings.LanguageID(msoLanguageIDInstall) ‚Å“¾‚ç‚ê‚é’l
-'#Const cLANG = 1041   '// “ú–{Œê
-#Const cLANG = 1033  '// English
+#Const cLANG = 1041   '// “ú–{Œê
+'#Const cLANG = 1033  '// English
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -246,6 +246,7 @@ Public Const LBL_LGI_LOGIN                      As String = "ƒƒOƒCƒ“"
 Public Const LBL_LGI_CANCEL                     As String = "ƒLƒƒƒ“ƒZƒ‹"
 
 '// frmAdjustArc(ARC)
+Public Const LBL_ARC_FORM                       As String = "‰~‚ÌŠp“xİ’è"
 Public Const LBL_ARC_START                      As String = "ŠJnˆÊ’u"
 Public Const LBL_ARC_END                        As String = "I—¹ˆÊ’u"
 Public Const LBL_ARC_RESET_ROT                  As String = "ŒX‚«‚ğƒŠƒZƒbƒg"
@@ -326,7 +327,13 @@ Public Const HDR_LST                            As String = "ƒpƒX;ƒtƒ@ƒCƒ‹–¼;ì
 
 '// ////////////////////
 '// ƒAƒvƒŠ‹¤’Ê•Ï” (•Ï”‘®: APP_{string} )
+#If OFFICE_APP = "EXCEL" Then
 Public Const APP_TITLE                          As String = "Excel Extentions"
+#ElseIf OFFICE_APP = "POWERPOINT" Then
+Public Const APP_TITLE                          As String = "Excel Extentions for PowerPoint"
+#End If
+
+Public Const APP_TITLE                          As String = ""
 Public Const APP_EXL_FILE                       As String = "Excel file (#),#"
 
 
@@ -621,3 +628,4 @@ Public Const HDR_LST                            As String = "Location;File Name;
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
+

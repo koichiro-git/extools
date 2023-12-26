@@ -35,7 +35,15 @@ Public Sub ribbonCallback_AdjustShape(control As IRibbonControl)
         Case "AdjShapeUngroup"                                                  '// 再帰でグループ解除
             Call psAdjustUngroup
         Case "AdjShapeOrderTile"                                                '// グリッドに整列
-            Call psDistributeShapeGrid
+            Call psDistributeShapeGrid(0)
+        Case "AdjShapeOrderTile_1"                                                '// グリッドに整列 1pt
+            Call psDistributeShapeGrid(1)
+        Case "AdjShapeOrderTile_2"                                                '// グリッドに整列 2pt
+            Call psDistributeShapeGrid(2)
+        Case "AdjShapeOrderTile_3"                                                '// グリッドに整列 3pt
+            Call psDistributeShapeGrid(3)
+        Case "AdjShapeOrderTile_4"                                                '// グリッドに整列 4pt
+            Call psDistributeShapeGrid(4)
     End Select
 End Sub
 
@@ -142,7 +150,6 @@ Private Sub psAdjustBlockArrowHead()
         With ActiveWindow.Selection.ShapeRange(idx)
             If .AutoShapeType = msoShapePentagon Or _
                 .AutoShapeType = msoShapeChevron Then
-'                bff = WorksheetFunction.Min(.Height, .Width) * .Adjustments.Item(1)
                 bff = gfMin2(.Height, .Width) * .Adjustments.Item(1)
                 If target = 0 Then
                     target = bff
@@ -222,7 +229,6 @@ Private Sub psAdjustLine()
         With ActiveWindow.Selection.ShapeRange(idx)
             If .Type = msoLine Then
                 If .Width * .Height <> 0 Then
-'                    Select Case WorksheetFunction.Degrees(Atn((.Height) / (.Width)))
                     Select Case Atn(.Height / .Width) * 180 / (Atn(1) * 4)
                         Case Is <= 30   '// 0度に補正
                             .Top = IIf(.VerticalFlip, .Top - .Height / 2, .Top + .Height / 2)
@@ -293,7 +299,7 @@ End Sub
 '// メソッド：   グリッド整列
 '// 説明：       メイン処理
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub psDistributeShapeGrid()
+Private Sub psDistributeShapeGrid(spacing As Integer)
 'On Error GoTo ErrorHandler
     Dim tls             As Shape    '// Top-Left-Shape. 左上の基準とするシェイプ
     Dim allShapes()     As Shape    '// すべてのシェイプを格納
@@ -314,8 +320,8 @@ Private Sub psDistributeShapeGrid()
 #End If
     
     '// 行ヘッダにあたるシェイプの配列を設定
-    rowHeader = pfGetRowHeader(tls, allShapes)
-    colHeader = pfGetColHeader(tls, allShapes)
+    rowHeader = pfGetRowHeader(tls, allShapes, spacing)
+    colHeader = pfGetColHeader(tls, allShapes, spacing)
     
     Call psAdjustAllShapes(allShapes, rowHeader, colHeader)
     Exit Sub
@@ -378,7 +384,7 @@ Public Function pfGetTopLeftObject(rng As ShapeRange) As Shape
     Set pfGetTopLeftObject = rslt
     
 '//　赤にする
-rslt.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
+'rslt.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
 End Function
 
 
@@ -386,7 +392,7 @@ End Function
 '// メソッド：   グリッド整列
 '// 説明：       行ヘッダ（縦軸）取得
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
+Private Function pfGetRowHeader(tls As Shape, ary() As Shape, spacing As Integer) As Shape()
 'On Error GoTo ErrorHandler
 '    Dim shp         As Shape
     Dim rslt()      As Shape
@@ -394,11 +400,12 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
     Dim bff         As Shape
     Dim idxS1       As Long
     Dim idxS2       As Long
+    Dim heightTotal As Long     '// ヘッダのシェイプの高さの合計
 
     '// 縦軸に該当するオブジェクトを配列に格納
     ReDim rslt(0)
     For i = 0 To UBound(ary)
-        If ary(i).Left < (tls.Left + tls.Width) Then
+        If ary(i).Left < (tls.Left + (tls.Width * 0.9)) Then
             If Not rslt(0) Is Nothing Then
                 ReDim Preserve rslt(UBound(rslt) + 1)
             End If
@@ -434,11 +441,21 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape) As Shape()
     Call ActiveWindow.Selection.Unselect
 #End If
     
-    '// 位置補正
     For i = 0 To UBound(rslt)
-'        rslt(i).Left = tls.Left
         Call rslt(i).Select(Replace:=False)
+        heightTotal = heightTotal + rslt(i).Height
+'        rslt(i).Line.ForeColor.RGB = vbRed
     Next
+    
+    '// オブジェクトが重なっている場合（高さの合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
+    If UBound(rslt) > 0 Then
+        If heightTotal >= (rslt(UBound(rslt)).Top + rslt(UBound(rslt)).Height) - tls.Top _
+              Or spacing > 0 Then
+'            rslt(UBound(rslt)).Line.ForeColor.RGB = vbRed
+            rslt(UBound(rslt)).Top = tls.Top + heightTotal - rslt(UBound(rslt)).Height + UBound(rslt) * spacing
+        End If
+    End If
+    
     
     If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
 #If OFFICE_APP = "EXCEL" Then
@@ -460,19 +477,21 @@ End Function
 '// メソッド：   グリッド整列
 '// 説明：       列ヘッダ（横軸）取得
 '// ////////////////////////////////////////////////////////////////////////////
-Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
+Private Function pfGetColHeader(tls As Shape, ary() As Shape, spacing As Integer) As Shape()
 'On Error GoTo ErrorHandler
 '    Dim shp         As Shape
     Dim rslt()      As Shape
     Dim i           As Integer
     Dim bff         As Shape
-    Dim idxS1      As Long
-    Dim idxS2      As Long
+    Dim idxS1       As Long
+    Dim idxS2       As Long
+    Dim widthTotal  As Long     '// ヘッダのシェイプの幅の合計
     
     '// 横軸に該当するオブジェクトを配列に格納
+    widthTotal = 0
     ReDim rslt(0)
     For i = 0 To UBound(ary)
-        If ary(i).Top < (tls.Top + tls.Height) Then
+        If ary(i).Top < (tls.Top + (tls.Height * 0.9)) Then
             If Not rslt(0) Is Nothing Then
                 ReDim Preserve rslt(UBound(rslt) + 1)
             End If
@@ -503,15 +522,25 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
 #End If
 
     For i = 0 To UBound(rslt)
-'        rslt(i).Top = tls.Top
         Call rslt(i).Select(Replace:=False)
+        widthTotal = widthTotal + rslt(i).Width
+'        rslt(i).Line.ForeColor.RGB = vbBlue
     Next
+    
+    '// オブジェクトが重なっている場合（幅の合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
+    If UBound(rslt) > 0 Then
+        If widthTotal >= (rslt(UBound(rslt)).Left + rslt(UBound(rslt)).Width) - tls.Left _
+              Or spacing > 0 Then
+'            rslt(UBound(rslt)).Line.ForeColor.RGB = vbBlue
+            rslt(UBound(rslt)).Left = tls.Left + widthTotal - rslt(UBound(rslt)).Width + UBound(rslt) * spacing
+        End If
+    End If
     
     If UBound(rslt) > 1 Then    '// 整列（Distribute）は３つ以上のオブジェクトが無いとエラーになるため
 #If OFFICE_APP = "EXCEL" Then
-        Call Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+        Call Selection.ShapeRange.Distribute(msoDistributeHorizontally, False)
 #ElseIf OFFICE_APP = "POWERPOINT" Then
-        Call ActiveWindow.Selection.ShapeRange.Distribute(msoDistributeVertically, False)
+        Call ActiveWindow.Selection.ShapeRange.Distribute(msoDistributeHorizontally, False)
 #End If
     End If
     
@@ -519,7 +548,7 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape) As Shape()
     Exit Function
     
 ErrorHandler:
-'    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
+    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
 End Function
 
 
@@ -535,7 +564,8 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         '// 行ヘッダ（縦軸）でのループ
         For idxHead = 0 To UBound(rowHeader)
             bff = allShapes(idx).Top + allShapes(idx).Height / 2    '// 対象オブジェクトの中央ポジション（縦）
-            If bff >= allShapes(idx).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
+'            If bff >= allShapes(idx).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
+            If bff >= rowHeader(idxHead).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
                 allShapes(idx).Top = rowHeader(idxHead).Top
                 allShapes(idx).Height = rowHeader(idxHead).Height
                 Exit For
@@ -545,7 +575,8 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         '// 列ヘッダ（横軸）でのループ
         For idxHead = 0 To UBound(colHeader)
             bff = allShapes(idx).Left + allShapes(idx).Width / 2    '// 対象オブジェクトの中央ポジション（縦）
-            If bff >= allShapes(idx).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
+'            If bff >= allShapes(idx).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
+            If bff >= colHeader(idxHead).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
                 allShapes(idx).Left = colHeader(idxHead).Left
                 allShapes(idx).Width = colHeader(idxHead).Width
                 Exit For
