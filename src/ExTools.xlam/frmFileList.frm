@@ -200,7 +200,7 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
-    Call gsShowErrorMsgDlg("frmFileList.pfShowFileList", Err)
+    Call gsShowErrorMsgDlg("frmFileList.pfShowFileList", Err, Nothing)
 End Sub
 
 
@@ -300,6 +300,7 @@ On Error GoTo ErrorHandler
             If depth < pMaxDepth Then
                 Call psGetFileList(wkSheet, fs, .Path, idxRow, depth + 1, mode_Dir, mode_File, addLink, sizeUnit)
             Else
+                wkSheet.Cells(idxRow, 5).Value = fs.GetFolder(.Path).Size / sizeUnit    '// 配下のファイルサイズを取得
                 wkSheet.Cells(idxRow, 8).Value = MSG_MAX_DEPTH
             End If
         End With
@@ -315,7 +316,7 @@ ErrorHandler:
     If Err.Number = 70 Then
         wkSheet.Cells(currentRow, 8).Value = MSG_ERR_PRIV
     Else
-        Call gsShowErrorMsgDlg("frmFileList.psGetFileList", Err)
+        Call gsShowErrorMsgDlg("frmFileList.psGetFileList", Err, Nothing)
     End If
 End Sub
 

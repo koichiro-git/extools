@@ -121,7 +121,7 @@ On Error GoTo ErrorHandler
     Exit Sub
   
 ErrorHandler:
-    Call gsShowErrorMsgDlg("frmLogin.cmdOk_Click", Err)
+    Call gsShowErrorMsgDlg("frmLogin.cmdOk_Click", Err, Nothing)
     Set gADO = Nothing
 End Sub
 

@@ -14,8 +14,8 @@ Option Explicit
 #Const OFFICE_APP = "POWERPOINT"
 
 '// Œ¾ŒêƒR[ƒh Application.LanguageSettings.LanguageID(msoLanguageIDInstall) ‚Å“¾‚ç‚ê‚é’l
+'//            “ú–{Œê: 1041 / ‰pŒê: 1033
 #Const cLANG = 1041   '// “ú–{Œê
-'#Const cLANG = 1033  '// English
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -37,13 +37,13 @@ Public Const APP_EXL_FILE                       As String = "ƒGƒNƒZƒ‹Œ`® ƒtƒ@ƒC
 '// ////////////////////
 '// ƒƒjƒ…[ (•Ï”‘®: MENU_{string} )
 'Public Const MENU_SHEET_GROUP                   As String = "ƒV[ƒg # ` @"
-Public Const MENU_CHANGE_CHAR                   As String = "•¶ší‚Ì•ÏŠ·"
-Public Const MENU_CAPITAL                       As String = "‘å•¶š"
-Public Const MENU_SMALL                         As String = "¬•¶š"
-Public Const MENU_PROPER                        As String = "’PŒê‚Ìæ“ª•¶š‚ğ‘å•¶š"
-Public Const MENU_ZEN                           As String = "‘SŠp"
-Public Const MENU_HAN                           As String = "”¼Šp"
-Public Const MENU_TRIM                          As String = "’l‚ÌƒgƒŠƒ€"
+'Public Const MENU_CHANGE_CHAR                   As String = "•¶ší‚Ì•ÏŠ·"
+'Public Const MENU_CAPITAL                       As String = "‘å•¶š"
+'Public Const MENU_SMALL                         As String = "¬•¶š"
+'Public Const MENU_PROPER                        As String = "’PŒê‚Ìæ“ª•¶š‚ğ‘å•¶š"
+'Public Const MENU_ZEN                           As String = "‘SŠp"
+'Public Const MENU_HAN                           As String = "”¼Šp"
+'Public Const MENU_TRIM                          As String = "’l‚ÌƒgƒŠƒ€"
 
 
 '// ////////////////////
@@ -51,7 +51,7 @@ Public Const MENU_TRIM                          As String = "’l‚ÌƒgƒŠƒ€"
 
 '// ‹¤’Ê
 Public Const MSG_ERR                            As String = "ˆ—’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B"
-Public Const MSG_NO_BOOK                        As String = "ƒuƒbƒN‚ª‚ ‚è‚Ü‚¹‚ñB"
+Public Const MSG_NO_BOOK                        As String = "ƒuƒbƒN‚ªŠJ‚©‚ê‚Ä‚¢‚Ü‚¹‚ñB"
 Public Const MSG_FINISHED                       As String = "ˆ—‚ªI—¹‚µ‚Ü‚µ‚½B"
 Public Const MSG_PROCEED_CREATE_SHEET           As String = "ƒV[ƒgì¬‚ÍAŒ»İ‚ÌƒuƒbƒN‚ÉƒV[ƒg‚ğ’Ç‰Á‚µ‚Ü‚·B‚æ‚ë‚µ‚¢‚Å‚·‚©H"
 Public Const MSG_TOO_MANY_RANGE                 As String = "‚±‚ÌƒRƒ}ƒ“ƒh‚Í•¡”‚Ì‘I‘ğ”ÍˆÍ‚É‘Î‚µ‚ÄÀs‚Å‚«‚Ü‚¹‚ñB"
@@ -318,6 +318,12 @@ Public Const HDR_SEARCH                         As String = "ƒtƒ@ƒCƒ‹;ƒV[ƒg;ƒZƒ
 Public Const HDR_LST                            As String = "ƒpƒX;ƒtƒ@ƒCƒ‹–¼;ì¬“ú;XV“ú;ƒTƒCƒY($);ƒtƒ@ƒCƒ‹ƒ^ƒCƒv;‘®«;”õl"
 
 
+'// ////////////////////
+'// PowerPoint”Å
+Public Const MSG_NO_PRESENTATION                As String = "ƒvƒŒƒ[ƒ“ƒe[ƒVƒ‡ƒ“‚ªŠJ‚©‚ê‚Ä‚¢‚Ü‚¹‚ñB"
+Public Const MSG_PRESENTATION_PROTECTED         As String = "ƒvƒŒƒ[ƒ“ƒe[ƒVƒ‡ƒ“‚ª“Ç‚İæ‚èê—p‚É•ÛŒì‚³‚ê‚Ä‚¢‚Ü‚·B•ÛŒì‚ğ‰ğœ‚µ‚Ä‰º‚³‚¢B"
+
+
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// 1033 - English
@@ -340,13 +346,13 @@ Public Const APP_EXL_FILE                       As String = "Excel file (#),#"
 '// ////////////////////
 '// ƒƒjƒ…[ (•Ï”‘®: MENU_{string} )
 'Public Const MENU_SHEET_GROUP                   As String = "Sheet # - @"
-Public Const MENU_CHANGE_CHAR                   As String = "Change Case"
-Public Const MENU_CAPITAL                       As String = "Uppercase"
-Public Const MENU_SMALL                         As String = "Lowercase"
-Public Const MENU_PROPER                        As String = "Capital the First Letter in the Word"
-Public Const MENU_ZEN                           As String = "Wide Letter"
-Public Const MENU_HAN                           As String = "Narrow Letter"
-Public Const MENU_TRIM                          As String = "Trim Values"
+'Public Const MENU_CHANGE_CHAR                   As String = "Change Case"
+'Public Const MENU_CAPITAL                       As String = "Uppercase"
+'Public Const MENU_SMALL                         As String = "Lowercase"
+'Public Const MENU_PROPER                        As String = "Capital the First Letter in the Word"
+'Public Const MENU_ZEN                           As String = "Wide Letter"
+'Public Const MENU_HAN                           As String = "Narrow Letter"
+'Public Const MENU_TRIM                          As String = "Trim Values"
 
 
 '// ////////////////////
@@ -354,7 +360,7 @@ Public Const MENU_TRIM                          As String = "Trim Values"
 
 '// ‹¤’Ê
 Public Const MSG_ERR                            As String = "An error occured during the operation."
-Public Const MSG_NO_BOOK                        As String = "No books opened."
+Public Const MSG_NO_BOOK                        As String = "No Books opened."
 Public Const MSG_FINISHED                       As String = "Operation finished successfully."
 Public Const MSG_PROCEED_CREATE_SHEET           As String = "Are you sure to append new sheet on the current workbook?"
 Public Const MSG_TOO_MANY_RANGE                 As String = "This operation supports single selection area only."
@@ -621,6 +627,10 @@ Public Const HDR_SEARCH                         As String = "File;Sheet;Cell;Val
 Public Const HDR_LST                            As String = "Location;File Name;Created;Modified;Size($);Type;attributes;Note"
 
 
+'// ////////////////////
+'// PowerPoint”Å
+Public Const MSG_NO_PRESENTATION                As String = "There are no presentations"
+Public Const MSG_PRESENTATION_PROTECTED         As String = "Presentation is read-only. Please unprotect and retry."
 
 #End If
 
@@ -628,3 +638,4 @@ Public Const HDR_LST                            As String = "Location;File Name;
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
+

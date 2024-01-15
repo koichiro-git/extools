@@ -157,7 +157,7 @@ On Error GoTo ErrorHandler
   Exit Sub
   
 ErrorHandler:
-  Call gsShowErrorMsgDlg("frmCompSheet.psCompSheet", Err)
+  Call gsShowErrorMsgDlg("frmCompSheet.psCompSheet", Err, Nothing)
 End Sub
 
 
@@ -249,7 +249,7 @@ On Error GoTo ErrorHandler
   Exit Sub
   
 ErrorHandler:
-  Call gsShowErrorMsgDlg("frmCompBook.psCompBook", Err)
+  Call gsShowErrorMsgDlg("frmCompBook.psCompBook", Err, Nothing)
 End Sub
 
 
@@ -465,7 +465,7 @@ On Error GoTo ErrorHandler
   Application.StatusBar = False
   Exit Sub
 ErrorHandler:
-  Call gsShowErrorMsgDlg("frmCompSheet.psExecComp", Err)
+  Call gsShowErrorMsgDlg("frmCompSheet.psExecComp", Err, Nothing)
   Application.StatusBar = False
 End Sub
 
@@ -505,7 +505,8 @@ Private Sub psShowResult(wkBook As Workbook)
   '// ç∑ï™ÇÃê›íË
   For idxRow = 0 To UBound(pDiff) - 1
     wkSheet.Cells(idxRow + 2, 1).Value = pDiff(idxRow).sheet
-    wkSheet.Cells(idxRow + 2, 2).Value = mdlCommon.gfGetColIndexString(pDiff(idxRow).Col) & CStr(pDiff(idxRow).Row)
+    wkSheet.Cells(idxRow + 2, 2).Value = Cells(pDiff(idxRow).Row, pDiff(idxRow).Col).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+'    wkSheet.Cells(idxRow + 2, 2).Value = mdlCommon.gfGetColIndexString(pDiff(idxRow).Col) & CStr(pDiff(idxRow).Row)
     If needLink Then
       Call wkSheet.Cells(idxRow + 2, 2).Hyperlinks.Add(Anchor:=Cells(idxRow + 2, 2), Address:=BLANK, SubAddress:="'" & pDiff(idxRow).sheet & "'!" & wkSheet.Cells(idxRow + 2, 2).Value)
     End If
@@ -770,4 +771,3 @@ End Sub
 '// ////////////////////////////////////////////////////////////////////////////
 '// END
 '// ////////////////////////////////////////////////////////////////////////////
-

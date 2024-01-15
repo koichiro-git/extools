@@ -334,7 +334,7 @@ On Error GoTo ErrorHandler
     Exit Function
 
 ErrorHandler:
-    Call gsShowErrorMsgDlg("frmGetRecord.pfDrawHeader", Err)
+    Call gsShowErrorMsgDlg("frmGetRecord.pfDrawHeader", Err, Nothing)
 End Function
 
 
@@ -383,7 +383,7 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
-    Call gsShowErrorMsgDlg("frmGetRecord.psDrawDataRows", Err)
+    Call gsShowErrorMsgDlg("frmGetRecord.psDrawDataRows", Err, Nothing)
 End Sub
 
 

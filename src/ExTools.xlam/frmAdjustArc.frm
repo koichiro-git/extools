@@ -27,7 +27,7 @@ Option Base 0
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// コンパイルスイッチ（"EXCEL" / "POWERPOINT"）
-#Const OFFICE_APP = "EXCEL"
+'#Const OFFICE_APP = "EXCEL"
 
 Private Const ANGLE_ADJUST      As Integer = -90    '// 角度計算の開始位置補正値
 
@@ -52,7 +52,6 @@ End Sub
 Private Sub UserForm_Activate()
 On Error GoTo ErrorHandler
     Dim shp     As Shape
-    Dim spacer  As Integer
     
     '// 事前準備 //////////
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
@@ -61,11 +60,7 @@ On Error GoTo ErrorHandler
         Exit Sub
     End If
     
-#If OFFICE_APP = "EXCEL" Then
-    For Each shp In Selection.ShapeRange
-#ElseIf OFFICE_APP = "POWERPOINT" Then
     For Each shp In ActiveWindow.Selection.ShapeRange
-#End If
         Select Case shp.AutoShapeType
             Case msoShapePie, msoShapeBlockArc, msoShapeArc
                 angleStart = Int(shp.Adjustments.Item(1)) - ANGLE_ADJUST
@@ -83,10 +78,7 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
-#If OFFICE_APP = "EXCEL" Then
-    Call gsResumeAppEvents
-#End If
-    Call gsShowErrorMsgDlg("frmAdjustArc.UserForm_Activate", Err)
+    Call gsShowErrorMsgDlg("frmAdjustArc.UserForm_Activate", Err, Nothing)
 End Sub
 
 
@@ -102,11 +94,7 @@ End Sub
 Private Sub cmdResetRotation_Click()
     Dim shp As Shape
     
-#If OFFICE_APP = "EXCEL" Then
-    For Each shp In Selection.ShapeRange
-#ElseIf OFFICE_APP = "POWERPOINT" Then
     For Each shp In ActiveWindow.Selection.ShapeRange
-#End If
         Select Case shp.AutoShapeType
             Case msoShapePie, msoShapeBlockArc, msoShapeCircularArrow, msoShapeArc
                 shp.Rotation = 0
@@ -169,16 +157,12 @@ On Error GoTo ErrorHandler
         Call adjustArc
     Else
         Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
-#If OFFICE_APP = "EXCEL" Then
-        txtStart.Value = Selection.ShapeRange(1).Adjustments.Item(1) - ANGLE_ADJUST
-#ElseIf OFFICE_APP = "POWERPOINT" Then
         txtStart.Value = ActiveWindow.Selection.ShapeRange(1).Adjustments.Item(1) - ANGLE_ADJUST
-#End If
     End If
     Exit Sub
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("frmAdjustArc.txtStart_AfterUpdate", Err)
+    Call gsShowErrorMsgDlg("frmAdjustArc.txtStart_AfterUpdate", Err, Nothing)
 End Sub
 
 
@@ -192,16 +176,12 @@ On Error GoTo ErrorHandler
         Call adjustArc
     Else
         Call MsgBox(MSG_INVALID_NUM, vbOKOnly, APP_TITLE)
-#If OFFICE_APP = "EXCEL" Then
-        txtEnd.Value = Selection.ShapeRange(1).Adjustments.Item(2) - ANGLE_ADJUST
-#ElseIf OFFICE_APP = "POWERPOINT" Then
         txtEnd.Value = ActiveWindow.Selection.ShapeRange(1).Adjustments.Item(2) - ANGLE_ADJUST
-#End If
     End If
     Exit Sub
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("frmAdjustArc.txtEnd_AfterUpdate", Err)
+    Call gsShowErrorMsgDlg("frmAdjustArc.txtEnd_AfterUpdate", Err, Nothing)
 End Sub
 
 
@@ -212,11 +192,7 @@ End Sub
 Private Sub adjustArc()
     Dim shp     As Shape
     
-#If OFFICE_APP = "EXCEL" Then
-    For Each shp In Selection.ShapeRange
-#ElseIf OFFICE_APP = "POWERPOINT" Then
     For Each shp In ActiveWindow.Selection.ShapeRange
-#End If
         Select Case shp.AutoShapeType
             Case msoShapePie, msoShapeBlockArc, msoShapeArc
                 shp.Adjustments.Item(1) = angleStart + ANGLE_ADJUST

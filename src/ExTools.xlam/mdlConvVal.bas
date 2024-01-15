@@ -10,6 +10,26 @@ Attribute VB_Name = "mdlConvVal"
 Option Explicit
 Option Base 0
 
+Private Const MENU_CHANGE_CHAR                   As String = "Change Case"
+Private Const MENU_CAPITAL                       As String = "Uppercase"
+Private Const MENU_SMALL                         As String = "Lowercase"
+Private Const MENU_PROPER                        As String = "Capital the First Letter in the Word"
+Private Const MENU_ZEN                           As String = "Wide Letter"
+Private Const MENU_HAN                           As String = "Narrow Letter"
+Private Const MENU_TRIM                          As String = "Trim Values"
+
+'// ////////////////////////////////////////////////////////////////////////////
+'// 列挙 宣言
+'// 型変換モード
+Public Enum udConvMode
+  cUpper = 1
+  cSmall = 2
+  cProper = 3
+  cZenkaku = 4
+  cHankaku = 5
+  cTrim = 6
+End Enum
+
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   リボンボタンコールバック管理(フォームなし)
@@ -20,17 +40,17 @@ Option Base 0
 Public Sub ribbonCallback_ConvVal(control As IRibbonControl)
     Select Case control.ID
         Case "chrUpper"                     '// 大文字
-            Call psConvValue(MENU_CAPITAL)
+            Call psConvValue(cUpper)
         Case "chrLower"                     '// 小文字
-            Call psConvValue(MENU_SMALL)
+            Call psConvValue(cSmall)
         Case "chrInitCap"                   '// 先頭大文字
-            Call psConvValue(MENU_PROPER)
+            Call psConvValue(cProper)
         Case "chrZen"                       '// 全角
-            Call psConvValue(MENU_ZEN)
+            Call psConvValue(cZenkaku)
         Case "chrHan"                       '// 半角
-            Call psConvValue(MENU_HAN)
+            Call psConvValue(cHankaku)
         Case "TrimVal"                      '// トリム
-            Call psConvValue(MENU_TRIM)
+            Call psConvValue(cTrim)
     End Select
 End Sub
 
@@ -39,7 +59,7 @@ End Sub
 '// メソッド：   文字種の変換
 '// 説明：       選択範囲の値を変換する
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub psConvValue(funcFlag As String)
+Private Sub psConvValue(funcFlag As udConvMode)
 On Error GoTo ErrorHandler
     Dim tCell     As Range    '// 変換対象セル
     Dim statGauge As cStatusGauge
@@ -72,7 +92,7 @@ ErrorHandler:
     If Err.Number = 1004 Then  '// 範囲選択が正しくない場合
         Call MsgBox(MSG_INVALID_RANGE, vbOKOnly, APP_TITLE)
     Else
-        Call gsShowErrorMsgDlg("psConvValue", Err)
+        Call gsShowErrorMsgDlg("psConvValue", Err, Nothing)
     End If
 End Sub
 
@@ -81,19 +101,19 @@ End Sub
 '// メソッド：   文字種の変換 サブルーチン
 '// 説明：       引数の値を変換する
 '// ////////////////////////////////////////////////////////////////////////////
-Private Sub psConvValue_sub(tCell As Range, funcFlag As String)
+Private Sub psConvValue_sub(tCell As Range, funcFlag As udConvMode)
     Select Case funcFlag
-        Case MENU_CAPITAL
+        Case cUpper
             tCell.Value = UCase(tCell.Value)
-        Case MENU_SMALL
+        Case cSmall
             tCell.Value = LCase(tCell.Value)
-        Case MENU_PROPER
+        Case cProper
             tCell.Value = StrConv(tCell.Value, vbProperCase)
-        Case MENU_ZEN
+        Case cZenkaku
             tCell.Value = StrConv(tCell.Value, vbWide)
-        Case MENU_HAN
+        Case cHankaku
             tCell.Value = StrConv(StrConv(tCell.Value, vbKatakana), vbNarrow)
-        Case MENU_TRIM
+        Case cTrim
             tCell.Value = Trim$(tCell.Value)
             If Len(tCell.Value) = 0 Then
                 tCell.Value = Empty

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmSheetManage 
    Caption         =   "ÉVÅ[ÉgëÄçÏ"
-   ClientHeight    =   4920
+   ClientHeight    =   5055
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   6360
@@ -175,7 +175,7 @@ On Error GoTo ErrorHandler
   
 ErrorHandler:
     Call gsResumeAppEvents
-    Call gsShowErrorMsgDlg("frmSheetManage.cmdExecute_Click [" & ActiveWorkbook.FullName & "!" & ActiveSheet.Name & "]", Err)
+    Call gsShowErrorMsgDlg("frmSheetManage.cmdExecute_Click [" & ActiveWorkbook.FullName & "!" & ActiveSheet.Name & "]", Err, Nothing)
     Call MsgBox(MSG_COMPLETED_FILES & Chr(10) & compFiles, vbOKOnly, APP_TITLE)
 End Sub
 

@@ -37,7 +37,7 @@ Public Const MRG_FOOTER               As Double = 0.3                           
 '// アプリケーション定数
 
 '// バージョン
-Public Const APP_VERSION              As String = "3.0.0.83"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
+Public Const APP_VERSION              As String = "3.0.0.84"                                        '// {メジャー}.{機能修正}.{バグ修正}.{開発時管理用}
 
 '// システム定数
 Public Const BLANK                    As String = ""                                                '// 空白文字列
@@ -130,7 +130,7 @@ On Error GoTo ErrorHandler
         gfGetShapeText = shapeObj.TextFrame.TextRange.Text
 #End If
     End If
-Exit Function
+    Exit Function
 
 ErrorHandler:
     gfGetShapeText = BLANK
@@ -159,9 +159,9 @@ End Function
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   Min関数
-'// 説明：       WorksheetFunction.Minの代替。ただし、２つの値のみ対応。
+'// 説明：       WorksheetFunction.Minの代替。
 '//              ※PowerPointでワークシート関数が使えないため
-'// 引数：       val1, val2: 比較対象の値
+'// 引数：       比較対象の値
 '// 戻り値：     より小さい値
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function gfMin2(val1 As Double, val2 As Double) As Double
@@ -191,10 +191,18 @@ End Function
 '// 説明：       例外処理部で処理できない例外のエラーの内容を、ダイアログ表示する。
 '// 引数：       errSource: エラーの発生元のオブジェクトまたはアプリケーションの名前を示す文字列式
 '//              e: ＶＢエラーオブジェクト
-'//              objAdo： ADOオブジェクト（省略可）
+'//              objAdo： ADOオブジェクト
+'//              params: エラー時のパラメータ
 '// ////////////////////////////////////////////////////////////////////////////
 #If OFFICE_APP = "EXCEL" Then
-Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, Optional ado As cADO = Nothing)
+Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, ado As cADO, ParamArray params() As Variant)
+    Dim paramText   As String
+    Dim idx         As Integer
+    
+    For idx = 0 To UBound(params())
+        paramText = paramText & " [" & params(idx) & "]"
+    Next
+    
     If ado Is Nothing Then
         '// ADOオブジェクトがからの場合はVBエラーとして扱う
         Call MsgBox(MSG_ERR & vbLf & vbLf _
@@ -236,13 +244,23 @@ End Sub
 '// 説明：       例外処理部で処理できない例外のエラーの内容を、ダイアログ表示する。
 '// 引数：       errSource: エラーの発生元のオブジェクトまたはアプリケーションの名前を示す文字列式
 '//              e: ＶＢエラーオブジェクト
+'//              ado: 不使用。インターフェイスを合わせる為のダミー。エクセル版ではadoを受け取る。
+'//              params: エラー時のパラメータ
 '// ////////////////////////////////////////////////////////////////////////////
-Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject)
+Public Sub gsShowErrorMsgDlg(errSource As String, ByVal e As ErrObject, ado As Variant, ParamArray params() As Variant)
+    Dim paramText   As String
+    Dim idx         As Integer
+    
+    For idx = 0 To UBound(params())
+        paramText = paramText & " [" & params(idx) & "]"
+    Next
+ 
     '// すべてVBエラーとして扱う
     Call MsgBox(MSG_ERR & vbLf & vbLf _
                & "Error Number: " & e.Number & vbLf _
                & "Error Source: " & errSource & vbLf _
-               & "Error Description: " & e.Description _
+               & "Error Description: " & e.Description & vbLf _
+               & "Parameters: " & paramText _
                , , APP_TITLE)
     Call e.Clear
 End Sub
@@ -333,10 +351,24 @@ Public Function gfPreCheck(Optional protectCont As Boolean = False, _
                             Optional selCols As Integer = 0) As Boolean
     gfPreCheck = True
     
+    If Presentations.Count = 0 Then                             '// ファイルが開かれているか
+        Call MsgBox(MSG_NO_PRESENTATION, vbOKOnly, APP_TITLE)
+        gfPreCheck = False
+        Exit Function
+    End If
+    
+    If ActivePresentation.ReadOnly Then                         '// ファイルが保護されているか
+        Call MsgBox(MSG_PRESENTATION_PROTECTED, vbOKOnly, APP_TITLE)
+        gfPreCheck = False
+        Exit Function
+    End If
+    
+
     '// 選択範囲のタイプをチェック
     Select Case selType
         Case TYPE_SHAPE
-            If ActiveWindow.Selection.Type = ppSelectionNone Then
+            If ActiveWindow.Selection.Type = ppSelectionNone Or _
+            ActiveWindow.Selection.Type = ppSelectionSlides Then
                 Call MsgBox(MSG_SHAPE_NOT_SELECTED, vbOKOnly, APP_TITLE)
                 gfPreCheck = False
                 Exit Function
@@ -565,19 +597,19 @@ End Function
 '// 引数：       targetVal: 列番号
 '// 戻り値：     列の文字列表記
 '// ////////////////////////////////////////////////////////////////////////////
-Public Function gfGetColIndexString(ByVal targetVal As Integer) As String
-    Const ALPHABETS   As Integer = 26
-    Dim remainder     As Integer
-    Dim rslt          As String
-    
-    Do
-        remainder = IIf((targetVal Mod ALPHABETS) = 0, ALPHABETS, targetVal Mod ALPHABETS)
-        rslt = Chr(64 + remainder) & rslt
-        targetVal = Int((targetVal - 1) / ALPHABETS)
-    Loop Until targetVal < 1
-    
-    gfGetColIndexString = rslt
-End Function
+'Public Function gfGetColIndexString(ByVal targetVal As Integer) As String
+'    Const ALPHABETS   As Integer = 26
+'    Dim remainder     As Integer
+'    Dim rslt          As String
+'
+'    Do
+'        remainder = IIf((targetVal Mod ALPHABETS) = 0, ALPHABETS, targetVal Mod ALPHABETS)
+'        rslt = Chr(64 + remainder) & rslt
+'        targetVal = Int((targetVal - 1) / ALPHABETS)
+'    Loop Until targetVal < 1
+'
+'    gfGetColIndexString = rslt
+'End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
@@ -883,7 +915,7 @@ Private Sub psPutDateTime(DateTimeMode As String)
     
 ErrorHandler:
     Call gsResumeAppEvents
-    Call gsShowErrorMsgDlg("mdlCommon.psPutDateTime", Err)
+    Call gsShowErrorMsgDlg("mdlCommon.psPutDateTime", Err, Nothing)
 End Sub
 #End If
 

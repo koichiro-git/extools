@@ -122,7 +122,7 @@ On Error GoTo ErrorHandler
     Exit Sub
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("psCopyToClipboard", Err)
+    Call gsShowErrorMsgDlg("psCopyToClipboard", Err, Nothing)
 End Sub
 
 
@@ -192,7 +192,7 @@ On Error GoTo ErrorHandler
     
     Exit Sub
 ErrorHandler:
-    Call gsShowErrorMsgDlg("psCopyToCB_Markdown", Err)
+    Call gsShowErrorMsgDlg("psCopyToCB_Markdown", Err, Nothing)
 End Sub
 
 
@@ -220,7 +220,7 @@ On Error GoTo ErrorHandler
         
     Exit Sub
 ErrorHandler:
-    Call gsShowErrorMsgDlg("psCopyToCB_Image", Err)
+    Call gsShowErrorMsgDlg("psCopyToCB_Image", Err, Nothing)
 End Sub
 #End If
 
@@ -282,7 +282,7 @@ Private Sub psCopyShapeText()
     Exit Sub
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("psCopyShapeText", Err)
+    Call gsShowErrorMsgDlg("psCopyShapeText", Err, Nothing)
 End Sub
 
 
@@ -295,14 +295,15 @@ Private Function pfCopyShapeText_sub(targetShape As Shape) As String
     Dim rslt    As String
     Dim bff     As String
     
+    bff = BLANK
     '// グループは再帰処理
     If targetShape.Type = msoGroup Then
         For Each sh In targetShape.GroupItems
-            rslt = rslt + pfCopyShapeText_sub(sh)
+            bff = bff & pfCopyShapeText_sub(sh)
         Next
     End If
     
-    bff = gfClean(gfGetShapeText(targetShape))
+    bff = bff & gfClean(gfGetShapeText(targetShape))
 '    bff = WorksheetFunction.Clean(gfGetShapeText(targetShape))
     If bff <> BLANK Then
         pfCopyShapeText_sub = rslt & Trim(Str(Int(targetShape.Left))) & "," + Trim(Str(Int(targetShape.Top))) & "," & bff & vbCrLf

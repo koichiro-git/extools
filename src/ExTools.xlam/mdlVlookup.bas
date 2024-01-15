@@ -105,7 +105,7 @@ On Error GoTo ErrorHandler
     Exit Sub
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("psVLookupPaste", Err)
+    Call gsShowErrorMsgDlg("psVLookupPaste", Err, Nothing)
 End Sub
 
 

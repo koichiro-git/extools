@@ -49,11 +49,15 @@ Private Sub UserForm_Initialize()
 End Sub
 
 
+'// ////////////////////////////////////////////////////////////////////////////
+'// メソッド：   カレンダーコントロール生成
+'// 説明：       コモンコントロールのMonthViewをフォーム上に作成する
+'// ////////////////////////////////////////////////////////////////////////////
 Private Sub psSetupDatePicker()
 On Error GoTo ErrorHandler
     Dim icce                As tagINITCOMMONCONTROLSEX
     Dim rc                  As RECT
-    Dim hWnd_Sub            As LongPtr
+    Dim hWnd_Sub            As LongPtr  '// MonthViewのウィンドウハンドル
     Dim hWnd                As LongPtr  '// UserFormのウィンドウハンドル
     Dim lResult             As LongPtr
     Dim calendarWidth       As Long
@@ -92,8 +96,7 @@ On Error GoTo ErrorHandler
     Exit Sub
 
 ErrorHandler:
-    Call gsResumeAppEvents
-    Call gsShowErrorMsgDlg("frmDatePicker.psSetupDatePicker", Err)
+    Call gsShowErrorMsgDlg("frmDatePicker.psSetupDatePicker", Err, Nothing)
 End Sub
 
 

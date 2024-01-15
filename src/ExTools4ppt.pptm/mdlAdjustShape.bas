@@ -3,8 +3,8 @@ Attribute VB_Name = "mdlAdjustShape"
 '// プロジェクト   : 拡張ツール
 '// タイトル       : オブジェクトの補正機能
 '// モジュール     : mdlAdjustShape
-'// 説明           : 鍵コネクタやブロック矢印などのオブジェクトの微調整機能
-'//                  ※旧mdlFeatures（V2.1.1まで）
+'// 説明           : オブジェクトの微調整機能
+'//                  PowerPoint版共通モジュール
 '// ////////////////////////////////////////////////////////////////////////////
 '// Copyright (c) by Koichiro.
 '// ////////////////////////////////////////////////////////////////////////////
@@ -24,25 +24,25 @@ Option Base 0
 '// ////////////////////////////////////////////////////////////////////////////
 Public Sub ribbonCallback_AdjustShape(control As IRibbonControl)
     Select Case control.ID
-        Case "AdjShapeElbowConn"                                                '// 鍵コネクタの補正
+        Case "AdjShapeElbowConn"                        '// 鍵コネクタの補正
             Call psAdjustElbowConnector
-        Case "AdjShapeRoundRect"                                                '// 四角形の角丸み補正
+        Case "AdjShapeRoundRect"                        '// 四角形の角丸み補正
             Call psAdjustRoundRect
-        Case "AdjShapeBlockArrow"                                               '// ブロック矢印の傾き補正
+        Case "AdjShapeBlockArrow"                       '// ブロック矢印の傾き補正
             Call psAdjustBlockArrowHead
-        Case "AdjShapeLine"                                                     '// 直線の傾き補正（0,45,90度）
+        Case "AdjShapeLine"                             '// 直線の傾き補正（0,45,90度）
             Call psAdjustLine
-        Case "AdjShapeUngroup"                                                  '// 再帰でグループ解除
+        Case "AdjShapeUngroup"                          '// 再帰でグループ解除
             Call psAdjustUngroup
-        Case "AdjShapeOrderTile"                                                '// グリッドに整列
+        Case "AdjShapeOrderTile"                        '// タイル状に整列
             Call psDistributeShapeGrid(0)
-        Case "AdjShapeOrderTile_1"                                                '// グリッドに整列 1pt
+        Case "AdjShapeOrderTile_1"                      '// タイル状に整列 1pt
             Call psDistributeShapeGrid(1)
-        Case "AdjShapeOrderTile_2"                                                '// グリッドに整列 2pt
+        Case "AdjShapeOrderTile_2"                      '// タイル状に整列 2pt
             Call psDistributeShapeGrid(2)
-        Case "AdjShapeOrderTile_3"                                                '// グリッドに整列 3pt
+        Case "AdjShapeOrderTile_3"                      '// タイル状に整列 3pt
             Call psDistributeShapeGrid(3)
-        Case "AdjShapeOrderTile_4"                                                '// グリッドに整列 4pt
+        Case "AdjShapeOrderTile_4"                      '// タイル状に整列 4pt
             Call psDistributeShapeGrid(4)
     End Select
 End Sub
@@ -92,8 +92,7 @@ On Error GoTo ErrorHandler
     Else
         topObjName = elbows(0).ConnectorFormat.EndConnectedShape.Name
     End If
-    
-    '// ターゲット値(コネクタ幅×Adjust値の最小値)を取得　//////////
+    '// ターゲット値(コネクタ幅×Adjust値の最小値)を取得 //////////
     target = 0
     For idx = 0 To UBound(elbows)
         With elbows(idx)
@@ -122,11 +121,14 @@ On Error GoTo ErrorHandler
             End If
         End With
     Next
-    
     Exit Sub
-ErrorHandler:
-    '//
     
+ErrorHandler:
+#If OFFICE_APP = "EXCEL" Then
+    Call gsResumeAppEvents
+#End If
+    Call gsShowErrorMsgDlg("psAdjustElbowConnector", Err, Nothing, _
+        topObjName, target, idx, cntElbow, bff)
 End Sub
 
 
@@ -135,16 +137,17 @@ End Sub
 '// 説明：       ブロック矢印の先端角を、最も鈍角なものに合わせる
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psAdjustBlockArrowHead()
+On Error GoTo ErrorHandler
     Dim target      As Double   '// 全ブロック矢印のAdjustment(1)をこのターゲットに合わせる。「短辺×Adjust値の最小値)」
-    Dim bff         As Double
     Dim idx         As Integer
+    Dim bff         As Double
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
         Exit Sub
     End If
     
-    '// ターゲット値(短辺×Adjust値の最小値)を取得　//////////
+    '// ターゲット値(短辺×Adjust値の最小値)を取得 //////////
     target = 0
     For idx = 1 To ActiveWindow.Selection.ShapeRange.Count  '// shaperangeの開始インデックスは１から
         With ActiveWindow.Selection.ShapeRange(idx)
@@ -169,6 +172,13 @@ Private Sub psAdjustBlockArrowHead()
             End If
         End With
     Next
+    Exit Sub
+    
+ErrorHandler:
+#If OFFICE_APP = "EXCEL" Then
+    Call gsResumeAppEvents
+#End If
+    Call gsShowErrorMsgDlg("psAdjustBlockArrowHead", Err, Nothing, target, idx, bff)
 End Sub
 
 
@@ -177,9 +187,10 @@ End Sub
 '// 説明：       角の丸い四角形の丸みを、最もR（径）の小さいものに合わせる
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psAdjustRoundRect()
+On Error GoTo ErrorHandler
     Dim target      As Double   '// 全ブロック矢印のAdjustment(1)をこのターゲットに合わせる。「短辺×Adjust値の最小値)」
-    Dim bff         As Double
     Dim idx         As Integer
+    Dim bff         As Double
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
@@ -209,6 +220,13 @@ Private Sub psAdjustRoundRect()
             End If
         End With
     Next
+    Exit Sub
+    
+ErrorHandler:
+#If OFFICE_APP = "EXCEL" Then
+    Call gsResumeAppEvents
+#End If
+    Call gsShowErrorMsgDlg("psAdjustRoundRect", Err, Nothing, target, idx, bff)
 End Sub
 
 
@@ -217,6 +235,7 @@ End Sub
 '// 説明：       直線の角度を、0,45,90度に補正する。元の位置の中心から回転させる
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psAdjustLine()
+On Error GoTo ErrorHandler
     Dim idx         As Integer
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
@@ -249,6 +268,13 @@ Private Sub psAdjustLine()
             End If
         End With
     Next
+    Exit Sub
+    
+ErrorHandler:
+#If OFFICE_APP = "EXCEL" Then
+    Call gsResumeAppEvents
+#End If
+    Call gsShowErrorMsgDlg("psAdjustLine", Err, idx)
 End Sub
 
 
@@ -259,7 +285,6 @@ End Sub
 Private Sub psAdjustUngroup()
 On Error GoTo ErrorHandler
     Dim idx         As Integer
-'    Dim sh          As Shape
     
     '// 事前チェック（アクティブシート保護、選択タイプ＝シェイプ）
     If Not gfPreCheck(protectCont:=True, selType:=TYPE_SHAPE) Then
@@ -275,7 +300,7 @@ ErrorHandler:
 #If OFFICE_APP = "EXCEL" Then
     Call gsResumeAppEvents
 #End If
-    Call gsShowErrorMsgDlg("psAdjustUngroup", Err)
+    Call gsShowErrorMsgDlg("psAdjustUngroup", Err, Nothing, idx)
 End Sub
 
 
@@ -294,13 +319,12 @@ Private Sub psAdjustUngroup_sub(targetShape As Shape)
 End Sub
 
 
-
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   グリッド整列
 '// 説明：       メイン処理
 '// ////////////////////////////////////////////////////////////////////////////
 Private Sub psDistributeShapeGrid(spacing As Integer)
-'On Error GoTo ErrorHandler
+On Error GoTo ErrorHandler
     Dim tls             As Shape    '// Top-Left-Shape. 左上の基準とするシェイプ
     Dim allShapes()     As Shape    '// すべてのシェイプを格納
     Dim rowHeader()     As Shape    '// 行ヘッダ（縦軸）のシェイプを格納
@@ -330,13 +354,13 @@ ErrorHandler:
 #If OFFICE_APP = "EXCEL" Then
     Call gsResumeAppEvents
 #End If
-'    Call gsShowErrorMsgDlg("psDistributeShapeGrid", Err)
+    Call gsShowErrorMsgDlg("psDistributeShapeGrid", Err, Nothing, tls.Name, UBound(rowHeader), UBound(colHeader))
 End Sub
 
 
 '// ////////////////////////////////////////////////////////////////////////////
 '// メソッド：   グリッド整列
-'// 説明：       選択されたシェイプを全て配列に格納
+'// 説明：       選択されたシェイプを全て配列に格納して戻す
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function pfGetAllShapes(rng As ShapeRange) As Shape()
     Dim shp         As Shape
@@ -358,8 +382,8 @@ End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   グリッド整列
-'// 説明：       基準となる、TopLeft位置のシェイプを取得
+'// メソッド：   グリッド整列 TopLeftオブジェクト取得
+'// 説明：       基準となる左上のシェイプを取得
 '// ////////////////////////////////////////////////////////////////////////////
 Public Function pfGetTopLeftObject(rng As ShapeRange) As Shape
     Dim shp         As Shape
@@ -382,19 +406,15 @@ Public Function pfGetTopLeftObject(rng As ShapeRange) As Shape
     Next
     
     Set pfGetTopLeftObject = rslt
-    
-'//　赤にする
-'rslt.Fill.ForeColor.ObjectThemeColor = msoThemeColorAccent2
 End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   グリッド整列
-'// 説明：       行ヘッダ（縦軸）取得
+'// メソッド：   グリッド整列 行ヘッダ（縦軸）取得
+'// 説明：       TolLeftオブジェクトの右端tls.Left + (tls.Width * 0.9)よりも、Leftが小さければ行ヘッダとして扱う
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetRowHeader(tls As Shape, ary() As Shape, spacing As Integer) As Shape()
-'On Error GoTo ErrorHandler
-'    Dim shp         As Shape
+On Error GoTo ErrorHandler
     Dim rslt()      As Shape
     Dim i           As Integer
     Dim bff         As Shape
@@ -444,14 +464,12 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape, spacing As Integer
     For i = 0 To UBound(rslt)
         Call rslt(i).Select(Replace:=False)
         heightTotal = heightTotal + rslt(i).Height
-'        rslt(i).Line.ForeColor.RGB = vbRed
     Next
     
     '// オブジェクトが重なっている場合（高さの合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
     If UBound(rslt) > 0 Then
         If heightTotal >= (rslt(UBound(rslt)).Top + rslt(UBound(rslt)).Height) - tls.Top _
               Or spacing > 0 Then
-'            rslt(UBound(rslt)).Line.ForeColor.RGB = vbRed
             rslt(UBound(rslt)).Top = tls.Top + heightTotal - rslt(UBound(rslt)).Height + UBound(rslt) * spacing
         End If
     End If
@@ -469,17 +487,16 @@ Private Function pfGetRowHeader(tls As Shape, ary() As Shape, spacing As Integer
     Exit Function
     
 ErrorHandler:
-'    Call gsShowErrorMsgDlg("pfGetRowHeader", Err)
+    Call gsShowErrorMsgDlg("pfGetRowHeader", Err, Nothing, UBound(rslt), i, bff.Name, idxS1, idxS2, heightTotal)
 End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// メソッド：   グリッド整列
-'// 説明：       列ヘッダ（横軸）取得
+'// メソッド：   グリッド整列 列ヘッダ（横軸）取得
+'// 説明：       TolLeftオブジェクトの下端tls.Top + (tls.Height * 0.9)よりも、Topが小さければ行ヘッダとして扱う
 '// ////////////////////////////////////////////////////////////////////////////
 Private Function pfGetColHeader(tls As Shape, ary() As Shape, spacing As Integer) As Shape()
-'On Error GoTo ErrorHandler
-'    Dim shp         As Shape
+On Error GoTo ErrorHandler
     Dim rslt()      As Shape
     Dim i           As Integer
     Dim bff         As Shape
@@ -524,14 +541,12 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape, spacing As Integer
     For i = 0 To UBound(rslt)
         Call rslt(i).Select(Replace:=False)
         widthTotal = widthTotal + rslt(i).Width
-'        rslt(i).Line.ForeColor.RGB = vbBlue
     Next
     
     '// オブジェクトが重なっている場合（幅の合計が最後のオブジェクトの終点よりも小さい）は、配置を広げる
     If UBound(rslt) > 0 Then
         If widthTotal >= (rslt(UBound(rslt)).Left + rslt(UBound(rslt)).Width) - tls.Left _
               Or spacing > 0 Then
-'            rslt(UBound(rslt)).Line.ForeColor.RGB = vbBlue
             rslt(UBound(rslt)).Left = tls.Left + widthTotal - rslt(UBound(rslt)).Width + UBound(rslt) * spacing
         End If
     End If
@@ -548,23 +563,25 @@ Private Function pfGetColHeader(tls As Shape, ary() As Shape, spacing As Integer
     Exit Function
     
 ErrorHandler:
-    Call gsShowErrorMsgDlg("pfGetColHeader", Err)
+    Call gsShowErrorMsgDlg("pfGetColHeader", Err, Nothing, UBound(rslt), i, bff.Name, idxS1, idxS2, widthTotal)
 End Function
 
 
 '// ////////////////////////////////////////////////////////////////////////////
-'// 全シェイプの配置
+'// メソッド：   グリッド整列 全シェイプ整列
+'// 説明：       各シェイプの座標を列ヘッダと行ヘッダに合わせて補正・大きさをヘッダに合わせて修正する
+'// ////////////////////////////////////////////////////////////////////////////
 Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHeader() As Shape)
+On Error GoTo ErrorHandler
     Dim idx                 As Integer
     Dim idxHead             As Integer
     Dim bff                 As Double   '// 整列対象シェイプの中央位置を格納
     
     '// 全シェイプでのループ
     For idx = 0 To UBound(allShapes)
-        '// 行ヘッダ（縦軸）でのループ
+        '// 行ヘッダ（縦軸）でのループ：対象シェイプの中央のY座標値と、ヘッダの上下の座標で位置を判定する
         For idxHead = 0 To UBound(rowHeader)
             bff = allShapes(idx).Top + allShapes(idx).Height / 2    '// 対象オブジェクトの中央ポジション（縦）
-'            If bff >= allShapes(idx).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
             If bff >= rowHeader(idxHead).Top And bff <= rowHeader(idxHead).Top + rowHeader(idxHead).Height Then
                 allShapes(idx).Top = rowHeader(idxHead).Top
                 allShapes(idx).Height = rowHeader(idxHead).Height
@@ -572,10 +589,9 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
             End If
         Next
         
-        '// 列ヘッダ（横軸）でのループ
+        '// 列ヘッダ（横軸）でのループ：対象シェイプの中央のX座標値と、ヘッダの左右の座標で位置を判定する
         For idxHead = 0 To UBound(colHeader)
             bff = allShapes(idx).Left + allShapes(idx).Width / 2    '// 対象オブジェクトの中央ポジション（縦）
-'            If bff >= allShapes(idx).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
             If bff >= colHeader(idxHead).Left And bff <= colHeader(idxHead).Left + colHeader(idxHead).Width Then
                 allShapes(idx).Left = colHeader(idxHead).Left
                 allShapes(idx).Width = colHeader(idxHead).Width
@@ -586,6 +602,10 @@ Private Sub psAdjustAllShapes(allShapes() As Shape, rowHeader() As Shape, colHea
         '// 選択解除をもとに戻す
         Call allShapes(idx).Select(Replace:=False)
     Next
+    Exit Sub
+    
+ErrorHandler:
+    Call gsShowErrorMsgDlg("psAdjustAllShapes", Err, Nothing, idx, idxHead, bff)
 End Sub
 
 

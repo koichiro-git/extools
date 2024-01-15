@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmShowSheetList 
    Caption         =   "シート一覧出力"
-   ClientHeight    =   3375
+   ClientHeight    =   3510
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   4305
@@ -167,7 +167,7 @@ Private Sub psShowSheetList(wkBook As Workbook, maxRow As Integer, maxCol As Int
     idx = 3
     For idxRow = 1 To maxRow
         For idxCol = 1 To maxCol
-            resultSheet.Cells(1, idx).Value = gfGetColIndexString(idxCol) & CStr(idxRow)
+            resultSheet.Cells(1, idx).Value = Cells(idxRow, idxCol).Address(RowAbsolute:=False, ColumnAbsolute:=False) 'gfGetColIndexString(idxCol) & CStr(idxRow)
             idx = idx + 1
         Next
     Next
